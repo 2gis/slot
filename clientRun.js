@@ -1,4 +1,4 @@
 if (typeof SKIP_APP_RUN == 'undefined') {
-    var bootstrap = require('./core/clientBootstrap.js');
+    var bootstrap = require('slot/clientBootstrap');
     bootstrap.run();
 }

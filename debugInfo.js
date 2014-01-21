@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-    config = req('core/config');
+    config = require('slot/config');
 
 /**
  * Дебажная информация.

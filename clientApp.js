@@ -5,8 +5,8 @@ var async = require('async'),
     baseAppConstructor = require('./app'),
     helpers = require('./templateHelpers'),
     namer = require('./namer'),
-    env = req('core/env'),
-    defer = req('components/defer/defer')();
+    env = require('./env'),
+    defer = env.require('components/defer/defer')();
 
 helpers.registerHelpers(handlebars);
 
@@ -185,7 +185,7 @@ module.exports = function() {
                     transitionsAreRunning = false;
                     if (callback) callback();
                 }
-                
+
             }
         },
 
@@ -237,7 +237,7 @@ module.exports = function() {
             if (moduleElements && moduleElements[elementName]) {
                 var selector = moduleElements[elementName].selector || '.' + namer.elementClass(module.type, elementName),
                     elements = $(selector, moduleBlockId(moduleId)); // Возвращаемые элементы (jQuery объект)
-                
+
                 // Фолбек на dashed-case на переходной период
                 if (!elements.length) {
                     selector = '.' + namer.elementClass(module.type, elementName, true);

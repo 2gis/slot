@@ -33,8 +33,8 @@ function serverRequest(conf) {
     var pkg = 'request';
 
     var request = require(pkg),
-        winston = req('core/logger'),
-        config = req('core/config');
+        winston = require('logger'),
+        config = require('config');
 
     if (conf.method && conf.method.toLowerCase() == 'post') {
         conf.form = conf.data;

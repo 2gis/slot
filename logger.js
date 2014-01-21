@@ -8,7 +8,7 @@
 
 var winston = require('winston'),
     config = require('./config'),
-    conf = require('./config').group('logger'),
+    conf = config.group('logger'),
     confGraylog = conf.graylog;
 
 confGraylog.graylogHostname = config.innerhost;
