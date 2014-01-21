@@ -357,7 +357,7 @@ module.exports = function() {
             fileName = fileName || moduleName;
 
             var fn = 'modules/' + moduleName + '/' + fileName;
-            
+
             try {
                 return app.require(fn);
             } catch (ex) {
@@ -376,7 +376,7 @@ module.exports = function() {
                 moduleId = data.id || nextModuleId(parentId),
                 moduleName = data.type;
 
-            var slotConstructor = app.require('core/slot'),
+            var slotConstructor = require('./slot'),
                 moduleConstructor = app.requireModuleJs(moduleName),
                 slot = app.invoke(slotConstructor, [app, {
                     moduleId: moduleId,
@@ -403,7 +403,7 @@ module.exports = function() {
                         };
 
                         var html = template.call(this, templateData, options);
-                        
+
                         return html;
                     };
                 });
@@ -431,8 +431,8 @@ module.exports = function() {
             if (parentId) {
                 internals.moduleInstances[parentId].children.push(moduleId);
             }
-            
-            var moduleWrapperConstructor = app.require('core/moduleWrapper'),
+
+            var moduleWrapperConstructor = require('./moduleWrapper'),
                 moduleWrapper = moduleWrapperConstructor(app, module, slot);
 
             var dispose = function() {
@@ -490,7 +490,7 @@ module.exports = function() {
                 return moduleInstance.wrapper;
             }
         },
-        
+
         isGrym: env.isGrym,
         isServer: env.isServer,
         isClient: env.isClient,

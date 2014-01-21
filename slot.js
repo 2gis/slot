@@ -5,7 +5,7 @@ var async = require('async'),
     smokesignals = envRequire('smokesignals');
 
 module.exports = function(app, params) {
-    var utils = app.require('core/utils'),
+    var utils = require('./utils'),
         moduleId = params.moduleId,
         timeouts = [], // Массив всех таймаутов для текущей копии модуля
         requests = [], // Массив запросов к апи
@@ -154,7 +154,7 @@ module.exports = function(app, params) {
 
         wrapData: function(type, data) {
             // _.warn('wrapData is deprecated!');
-            
+
             var args = [].slice.call(arguments, 1);
             var modelConstructor = function() {};
             var model = app.require('models/' + type);
@@ -168,7 +168,7 @@ module.exports = function(app, params) {
 
             return args.length ? wrapper.apply(null, args) : wrapper;
         },
-        
+
         // Выставить таймаут для возможности его автоматической отмены при диспозе.
         setTimeout: function(func, delay) {
             var timer = app.setTimeout(func, delay);
