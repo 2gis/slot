@@ -3,6 +3,20 @@
   "version": "0.0.1",
   "description": "Flexible framework for complex JS applications",
   "main": "index.js",
+  "dependencies": {
+    "underscore": "1.5.2",
+    "async": "0.2.9",
+    "smokesignals": "~0.0.7",
+    "ua-parser-js": "~0.6.2",
+    "winston": "~0.7.2",
+    "request": "~2.27.0",
+    "lodash": "~2.4.1",
+    "handlebars": "~1.0.12",
+    "underscore.string": "~2.3.3"
+  },
+  "optionalDependencies": {
+    "winston-graylog2": "~0.1.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

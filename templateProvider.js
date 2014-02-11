@@ -1,11 +1,13 @@
-var env = require('./env'),
-    isServer = typeof window == 'undefined';
+var env = require('./env');
+var handlebars = require('handlebars');
 
 // Возвращает объект, куда будем складывать шаблоны для неймспейса ns
 function templates(ns) {
     ns = 'jst_' + ns;
 
-    return isServer ? env.requirePrivate(ns) : window[ns];
+    var templateConstructor = env.requirePrivate(ns);
+
+    return templateConstructor(handlebars);
 }
 
 // ns - namespace

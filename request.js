@@ -30,11 +30,11 @@ function noop() {}
 
 
 function serverRequest(conf) {
+    // Browserify хак, специально имя пакето вынесено в переменную
     var pkg = 'request';
-
     var request = require(pkg),
-        winston = require('logger'),
-        config = require('config');
+        winston = require('./logger'),
+        config = require('./config');
 
     if (conf.method && conf.method.toLowerCase() == 'post') {
         conf.form = conf.data;

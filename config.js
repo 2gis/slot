@@ -1,5 +1,6 @@
 var env = require('./env');
 var _ = require('underscore');
+var _s = require('underscore.string');
 
 var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : dg.config;
 
@@ -8,7 +9,7 @@ module.exports = cfg;
 module.exports.group = function(name) {
     var ret = {};
     for (var key in cfg) {
-        if (cfg.hasOwnProperty(key) && _(key).startsWith(name + '.')) {
+        if (cfg.hasOwnProperty(key) && _s.startsWith(key, name + '.')) {
             var newKey = key.substr(name.length + 1);
             ret[newKey] = cfg[key];
         }

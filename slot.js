@@ -15,7 +15,7 @@ module.exports = function(app, params) {
         return app.loadModule({type: conf.type, parentId: moduleId});
     }
 
-    var componentsInfo = require('../components/components.json');
+    var componentsInfo = env.require('components/components.json');
 
     var slot = {
         templates: params.templates,
