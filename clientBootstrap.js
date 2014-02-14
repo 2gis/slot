@@ -1,6 +1,7 @@
 var clientApp = require('./clientApp.js'),
     env = require('./env'),
     _ = require('underscore'),
+    stuff = require('./stuff'),
     config = require('./config');
 
 exports.getApp = function() {
@@ -10,7 +11,7 @@ exports.getApp = function() {
 function stripHash(hash) {
     if (hash.charAt(0) == '#') hash = hash.substr(1);
     if (hash.charAt(0) == '/') hash = hash.substr(1);
-    
+
     return hash;
 }
 
@@ -27,11 +28,11 @@ function getUrl() {
 }
 
 exports.run = function(callback) {
-    var syncRegistry = require('../components/syncRegistry/syncRegistry')();
+    var syncRegistry = env.require('components/syncRegistry/syncRegistry')();
     syncRegistry.load(data);
 
     var localCfg = syncRegistry.get('cfg');
-    var config = req('core/config');
+    var config = require('./config');
     config.merge(localCfg);
 
     var app = clientApp();
@@ -62,7 +63,7 @@ exports.run = function(callback) {
         }
         url = decodeURIComponent(url);
 
-        var queryArgs = _.uri2state(document.location.search);
+        var queryArgs = stuff.uri2state(document.location.search);
         var initData = {
             url: url,
             query: queryArgs,

@@ -2,7 +2,7 @@ var utils = require('./utils'),
     _ = require('underscore'),
     namer = require('./namer'),
     templateProvider = require('./templateProvider'),
-    handlebars = envRequire('handlebars');
+    handlebars = require('handlebars');
 
 // Module wrapper expects a raw module objects as an argument for constructor.
 module.exports = function(app, moduleConf, slot) {
@@ -88,7 +88,7 @@ module.exports = function(app, moduleConf, slot) {
         if (!tmpl) {
             throw new Error('slot.renderPartial: partial "' + template + '" not found');
         }
-        
+
         return tmpl(ctx, getTmplOptions());
     };
 
@@ -174,7 +174,7 @@ module.exports = function(app, moduleConf, slot) {
 
             attrs.id = 'module-' + moduleId;
             attrs['data-module'] = moduleConf.type;
-            
+
             // Генерируем CSS класс модуля
             moduleClass = namer.moduleClass(moduleConf.type);
             classString = attrs['class'] || '';

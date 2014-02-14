@@ -25,6 +25,9 @@ function getBuildPath() {
  * @returns {*}
  */
 exports.require = function(name) {
+    if (!_s.endsWith(name, '.js') && !_s.endsWith(name, '.json')) {
+        name = name + '.js';
+    }
     return require(rootPath + name);
 };
 

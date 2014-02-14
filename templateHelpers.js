@@ -2,8 +2,7 @@ var _ = require('underscore'),
     i18n =  require('./i18n'),
     templateProvider = require('./templateProvider'),
     env = require('./env'),
-    helperBlocks = env.requirePrivate('helperBlocks'),
-    roundMeters = req('helpers/roundMeters').roundMeters;
+    helperBlocks = env.requirePrivate('helperBlocks');
 
 // Регистрирует все хелперы в хэндлебарсе
 exports.registerHelpers = function(handlebars, blockHelpers) {
@@ -30,11 +29,4 @@ exports.registerHelpers = function(handlebars, blockHelpers) {
     });
 
     helperBlocks(handlebars, templateProvider);
-
-    handlebars.registerHelper('roundMeters', function (dist) {
-        var rounded = roundMeters(dist),
-            outString = rounded.value + ' ' + _g(rounded.unit == 'm' ? 'м' : 'км');
-
-        return outString;
-    });
 };

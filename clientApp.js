@@ -1,5 +1,5 @@
 var async = require('async'),
-    handlebars = Handlebars,
+    handlebars = require('handlebars'),
     _ = require('underscore'),
     utils = require('./utils'),
     baseAppConstructor = require('./app'),
