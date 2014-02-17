@@ -5,17 +5,17 @@ describe('Core -> namer', function() {
 
     describe('. moduleModificatorClassTemp', function() {
         it('Правильно составляет модификатор', function() {
-            var module = 'firmCard',
+            var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
             var mod = namer.moduleModificatorClassTemp(module, name, value);
 
-            assert(mod === 'firm-card_address-exist-ance_true');
+            assert(mod === 'firm-card-example_address-exist-ance_true');
         });
 
         it('Правильно составляет модификатор для value === null', function() {
-            var module = 'firmCard',
+            var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
@@ -25,7 +25,7 @@ describe('Core -> namer', function() {
         });
 
         it('Правильно составляет модификатор для value === undefined', function() { // http://jira/browse/ONLINE-214
-            var module = 'firmCard',
+            var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
@@ -35,23 +35,23 @@ describe('Core -> namer', function() {
         });
 
         it('Правильно составляет модификатор для value === false', function() {
-            var module = 'firmCard',
+            var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
             var mod = namer.moduleModificatorClassTemp(module, name, false);
 
-            assert(mod === 'firm-card_address-exist-ance_false');
+            assert(mod === 'firm-card-example_address-exist-ance_false');
         });
 
         it('Правильно составляет модификатор для value === 0', function() {
-            var module = 'firmCard',
+            var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
             var mod = namer.moduleModificatorClassTemp(module, name, 0);
 
-            assert(mod === 'firm-card_address-exist-ance_0');
+            assert(mod === 'firm-card-example_address-exist-ance_0');
         });
     });
 
@@ -202,21 +202,21 @@ describe('Core -> namer', function() {
             assert(namer.isClassAModificator(moduleName, className));
         });
         it('Название модуля больше, чем из одного слова', function() {
-            var moduleName = 'firmCard',
-                className = 'firm-card_full_true';
+            var moduleName = 'firmCardExample',
+                className = 'firm-card-example_full_true';
             assert(namer.isClassAModificator(moduleName, className));
         });
         it('Ругается, если в классе нет названия модуля', function() {
-            var moduleName = 'firmCard',
-                className = 'firmCards_full_true'; // лишнюю букву в название модуля
+            var moduleName = 'firmCardExample',
+                className = 'firmCardExamples_full_true'; // лишнюю букву в название модуля
             assert(namer.isClassAModificator(moduleName, className) == false);
         });
         it('Ругается, если в классе больше, больше или меньше, чем 2 подчеркивания', function() {
-            var moduleName = 'firmCard',
-                className = 'firmCard_full_true_false'; // 3 подчеркивания
+            var moduleName = 'firmCardExample',
+                className = 'firmCardExample_full_true_false'; // 3 подчеркивания
             assert(namer.isClassAModificator(moduleName, className) == false);
 
-            className = 'firmCard_full'; // 1 подчеркивание
+            className = 'firmCardExample_full'; // 1 подчеркивание
             assert(namer.isClassAModificator(moduleName, className) == false);
         });
     });

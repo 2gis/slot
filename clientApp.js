@@ -30,44 +30,47 @@ module.exports = function() {
         /**
          * jQuery плагин, который:
          * - выставляет модификатор элементу
-         * - запрашивает модификатор[ы] элемента
+         * - запрашивает модификаторы элемента
          *
          * Особенности:
          * НЕ дергает modHandlers
          * НЕ работает на сервере, соответственно не пытаемся собирать эти модификаторы на клиенте
          * Частично повторяет логику app.mod
-         * При попытке получить или установить модификатор на несуществующий элемент, получаем undefined
+         * При попытке получить или установить/запросить модификатор на несуществующий элемент, получаем undefined
          *
-         * @param {string|object} modificators  Если строка, то возвращает определенный модификатор
-         *                                      Если объект, то устанавливает переданные модификаторы и возвращает все модификаторы
-         * @returns {object} модификаторы элемента
+         * @param {object|undefined} modificators
+         *     Если объект, то устанавливает переданные модификаторы и возвращает все модификаторы
+         *     Если undefined, просто возвращает объект-модификаторы
+         *
+         * @returns {object} модификаторы первого элемента. Если нужна другая логика - сообщите по адресу: г. Новосибирск, площадь Маркса 7.
          */
         $.fn.mod = function(modificators) {
-            // если пытаемся установить модификатор на несуществующий элемент
-            if (!this.length) {
-                return;
-            }
+            var firstMod;
 
-            // запросили определенный модификатор
-            if (typeof modificators == 'string') {
-                return this[0].mods && this[0].mods[modificators];
-            }
+            modificators = modificators || {};
 
+            this.each(function(i, element) {
+                var oldMods = element.mods || {};
 
-            var that = this[0],
-                oldMods = this[0].mods || {};
+                _.each(modificators, function(val, key) {
+                    var oldModVal = oldMods[key];
 
-            _.each(modificators, function(val, key) {
-                var oldModVal = oldMods[key];
-                if (oldModVal == val) return;
+                    if (oldModVal === val) return;
 
-                $(that)
-                    .removeClass(namer.elementModificatorClass(key, oldModVal))
-                    .addClass(namer.elementModificatorClass(key, val));
+                    if (oldModVal == undefined && (val === false || val === null)) { // Кейс когда html прилетел с сервера
+                        oldModVal = true;
+                    }
+
+                    $(element)
+                        .removeClass(namer.elementModificatorClass(key, oldModVal))
+                        .addClass(namer.elementModificatorClass(key, val));
+                });
+
+                element.mods = _.extend(element.mods || {}, modificators);
+                firstMod = firstMod || element.mods;
             });
 
-            that.mods = _.extend(that.mods || {}, modificators);
-            return this;
+            return firstMod;
         };
     }
 
@@ -232,15 +235,16 @@ module.exports = function() {
          */
         element: function(moduleId, elementName) {
             var module = app.getModuleById(moduleId),
-                moduleElements = module.instance.elements;
+                moduleElements = module.instance.elements,
+                blockName = module.instance.block || module.type;
 
             if (moduleElements && moduleElements[elementName]) {
-                var selector = moduleElements[elementName].selector || '.' + namer.elementClass(module.type, elementName),
+                var selector = moduleElements[elementName].selector || '.' + namer.elementClass(blockName, elementName),
                     elements = $(selector, moduleBlockId(moduleId)); // Возвращаемые элементы (jQuery объект)
 
                 // Фолбек на dashed-case на переходной период
                 if (!elements.length) {
-                    selector = '.' + namer.elementClass(module.type, elementName, true);
+                    selector = '.' + namer.elementClass(blockName, elementName, true);
                     elements = $(selector, moduleBlockId(moduleId));
                 }
 
@@ -286,6 +290,7 @@ module.exports = function() {
             });
 
             if (on) {
+                module.wrapper.bind();
                 module.wrapper.clientInit();
             }
 

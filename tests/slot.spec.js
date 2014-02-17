@@ -67,4 +67,44 @@ describe('Core -> slot', function() {
         testEnv.app.isServer = saveIsServer;
         testEnv.app.isClient = saveIsClient;
     });
+
+    describe('regFn', function() {
+        it('regFn регистрирует функцию и в живом модуле вызывает именно её', function() {
+            var result = false,
+                fn = function() {
+                    result = true;
+                };
+
+            var toCall = slot.regFn(fn);
+            toCall();
+
+            assert(result, 'Функция так и не была вызвана');
+        });
+
+        it('regFn регистрирует функцию и в мёртвом модуле её не вызывает', function() {
+            var result = true,
+                fn = function() {
+                    result = false;
+                };
+
+            var toCall = slot.regFn(fn);
+            slot.dispose();
+            toCall();
+
+            assert(result, 'Функция была вызвана после slot.dispose');
+        });
+
+        it('regFn регистрирует функцию после смерти модуля и её не вызывает', function() {
+            var result = true,
+                fn = function() {
+                    result = false;
+                };
+
+            slot.dispose();
+            var toCall = slot.regFn(fn);
+            toCall();
+
+            assert(result, 'Функция была вызвана после slot.dispose');
+        });
+    });
 });

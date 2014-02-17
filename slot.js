@@ -5,8 +5,7 @@ var async = require('async'),
     smokesignals = envRequire('smokesignals');
 
 module.exports = function(app, params) {
-    var utils = require('./utils'),
-        moduleId = params.moduleId,
+    var moduleId = params.moduleId,
         timeouts = [], // Массив всех таймаутов для текущей копии модуля
         requests = [], // Массив запросов к апи
         intervals = []; // Массив всех интервалов для текущей копии модуля
@@ -23,6 +22,7 @@ module.exports = function(app, params) {
         utils: utils,
         config: app.config,
         isInited: false,
+        disposed: false,
         isEnableShowTrack: true,
 
         disableShowTrack: function() {
@@ -153,11 +153,10 @@ module.exports = function(app, params) {
         },
 
         wrapData: function(type, data) {
-            // _.warn('wrapData is deprecated!');
+            var args = [].slice.call(arguments, 1),
+                modelConstructor = function() {},
+                model = app.require('models/' + type);
 
-            var args = [].slice.call(arguments, 1);
-            var modelConstructor = function() {};
-            var model = app.require('models/' + type);
             modelConstructor.prototype = model.prototype;
 
             var wrapper = function() {
@@ -209,7 +208,18 @@ module.exports = function(app, params) {
 
         onTransitionEnd: app.onTransitionEnd,
 
-        closestModule: _.partial(app.closestModule, moduleId)
+        closestModule: _.partial(app.closestModule, moduleId),
+
+        // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
+        regFn: function(fn) {
+            function ret() {
+                if (!slot.disposed) {
+                    fn.apply(this, arguments);
+                }
+            }
+
+            return ret;
+        }
 
     };
 

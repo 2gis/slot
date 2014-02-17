@@ -5,8 +5,6 @@
 
 var _ = require('underscore');
 
-require('./underscoreExt');
-
 var utils = require('./utils'),
     injector = require('./injector'),
     env = require('./env'),
@@ -335,22 +333,27 @@ module.exports = function() {
          * К интерфейсным методам можно применять параметры
          *
          * `filters[hasContext=5]` - берет только те модули filters у которых интерфейсный метод hasContext(5) вернет true
+         *
+         * Если модулей несколько, то возвращается значение последнего модуля. Если модулей нет undefined
+         *
+         * @returns {*}
          */
         broadcast: function (moduleId, message) {
-            var args = [].slice.call(arguments, 2);
-            var lastIndexOfDelim = message.lastIndexOf(':');
-
-            var selector = message.substr(0, lastIndexOfDelim),
-                action = message.substr(lastIndexOfDelim + 1);
+            var args = [].slice.call(arguments, 2),
+                lastIndexOfDelim = message.lastIndexOf(':'),
+                selector = message.substr(0, lastIndexOfDelim),
+                action = message.substr(lastIndexOfDelim + 1),
+                retValue;
 
             app.processModules(moduleId, selector, function(instance) {
                 if (instance.interface) {
                     var handler = instance.interface[action];
                     if (handler) {
-                        handler.apply(instance.interface, args);
+                        retValue = handler.apply(instance.interface, args);
                     }
                 }
             });
+            return retValue;
         },
 
         requireModuleJs: function(moduleName, fileName) {
@@ -462,6 +465,7 @@ module.exports = function() {
                     slot.block().remove();
                 }
                 moduleWrapper.disposed = true;
+                slot.disposed = true;
                 moduleWrapper = moduleInstance = module = slot = null;
             };
             moduleInstance.wrapper = moduleWrapper;
@@ -471,6 +475,11 @@ module.exports = function() {
             // На клиенте собираем модификаторы, расставленные при рендеринге на сервере.
             if (slot.isClient) {
                 slot.mod(getModificators(moduleWrapper));
+            }
+
+            // Кастомный блок для модуля
+            if (module.block) {
+                slot.mod({module: moduleWrapper.type});
             }
 
             return moduleWrapper;

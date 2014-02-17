@@ -123,6 +123,15 @@ module.exports = function(app, moduleConf, slot) {
             }
         },
 
+        /**
+         * Вызывается каждый раз после рендера представления
+         */
+        bind: function() {
+            if (moduleConf.bind) {
+                moduleConf.bind();
+            }
+        },
+
         changeState: function() {
             if (moduleConf.changeState) {
                 moduleConf.changeState.apply(moduleConf, arguments);
@@ -149,7 +158,8 @@ module.exports = function(app, moduleConf, slot) {
                 classString,
                 classes,
                 attributesString,
-                html;
+                html,
+                blockName = moduleConf.block || moduleConf.type;
 
             realvc = (moduleConf.viewContext) ? moduleConf.viewContext(customViewContext) : ""; // Вызов метода viewContext должен быть всегда
             viewContext = customViewContext || realvc || {};
@@ -176,7 +186,7 @@ module.exports = function(app, moduleConf, slot) {
             attrs['data-module'] = moduleConf.type;
 
             // Генерируем CSS класс модуля
-            moduleClass = namer.moduleClass(moduleConf.type);
+            moduleClass = namer.moduleClass(blockName);
             classString = attrs['class'] || '';
             classes = classString.split(/\s+/);
 
