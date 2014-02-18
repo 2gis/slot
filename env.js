@@ -1,6 +1,6 @@
 
 var rootPath = './',
-    _ = require('lodash'),
+    _ = require('underscore'),
     _s = require('underscore.string');
 
 exports.setRootPath = function(path) {
