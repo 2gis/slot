@@ -108,10 +108,9 @@ module.exports = function() {
             if (DEBUG && (app.config.makeups && slug in app.config.makeups)) {
                 name = app.config.makeups[slug];
             }
-            if (app.config.isLandingPage(req, appState)) {
+            if (app.config.isLandingPage(req)) {
                 name = 'landingPage';
             }
-
             return app.loadModule({type: name});
         },
 

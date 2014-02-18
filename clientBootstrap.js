@@ -12,6 +12,11 @@ function stripHash(hash) {
     if (hash.charAt(0) == '#') hash = hash.substr(1);
     if (hash.charAt(0) == '/') hash = hash.substr(1);
 
+    var queryStringPosition = hash.indexOf('?');
+    if( queryStringPosition !== -1) {
+        hash = hash.substr(0, queryStringPosition);
+    }
+
     return hash;
 }
 
