@@ -31,7 +31,7 @@ function logToChannel(channel, type) {
     }
 }
 
-module.exports = {
+var stuff = module.exports = {
 
     trim: function(str) {
         return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
@@ -145,13 +145,13 @@ module.exports = {
         if (!_.isObject(obj)) return obj;
         if (_.isArray(obj)) {
             return _.map(obj, function(elem) {
-                return _.deepClone(elem);
+                return stuff.deepClone(elem);
             });
         }
         var x = {};
         for (var name in obj) {
             if (obj.hasOwnProperty(name)) {
-                x[name] = _.deepClone(obj[name]);
+                x[name] = stuff.deepClone(obj[name]);
             }
         }
 
