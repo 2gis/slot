@@ -223,5 +223,7 @@ module.exports = function(app, params) {
 
     };
 
+    app.setupSlot(slot);
+
     return slot;
 };

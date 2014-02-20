@@ -107,6 +107,7 @@ module.exports = function() {
 
             if (DEBUG && (app.config.makeups && slug in app.config.makeups)) {
                 name = app.config.makeups[slug];
+                app.emit('resolveDevPage', name);
             }
             if (app.config.isLandingPage(req)) {
                 name = 'landingPage';
@@ -530,6 +531,15 @@ module.exports = function() {
         },
 
         /**
+         * Для переопределения в конечных продуктах
+         * вызывается на каждом новом слоте
+         * @param slot
+         */
+        setupSlot: function(slot) {
+
+        },
+
+        /**
          * Кинуть некоторое исключение которое должно обработаться управляющим кодом аппликейшена
          *
          * Например raise(404) на сервере показывает глобальную 404 страницу, т.е. данная функция некоторый
@@ -571,7 +581,7 @@ module.exports = function() {
     }
 
     return {
-        instance: app,
+        instance: smokesignals.convert(app),
         internals: internals
     };
 };
