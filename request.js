@@ -33,7 +33,8 @@ function serverRequest(conf) {
     // Browserify хак, специально имя пакето вынесено в переменную
     var pkg = 'request';
     var request = require(pkg),
-        winston = require('./logger'),
+        loggerModule = 'slot/logger', // move module name to separate value to avoid browserify include on client    
+        winston = require(loggerModule),
         config = require('./config');
 
     if (conf.method && conf.method.toLowerCase() == 'post') {
