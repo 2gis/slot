@@ -14,7 +14,7 @@ module.exports = function(app, params) {
         return app.loadModule({type: conf.type, parentId: moduleId});
     }
 
-    var componentsInfo = env.require('components/components.json');
+    var componentsInfo = require('components/components.json');
 
     var slot = {
         templates: params.templates,
@@ -155,7 +155,7 @@ module.exports = function(app, params) {
         wrapData: function(type, data) {
             var args = [].slice.call(arguments, 1),
                 modelConstructor = function() {},
-                model = app.require('models/' + type);
+                model = require('models/' + type);
 
             modelConstructor.prototype = model.prototype;
 

@@ -77,7 +77,7 @@ function serverRequest(conf) {
 
 function clientRequest(conf) {
     var reqwest = require('reqwest'),
-        sendError = req('lib/sendError');
+        sendError = require('lib/sendError');
     // @doclink: https://github.com/ded/reqwest
 
     _.defaults(conf, {

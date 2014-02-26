@@ -6,7 +6,7 @@ var async = require('async'),
     helpers = require('./templateHelpers'),
     namer = require('./namer'),
     env = require('./env'),
-    defer = env.require('components/defer/defer')();
+    defer = require('components/defer/defer')();
 
 helpers.registerHelpers(handlebars);
 
@@ -279,7 +279,7 @@ module.exports = function() {
                 _.each(handlers, function(handler, eventName) {
                     var container = $(containerId);
 
-                    var camelCaseModules = req('helpers/camelCaseModules');
+                    var camelCaseModules = require('helpers/camelCaseModules');
 
                     if (_.contains(camelCaseModules, module.type)) {
                         bind(selector, elementName, container, eventName, handler, on);
