@@ -290,7 +290,7 @@ module.exports = function() {
 
         newComponent: function(name, extraArgs) {
             extraArgs = extraArgs || [];
-            var componentConstructor = require('components/' + name + '/' + name);
+            var componentConstructor = require('components/' + name + '/' + name + '.js');
 
             return app.invoke(componentConstructor, [app].concat(extraArgs));
         },
@@ -355,7 +355,7 @@ module.exports = function() {
         requireModuleJs: function(moduleName, fileName) {
             fileName = fileName || moduleName;
 
-            var fn = 'modules/' + moduleName + '/' + fileName;
+            var fn = 'modules/' + moduleName + '/' + fileName + '.js';
 
             try {
                 return require(fn);
