@@ -1,10 +1,10 @@
 var _ = require('underscore');
-// var config = require('./config');
 
 function logEnabledFor(channel) {
     if (DEBUG) {
-        // var log_channels = config['log_channels'];
-        // return _(log_channels).indexOf(channel) != -1;
+        var config = require('./config');
+        var log_channels = config['log_channels'];
+        return _(log_channels).indexOf(channel) != -1;
     }
     return false;
 }
