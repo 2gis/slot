@@ -523,7 +523,7 @@ module.exports = function() {
         },
 
         registry: function(key, def) {
-            if (!registry[key]) {
+            if (registry[key] == null) {
                 registry[key] = def == null ? {} : def;
             }
 

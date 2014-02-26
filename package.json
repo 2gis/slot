@@ -1,6 +1,6 @@
 {
   "name": "slot",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Flexible framework for complex JS applications",
   "main": "index.js",
   "dependencies": {
