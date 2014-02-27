@@ -19,18 +19,6 @@ function getBuildPath() {
     return rootPath + 'build/';
 }
 
-/**
- * Запрашивает модуль относительно корня проекта
- *
- * @param name
- * @returns {*}
- */
-exports.require = function(name) {
-    if (!name.endsWith('.js') && !name.endsWith('.json')) {
-        name = name + '.js';
-    }
-    return require(rootPath + name);
-};
 
 /**
  * Возвращает глобальный контекст среды исполнения (в node.js или браузере)
@@ -79,7 +67,6 @@ function envRequire(serverName, clientName) {
 
 // ---- expose same functions as globals -----
 
-globals().req = exports.require;
 globals().envRequire = envRequire;
 
 if (!Object.freeze) Object.freeze = _.identity;
