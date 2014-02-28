@@ -1,11 +1,12 @@
 
 var rootPath = './',
-    _ = require('underscore'),
-    _s = require('underscore.string');
+    _ = require('underscore');
+
+require('./polyfill');
 
 exports.setRootPath = function(path) {
     rootPath = path;
-    if (!_s.endsWith(rootPath, '/')) {
+    if (!rootPath.endsWith('/')) {
         rootPath = rootPath + '/';
     }
 };
@@ -25,7 +26,7 @@ function getBuildPath() {
  * @returns {*}
  */
 exports.require = function(name) {
-    if (!_s.endsWith(name, '.js') && !_s.endsWith(name, '.json')) {
+    if (!name.endsWith('.js') && !name.endsWith('.json')) {
         name = name + '.js';
     }
     return require(rootPath + name);

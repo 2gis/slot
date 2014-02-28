@@ -10,8 +10,7 @@
     "ua-parser-js": "~0.6.2",
     "winston": "~0.7.2",
     "request": "~2.27.0",
-    "handlebars": "~1.0.12",
-    "underscore.string": "~2.3.3"
+    "handlebars": "~1.0.12"
   },
   "optionalDependencies": {
     "winston-graylog2": "~0.1.10"

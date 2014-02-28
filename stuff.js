@@ -33,18 +33,6 @@ function logToChannel(channel, type) {
 
 var stuff = module.exports = {
 
-    trim: function(str) {
-        return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
-    },
-
-    ltrim: function(str) {
-        return str.replace(/^\s+/, '');
-    },
-
-    rtrim: function(str) {
-        return str.replace(/\s+$/, '');
-    },
-
     /**
      * Форматирует строку, пример использования _.format("Hello %1 and %2", "Vasya", "Petya")
      * @param str
@@ -131,14 +119,6 @@ var stuff = module.exports = {
         }
 
         return obj;
-    },
-
-    startsWith: function(str, value) {
-        return _.isString(str) && str.substr(0, value.length) == value;
-    },
-
-    endsWith: function(str, value) {
-        return _.isString(str) && str.substr(-value.length) == value;
     },
 
     deepClone: function(obj) {
