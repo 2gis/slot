@@ -19,7 +19,7 @@ var namer = module.exports = {
 
     // Генерирует имя CSS-класса для модуля
     moduleClass: function(moduleName) {
-        var camelCaseModules = req('helpers/camelCaseModules');
+        var camelCaseModules = require('helpers/camelCaseModules');
 
         if (!_.contains(camelCaseModules, moduleName)) {
             moduleName = convertCamelToDash(moduleName);

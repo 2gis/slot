@@ -96,10 +96,6 @@ module.exports = function() {
             return app._stage == 'bind';
         },
 
-        require: function(path) {
-            return env.require(path);
-        },
-
         resolveEntryPoint: function(req, appState) {
             var url = req.url,
                 name = app.config.mainModule,
@@ -294,7 +290,7 @@ module.exports = function() {
 
         newComponent: function(name, extraArgs) {
             extraArgs = extraArgs || [];
-            var componentConstructor = app.require('components/' + name + '/' + name);
+            var componentConstructor = require('components/' + name + '/' + name + '.js');
 
             return app.invoke(componentConstructor, [app].concat(extraArgs));
         },
@@ -359,10 +355,10 @@ module.exports = function() {
         requireModuleJs: function(moduleName, fileName) {
             fileName = fileName || moduleName;
 
-            var fn = 'modules/' + moduleName + '/' + fileName;
+            var fn = 'modules/' + moduleName + '/' + fileName + '.js';
 
             try {
-                return app.require(fn);
+                return require(fn);
             } catch (ex) {
                 return null;
             }
