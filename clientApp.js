@@ -269,7 +269,7 @@ module.exports = function() {
 
             // Пробегаемся по ассоциативному массиву элементов, заданном в модуле
             _.each(elements, function(eventsConfig, elementName) {
-                var selector = eventsConfig.selector || '.' + namer.elementClass(module.type, elementName),
+                var selector = eventsConfig.selector || '.' + namer.elementClass(module.block || module.type, elementName),
                     selectorDashed = eventsConfig.selector || '.' + namer.elementClass(module.type, elementName, true),
                     containerId = moduleBlockId(moduleId);
 
