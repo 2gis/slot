@@ -438,9 +438,10 @@ module.exports = function() {
             var moduleWrapperConstructor = require('./moduleWrapper'),
                 moduleWrapper = moduleWrapperConstructor(app, module, slot);
 
-            var dispose = function() {
-                if (!moduleWrapper || moduleWrapper.disposing) return;
-                moduleWrapper.disposing = true;
+            // Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве
+            var kill = function() {
+                if (!moduleWrapper || moduleWrapper.stage == 'killed') return;
+                moduleWrapper.stage = slot.stage = 'killed';
 
                 slot.clearTimeouts();
                 slot.clearIntervals();
@@ -451,9 +452,25 @@ module.exports = function() {
                 var children = internals.moduleInstances[moduleId].children;
                 if (children) {
                     _.each(children, function(childrenId) {
-                        internals.moduleInstances[childrenId].wrapper.dispose();
+                        internals.moduleInstances[childrenId].wrapper.kill();
                     });
                 }
+            };
+
+            // Модуль удаляется из дом-дерева. Необходимо сначала его убить.
+            var remove = function() {
+                if (slot.isClient) {
+                    slot.block().remove();
+                }
+                moduleWrapper.stage = slot.stage = 'disposed'; // Сомнительно, ведь дальше враппер и слот удаляются
+
+                var children = internals.moduleInstances[moduleId].children;
+                if (children) {
+                    _.each(children, function(childrenId) {
+                        internals.moduleInstances[childrenId].wrapper.remove();
+                    });
+                }
+
                 if (module.dispose) module.dispose();
 
                 if (parentId) {
@@ -461,14 +478,17 @@ module.exports = function() {
                     delete internals.moduleInstances[parentId].slot.modules[moduleName];
                 }
                 delete internals.moduleInstances[moduleId];
-                if (slot.isClient) {
-                    slot.block().remove();
-                }
-                moduleWrapper.disposed = true;
-                slot.disposed = true;
                 moduleWrapper = moduleInstance = module = slot = null;
+            }
+
+            var dispose = function() {
+                moduleWrapper.kill();
+                moduleWrapper.remove();
             };
+
             moduleInstance.wrapper = moduleWrapper;
+            moduleWrapper.kill = slot.kill = kill;
+            moduleWrapper.remove = slot.remove = remove;
             moduleWrapper.dispose = slot.dispose = dispose;
             moduleWrapper.viewContext = module.viewContext;
 

@@ -21,8 +21,6 @@ module.exports = function(app, params) {
         modules: {},
         utils: utils,
         config: app.config,
-        isInited: false,
-        disposed: false,
         isEnableShowTrack: true,
 
         disableShowTrack: function() {
@@ -213,7 +211,7 @@ module.exports = function(app, params) {
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
         regFn: function(fn) {
             function ret() {
-                if (!slot.disposed) {
+                if (slot.stage != 'killed' && slot.stage != 'disposed') {
                     fn.apply(this, arguments);
                 }
             }

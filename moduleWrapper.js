@@ -96,12 +96,16 @@ module.exports = function(app, moduleConf, slot) {
 
         // Initializes the module with the given params. Invokes callback when init process is ready
         init: function(state, callback) {
+            slot.stage = 'initing';
+
             // moduleConf.init.length < 2 - показывает что moduleConf.init имеет менее 2х аргументов, то есть не имеет коллбэк
             var isInitSync = !moduleConf.init || moduleConf.init.length < 2;
 
             var done = function(err) {
                 if (callback) callback(err);
-                slot.isInited = !err;
+                if (!err) {
+                    slot.stage = 'inited';
+                }
             };
 
             if (moduleConf.init) {
