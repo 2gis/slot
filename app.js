@@ -482,8 +482,10 @@ module.exports = function() {
             }
 
             var dispose = function() {
-                moduleWrapper.kill();
-                moduleWrapper.remove();
+                if (moduleWrapper) { // Могли вызвать повторно
+                    moduleWrapper.kill();
+                    moduleWrapper.remove();
+                }
             };
 
             moduleInstance.wrapper = moduleWrapper;
