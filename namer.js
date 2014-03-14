@@ -48,7 +48,7 @@ var namer = module.exports = {
 
         if ((value || value === 0) && value !== 'false') {
             cls += '_' + name;
-        
+
             if (value != 'true' && value !== true) cls += '_' + value;
         }
 
@@ -100,12 +100,12 @@ var namer = module.exports = {
     isClassAModificator: function(moduleName, className) {
         var findUnderscores = /_/g,
             counter = 0,
-            dashedModuleName = convertCamelToDash(moduleName),
-            indexOfModuleName = className.indexOf(dashedModuleName);
+            moduleClass = namer.moduleClass(moduleName),
+            indexOfModuleClass = className.indexOf(moduleClass);
         while ( findUnderscores.exec(className) != null ) {
             counter++;
         }
-        return indexOfModuleName == 0 && className[dashedModuleName.length] == '_' && counter == 2;
+        return indexOfModuleClass == 0 && className[moduleClass.length] == '_' && counter == 2;
     },
 
     /**
