@@ -106,5 +106,13 @@ function clientRequest(conf) {
         conf.crossOrigin = true;
     }
 
-    return reqwest(conf);
+    var xhr = reqwest(conf);
+
+    // во время аборта запроса не логируем его как ошибку
+    var abort = xhr.abort;
+    xhr.abort = function() {
+        conf.error = noop;
+        abort.call(xhr);
+    };
+    return xhr;
 }
