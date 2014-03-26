@@ -1,11 +1,5 @@
 var _ = require('underscore');
 
-function convertCamelToDash(camelCasedString) {
-    return camelCasedString.toString().replace(/([A-Z])/g, function($1) {
-        return "-" + $1.toLowerCase();
-    });
-}
-
 function convertDashToCamel(dashedString) {
     return dashedString.toString().replace(/(-[a-zA-Z])/g, function($1) {
         return $1[1].toUpperCase(); // $1 это строка типа "-a", "-B", поэтому берем второй символ этой строки
@@ -14,32 +8,9 @@ function convertDashToCamel(dashedString) {
 
 var namer = module.exports = {
 
-    // Конвертирует кэмел-кейс строку в строку с тирэ
-    convertCamelToDash: convertCamelToDash,
-
     // Генерирует имя CSS-класса для модуля
     moduleClass: function(moduleName) {
-        var camelCaseModules = req('helpers/camelCaseModules');
-
-        if (!_.contains(camelCaseModules, moduleName)) {
-            moduleName = convertCamelToDash(moduleName);
-        }
-
         return moduleName;
-    },
-
-    // Генерирует имя CSS-класса для модификатора модуля
-    // @TODO удалить метод
-    moduleModificatorClassTemp: function(moduleName, modificatorName, modificatorValue) {
-        if (modificatorValue === null || modificatorValue === undefined) {
-            return '';
-        }
-
-        return (
-            namer.moduleClass(moduleName) + '_' +
-            convertCamelToDash(modificatorName) + '_' +
-            convertCamelToDash(modificatorValue)
-        );
     },
 
     // Генерирует имя CSS-класса для модификатора модуля по неймингу BEVIS
@@ -141,15 +112,9 @@ var namer = module.exports = {
      *
      * @moduleName {string} имя модуля
      * @elementName {string} имя элемента
-     * @dashed {bool} преобразует имя элемента в дашед-кейс (для обратной совместимости)
      * @return {string} имя элемента
      */
-    elementClass: function(moduleName, elementName, dashed) {
-        if (dashed) {
-            elementName = convertCamelToDash(elementName);
-            moduleName = namer.moduleClass(moduleName);
-        }
-
+    elementClass: function(moduleName, elementName) {
         return moduleName + '__' + elementName;
     }
 };

@@ -1,6 +1,6 @@
 {
   "name": "slot",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "homepage": "https://github.com/2gis/slot",
   "repository": "git@github.com:2gis/slot.git",
   "description": "Flexible framework for complex JS applications",

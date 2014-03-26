@@ -169,25 +169,11 @@ module.exports = function() {
                     if (app.isClient) { // или == 'bind' ?
                         block = app.block(moduleId);
 
-                        var oldModClass;
-
-                        // @TODO удалить когда весь CSS переедет на BEVIS
-                        oldModClass = namer.moduleModificatorClassTemp(module.type, key, oldModVal);
-                        if (oldModClass) block.removeClass(oldModClass);
-
-                        oldModClass = namer.moduleModificatorClass(key, oldModVal);
+                        var oldModClass = namer.moduleModificatorClass(key, oldModVal);
 
                         if (oldModClass) block.removeClass(oldModClass);
 
-                        var newModClass;
-
-                        // @TODO удалить когда весь CSS переедет на BEVIS
-                        if (val != null) {
-                            newModClass = namer.moduleModificatorClassTemp(module.type, key, val);
-                            block.addClass(newModClass);
-                        }
-
-                        newModClass = namer.moduleModificatorClass(key, val);
+                        var newModClass = namer.moduleModificatorClass(key, val);
 
                         if (newModClass) block.addClass(newModClass);
                     }
@@ -211,7 +197,7 @@ module.exports = function() {
                          * modHandlers: {
                          *     ...
                          *     _any: function(key, val) {
-                         *         shmonsole.log(key, val);
+                         *         shmonsole.loh(key, val);
                          *     }
                          * }
                          */

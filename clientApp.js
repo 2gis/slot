@@ -270,7 +270,6 @@ module.exports = function() {
             // Пробегаемся по ассоциативному массиву элементов, заданном в модуле
             _.each(elements, function(eventsConfig, elementName) {
                 var selector = eventsConfig.selector || '.' + namer.elementClass(module.instance.block || module.type, elementName),
-                    selectorDashed = eventsConfig.selector || '.' + namer.elementClass(module.instance.block || module.type, elementName, true),
                     containerId = moduleBlockId(moduleId);
 
                 // Выбираем все значения из объекта, за исключением селектора
@@ -279,13 +278,7 @@ module.exports = function() {
                 _.each(handlers, function(handler, eventName) {
                     var container = $(containerId);
 
-                    var camelCaseModules = req('helpers/camelCaseModules');
-
-                    if (_.contains(camelCaseModules, module.type)) {
-                        bind(selector, elementName, container, eventName, handler, on);
-                    } else {
-                        bind(selectorDashed, elementName, container, eventName, handler, on);
-                    }
+                    bind(selector, elementName, container, eventName, handler, on);
                 });
             });
 

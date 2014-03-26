@@ -199,10 +199,6 @@ module.exports = function(app, moduleConf, slot) {
             _.each(mods, function(val, key) {
                 var modClass;
 
-                // @TODO удалить
-                modClass = namer.moduleModificatorClassTemp(moduleConf.type, key, val);
-                classes.push(modClass);
-
                 modClass = namer.moduleModificatorClass(key, val);
 
                 classes.push(modClass);
