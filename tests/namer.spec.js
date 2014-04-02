@@ -3,13 +3,13 @@ var assert = require('assert');
 describe('Core -> namer', function() {
     var namer = require('../namer');
 
-    describe('. moduleModificatorClassTemp', function() {
+    describe('.modificatorClassTemp', function() {
         it('Правильно составляет модификатор', function() {
             var module = 'firmCardExample',
                 name = 'address-existAnce',
                 value = true;
 
-            var mod = namer.moduleModificatorClassTemp(module, name, value);
+            var mod = namer.modificatorClassTemp(module, name, value);
 
             assert(mod === 'firm-card-example_address-exist-ance_true');
         });
@@ -19,7 +19,7 @@ describe('Core -> namer', function() {
                 name = 'address-existAnce',
                 value = true;
 
-            var mod = namer.moduleModificatorClassTemp(module, name, null);
+            var mod = namer.modificatorClassTemp(module, name, null);
 
             assert(mod === '');
         });
@@ -29,7 +29,7 @@ describe('Core -> namer', function() {
                 name = 'address-existAnce',
                 value = true;
 
-            var mod = namer.moduleModificatorClassTemp(module, name, undefined);
+            var mod = namer.modificatorClassTemp(module, name, undefined);
 
             assert(mod === '');
         });
@@ -39,7 +39,7 @@ describe('Core -> namer', function() {
                 name = 'address-existAnce',
                 value = true;
 
-            var mod = namer.moduleModificatorClassTemp(module, name, false);
+            var mod = namer.modificatorClassTemp(module, name, false);
 
             assert(mod === 'firm-card-example_address-exist-ance_false');
         });
@@ -49,18 +49,18 @@ describe('Core -> namer', function() {
                 name = 'address-existAnce',
                 value = true;
 
-            var mod = namer.moduleModificatorClassTemp(module, name, 0);
+            var mod = namer.modificatorClassTemp(module, name, 0);
 
             assert(mod === 'firm-card-example_address-exist-ance_0');
         });
     });
 
-    describe('. moduleModificatorClass', function() {
+    describe('.modificatorClass', function() {
         it('Правильно составляет модификатор', function() {
             var name = 'addressExistance',
                 value = true;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '_addressExistance');
         });
@@ -69,7 +69,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = null;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '');
         });
@@ -78,7 +78,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '');
         });
@@ -87,7 +87,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = false;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '');
         });
@@ -96,7 +96,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = 0;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '_addressExistance_0');
         });
@@ -105,7 +105,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = true;
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '_addressExistance');
         });
@@ -115,7 +115,7 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = 'false';
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '');
         });
@@ -125,72 +125,72 @@ describe('Core -> namer', function() {
             var name = 'addressExistance',
                 value = 'true';
 
-            var mod = namer.moduleModificatorClass(name, value);
+            var mod = namer.modificatorClass(name, value);
 
             assert.equal(mod, '_addressExistance');
         });
     });
 
-    describe('-> elementModificatorClass', function() {
+    describe('-> modificatorClass', function() {
         it('Общие кейсы отдают правильные названия класса для модификатора элемента', function() {
             var name = 'visible',
                 value = true,
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.ok(mod === '_visible');
 
             value = 'true';
-            mod = namer.elementModificatorClass(name, value);
+            mod = namer.modificatorClass(name, value);
             assert.ok(mod === '_visible_true');
         });
 
         it('Передали значение false или null', function() {
             var name = 'visible',
                 value = false,
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.ok(mod === '');
 
             value = null;
-            mod = namer.elementModificatorClass(name, value);
+            mod = namer.modificatorClass(name, value);
             assert.ok(mod === '');
         });
 
         it('Передали значение undefined', function() {
             var name = 'visible',
                 value,
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.ok(mod === null);
         });
 
         it('Передали falsy имя модификатора', function() {
             var name = '',
                 value = 'what would you do without name huh?',
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.ok(mod === null);
 
             name = 0;
-            mod = namer.elementModificatorClass(name, value);
+            mod = namer.modificatorClass(name, value);
             assert.ok(mod === null);
 
             name = false;
-            mod = namer.elementModificatorClass(name, value);
+            mod = namer.modificatorClass(name, value);
             assert.ok(mod === null);
 
             name = undefined;
-            mod = namer.elementModificatorClass(name, value);
+            mod = namer.modificatorClass(name, value);
             assert.ok(mod === null);
         });
 
         it('Название класса ок, если имя состоит > чем из 1 слова', function() {
             var name = 'visibleMagic',
                 value = true,
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.equal(mod, '_visibleMagic');
         });
 
         it('Название класса ок, если значение состоит > чем из 1 слова', function() {
             var name = 'visibleMagic',
                 value = 'holyGlob',
-                mod = namer.elementModificatorClass(name, value);
+                mod = namer.modificatorClass(name, value);
             assert.ok(mod === '_visibleMagic_holyGlob');
         });
     });
@@ -223,7 +223,7 @@ describe('Core -> namer', function() {
 
     describe('-> getModificatorFromClass', function() {
         it('Самый простой модификатор', function() {
-            var className = 'online_full_true',
+            var className = '_full_true',
                 mod = { full: true };
 
             assert(namer.getModificatorFromClass(className), mod);
@@ -243,7 +243,7 @@ describe('Core -> namer', function() {
 
             assert.equal(namer.elementClass(module, element), 'simple__zazaza');
         });
-        
+
         it('Составной модуль простой элемент', function() {
             var module = 'cOm-plex',
                 element = 'element';
@@ -274,7 +274,7 @@ describe('Core -> namer', function() {
 
             assert.equal(namer.elementClass(module, element, true), 'simple__zazaza');
         });
-        
+
         it('Составной модуль простой элемент', function() {
             var module = 'cOm-plex',
                 element = 'element';

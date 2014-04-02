@@ -199,7 +199,7 @@ module.exports = function(app, moduleConf, slot) {
             _.each(mods, function(val, key) {
                 var modClass;
 
-                modClass = namer.moduleModificatorClass(key, val);
+                modClass = namer.modificatorClass(key, val);
 
                 classes.push(modClass);
             });
