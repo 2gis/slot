@@ -5,6 +5,38 @@ function convertDashToCamel(dashedString) {
         return $1[1].toUpperCase(); // $1 это строка типа "-a", "-B", поэтому берем второй символ этой строки
     });
 }
+/**
+ * Готовим значение модификатора для сохранения в класс
+ * @param  {} typedValue может быть любым. Null, undefined, false и NaN вернут false, true вернет true, число будет преобразовано в строку
+ * @return {Boolean|String}            true - надо выставить класс без значения, false - класс не нужен, string - значение модификатора
+ */
+function convertTypeToValue(typedValue) {
+    // Boolean не передаем
+    if (_(typedValue).isBoolean()) {
+        return typedValue;
+    }
+
+    // Undefined, NaN или null не передаем
+    if (!typedValue || _(typedValue).isNaN()) {
+        return false;
+    }
+
+    return typedValue.toString();
+}
+
+function convertValueToType(value) {
+    value = value.toString();
+
+    // Boolean не может прийти поэтому сразу пробуем преобразовать к числу
+    // Number
+    var convertedValue = parseFloat(value);
+    if (convertedValue.toString() === value) {
+        return convertedValue;
+    }
+
+    // Default
+    return value;
+}
 
 var namer = module.exports = {
 
@@ -14,96 +46,67 @@ var namer = module.exports = {
     },
 
     // Генерирует имя CSS-класса для модификатора модуля по неймингу BEVIS
-    moduleModificatorClass: function(name, value) {
+    modificatorClass: function(name, value) {
         var cls = '';
+        value = convertTypeToValue(value);
 
-        if ((value || value === 0) && value !== 'false') {
+        if (name && value) {
             cls += '_' + name;
 
-            if (value != 'true' && value !== true) cls += '_' + value;
+            // Если бы value булевое true, то значение выставлять не надо
+            if (_(value).isString()) cls += '_' + value;
         }
 
         return cls;
     },
 
     /**
-     * Модификатор начинается на подчеркивание и:
-     * 1. Если значение null или false - то у модификатора используется только ключ ( '_disabled' )
-     * 2. В остальных случаях модификатор включает и ключ и значение через подчеркивание ( '_color_green' )
-     *
-     * @param {jQuery} element
-     * @param {string} modificatorName
-     * @param {number|string|boolean|null} modificatorValue
-     * @returns {string|null}   Если вернуть null, то все равно можно скормить в jQuery.addClass,
-     *                          т.к. там проверка на тип входящего значения 'string'
-     */
-    elementModificatorClass: function(modificatorName, modificatorValue) {
-        // Имя modificatorName должно быть truthy
-        if (!modificatorName || modificatorValue === undefined) {
-            return null;
-        }
-
-        // убираем модификатор в случае если значение null или false
-        if (modificatorValue === null || modificatorValue === false) {
-            return '';
-        }
-
-        // модификатор начинается на подчеркивание
-        var modClass = '_' + modificatorName;
-        // опускаем значение в случае модификатора со значением true
-        if (modificatorValue !== true) {
-            modClass += '_' + modificatorValue;
-        }
-
-        return modClass;
-    },
-
-    /**
+     * Класс может быть типа _key_value, или _key если имеет булевое знаечение true
      * Смотрим, что:
-     * - класс начинается на название модуля
-     * - после него идет подчеркивание
-     * - всего класс содержит два подчеркивания: online_full_true
+     * - класс начинается с _
+     * - в классе содержится 1 или 2 повторения _([a-zA-Z\-]*)
      *
-     * @param {string} moduleName
      * @param {string} className
      * @returns {boolean}
      */
-    isClassAModificator: function(moduleName, className) {
-        var findUnderscores = /_/g,
+    isClassAModificator: function(className) {
+        var findUnderscores = /_([a-zA-Z0-9\-]*)/g,
             counter = 0,
-            moduleClass = namer.moduleClass(moduleName),
-            indexOfModuleClass = className.indexOf(moduleClass);
+            startsWithUnderscore = className.indexOf('_') == 0;
         while ( findUnderscores.exec(className) != null ) {
             counter++;
         }
-        return indexOfModuleClass == 0 && className[moduleClass.length] == '_' && counter == 2;
+        return startsWithUnderscore && counter >= 1 && counter <=2;
     },
 
     /**
      * Возвращает объект модификатора исходя из класса.
      * Берет слова (возможно, разделенные тире [a-zA-Z\-]) после подчеркивания, кемелкейсит их и возвращает объект.
-     * Пример: 'online_full-width_true' => { "fullWidth": "true" }
-     * (!) Применять только после isClassAModificator.
+     * Пример: '_full-width_true' => { "fullWidth": "true" }, '_full-width' => { "fullWidth": true }
      *
      * @param {string} className
      * @return {}
      */
     getModificatorFromClass: function(className) {
-        var getModificator = /_([a-zA-Z\-]*)/g,
-            modificator = [],
-            out = {},
-            continuePlease = true,
-            camelCasedClassName;
-        while (continuePlease) {
-            camelCasedClassName = convertDashToCamel(className);
-            modificator.push(getModificator.exec(camelCasedClassName)[1]); // exec возвращает массив вида [pattern, match, index, input]
+        if (!namer.isClassAModificator(className)) return {};
 
-            if (modificator.length == 2) {
-                continuePlease = false;
-            }
+        var getModificator = /_([a-zA-Z0-9\-]*)/g,
+            key, value,
+            out = {},
+            camelCasedClassName = convertDashToCamel(className);
+
+        // Получаем ключ
+        var key = getModificator.exec(camelCasedClassName)[1];
+        // Получаем значение, которого может и не быть
+        var valueMatch = getModificator.exec(camelCasedClassName);
+        if (valueMatch === null || valueMatch[1] === "") {
+            value = true;
+        } else {
+            value = convertValueToType(valueMatch[1]);
         }
 
-        out[modificator[0]] = modificator[1];
+        out[key] = value;
+
         return out;
     },
 

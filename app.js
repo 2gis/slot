@@ -53,9 +53,7 @@ module.exports = function() {
             var elementClasses = element[0].className.split(' ');
 
             _.each(elementClasses, function(className) {
-                if (namer.isClassAModificator(moduleWrapper.type, className)) {
-                    modificators = _.extend(modificators, namer.getModificatorFromClass(className));
-                }
+                modificators = _.extend(modificators, namer.getModificatorFromClass(className));
             });
         }
 
@@ -158,7 +156,7 @@ module.exports = function() {
                 block;
 
             _.each(modificators, function(val, key) {
-                newMods[key] = val !== null ? String(val) : null;
+                newMods[key] = val;
             });
 
             _.each(newMods, function(val, key) {
@@ -169,11 +167,11 @@ module.exports = function() {
                     if (app.isClient) { // или == 'bind' ?
                         block = app.block(moduleId);
 
-                        var oldModClass = namer.moduleModificatorClass(key, oldModVal);
+                        var oldModClass = namer.modificatorClass(key, oldModVal);
 
                         if (oldModClass) block.removeClass(oldModClass);
 
-                        var newModClass = namer.moduleModificatorClass(key, val);
+                        var newModClass = namer.modificatorClass(key, val);
 
                         if (newModClass) block.addClass(newModClass);
                     }

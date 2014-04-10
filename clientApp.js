@@ -62,8 +62,8 @@ module.exports = function() {
                     }
 
                     $(element)
-                        .removeClass(namer.elementModificatorClass(key, oldModVal))
-                        .addClass(namer.elementModificatorClass(key, val));
+                        .removeClass(namer.modificatorClass(key, oldModVal))
+                        .addClass(namer.modificatorClass(key, val));
                 });
 
                 element.mods = _.extend(element.mods || {}, modificators);
