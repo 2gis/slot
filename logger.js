@@ -11,8 +11,10 @@ var winstonModule = 'winston', // move module name to separate value to avoid br
     config = require('./config'),
     conf = config.group('logger'),
     confGraylog = conf.graylog;
+    confLogstash = conf.logstash;
 
 confGraylog.graylogHostname = config.innerhost;
+confLogstash.graylogHostname = config.innerhost;
 
 var configured = false;
 
@@ -27,6 +29,7 @@ if (!configured) {
     } else {
         try {
             winston.add(graylog2, confGraylog);
+            winston.add(graylog2, confLogstash);
         } catch (ex) {
             // pass
         }
