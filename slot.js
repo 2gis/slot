@@ -11,7 +11,11 @@ module.exports = function(app, params) {
         intervals = []; // Массив всех интервалов для текущей копии модуля
 
     function loadModule(conf) {
-        return app.loadModule({type: conf.type, parentId: moduleId});
+        // новый объект необязательно создавать
+        // сейчас нет и скорее всего не будет ситуации когда один и тот же конфиг передается на инициализацию разным слотам
+        // даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
+        conf.parentId = moduleId;
+        return app.loadModule(conf);
     }
 
     var componentsInfo = env.require('components/components.json');
