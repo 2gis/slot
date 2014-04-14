@@ -15,7 +15,7 @@
     "handlebars": "~1.0.12"
   },
   "optionalDependencies": {
-    "winston-graylog2": "~0.1.10"
+    "winston-graylog2": "git+ssh://git@github.com:krivchun/winston-graylog2.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

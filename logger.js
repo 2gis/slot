@@ -41,7 +41,7 @@ if (!configured) {
 
     // Логирование ошибок на клиенте
     winston.loggers.add('client', {
-        transports: [new (graylog2)(confGraylog)]
+        transports: [new (graylog2)(confGraylog), new (graylog2)(confLogstash)]
     });
     if (typeof DEBUG == 'undefined' || DEBUG) {
         winston.loggers.get('client').add(winston.transports.Console, {colorize: true});
