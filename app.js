@@ -34,7 +34,6 @@ module.exports = function() {
     }
 
     var registry = {
-        escModulesOrder: [] // список модулей которые будем закрывать по esc
     };
 
     /**
