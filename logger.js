@@ -11,8 +11,10 @@ var winstonModule = 'winston', // move module name to separate value to avoid br
     config = require('./config'),
     conf = config.group('logger'),
     confGraylog = conf.graylog;
+    confLogstash = conf.logstash;
 
 confGraylog.graylogHostname = config.innerhost;
+confLogstash.graylogHostname = config.innerhost;
 
 var configured = false;
 
@@ -27,6 +29,7 @@ if (!configured) {
     } else {
         try {
             winston.add(graylog2, confGraylog);
+            winston.add(graylog2, confLogstash);
         } catch (ex) {
             // pass
         }
@@ -38,7 +41,7 @@ if (!configured) {
 
     // Логирование ошибок на клиенте
     winston.loggers.add('client', {
-        transports: [new (graylog2)(confGraylog)]
+        transports: [new (graylog2)(confGraylog), new (graylog2)(confLogstash)]
     });
     if (typeof DEBUG == 'undefined' || DEBUG) {
         winston.loggers.get('client').add(winston.transports.Console, {colorize: true});
