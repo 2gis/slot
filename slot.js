@@ -35,6 +35,10 @@ module.exports = function(app, params) {
         runInQueue: app.runInQueue,
 
         initModule: function(moduleConf, callback) {
+            // Если слот умер - ничего инитить нет смысла,
+            // потому что слот умирает вместе с родительским модулем
+            if (slot.stage == 'disposed' || slot.stage == 'killed') return;
+
             var module = loadModule(moduleConf);
 
             module.init(moduleConf.data, function(err) {
