@@ -151,62 +151,64 @@ module.exports = function() {
         mod: function(moduleId, modificators) {
             var module = app.getModuleById(moduleId);
 
-            var oldMods = module.mods,
-                newMods = {},
-                block;
+            if (modificators) { // Без аргумента работает как геттер
+                var oldMods = _.clone(module.mods),
+                    newMods = {},
+                    block;
 
-            _.each(modificators, function(val, key) {
-                newMods[key] = val;
-            });
+                _.each(modificators, function(val, key) {
+                    newMods[key] = val;
+                });
 
-            _.each(newMods, function(val, key) {
-                var oldModVal = oldMods[key];
+                _.extend(module.mods, newMods);
 
-                if (oldModVal !== val) {
+                _.each(newMods, function(val, key) {
+                    var oldModVal = oldMods[key];
 
-                    if (app.isClient) { // или == 'bind' ?
-                        block = app.block(moduleId);
+                    if (oldModVal !== val) {
 
-                        var oldModClass = namer.modificatorClass(key, oldModVal);
+                        if (app.isClient) { // или == 'bind' ?
+                            block = app.block(moduleId);
 
-                        if (oldModClass) block.removeClass(oldModClass);
+                            var oldModClass = namer.modificatorClass(key, oldModVal);
 
-                        var newModClass = namer.modificatorClass(key, val);
+                            if (oldModClass) block.removeClass(oldModClass);
 
-                        if (newModClass) block.addClass(newModClass);
-                    }
+                            var newModClass = namer.modificatorClass(key, val);
 
-                    var handlers = module.instance.modHandlers;
-                    if (handlers && handlers[key]) { // Вызов деклараций установки или удаления модификатора
-                        if (val != null) {
-                            if (handlers[key].set) handlers[key].set.call(module.instance, val);
-                        } else {
-                            if (handlers[key].remove) handlers[key].remove.call(module.instance);
+                            if (newModClass) block.addClass(newModClass);
                         }
 
-                    }
+                        var handlers = module.instance.modHandlers;
+                        if (handlers && handlers[key]) { // Вызов деклараций установки или удаления модификатора
+                            if (val != null) {
+                                if (handlers[key].set) handlers[key].set.call(module.instance, val);
+                            } else {
+                                if (handlers[key].remove) handlers[key].remove.call(module.instance);
+                            }
 
-                    if (DEBUG) {
-                        /**
-                         * modHandler, который вызывается при изменении ЛЮБОГО модификатора
-                         *
-                         * Пример использования:
-                         *
-                         * modHandlers: {
-                         *     ...
-                         *     _any: function(key, val) {
-                         *         shmonsole.loh(key, val);
-                         *     }
-                         * }
-                         */
-                        if (handlers && handlers._any) {
-                            if (handlers._any.change) handlers._any.change.call(module.instance, key, val);
+                        }
+
+                        if (DEBUG) {
+                            /**
+                             * modHandler, который вызывается при изменении ЛЮБОГО модификатора
+                             *
+                             * Пример использования:
+                             *
+                             * modHandlers: {
+                             *     ...
+                             *     _any: function(key, val) {
+                             *         shmonsole.loh(key, val);
+                             *     }
+                             * }
+                             */
+                            if (handlers && handlers._any) {
+                                if (handlers._any.change) handlers._any.change.call(module.instance, key, val);
+                            }
                         }
                     }
-                }
-            });
-
-            _.extend(module.mods, newMods);
+                });
+            }
 
             return module.mods;
         },
