@@ -283,8 +283,8 @@ module.exports = function() {
             });
 
             if (on) {
-                module.wrapper.bind();
                 module.wrapper.clientInit();
+                module.wrapper.bind();
             }
 
             // Рекурсивно вызываем функцию для всех дочерних элементов
