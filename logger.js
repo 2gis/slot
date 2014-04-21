@@ -26,14 +26,15 @@ if (!configured) {
     winston.remove(winston.transports.Console);
     if (typeof DEBUG == 'undefined' || DEBUG) {
         winston.add(winston.transports.Console, {colorize: true});
-    } else {
-        try {
-            winston.add(graylog2, confGraylog);
-            winston.add(graylog2, confLogstash);
-        } catch (ex) {
-            // pass
-        }
     }
+
+    try {
+        winston.add(graylog2, confGraylog);
+        winston.add(graylog2, confLogstash);
+    } catch (ex) {
+        // pass
+    }
+
 
     // Логирование ликов
     winston.loggers.add('leaks', conf.leaks);
