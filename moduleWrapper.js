@@ -103,7 +103,9 @@ module.exports = function(app, moduleConf, slot) {
 
             var done = function(err) {
                 if (callback) callback(err);
-                if (!err) {
+                // При асинхронном ините модуля слот мог умереть раньше,
+                // чем завершится инициализация, и не надо перезаписывать его стэйдж!
+                if (!err && slot.stage == 'initing') {
                     slot.stage = 'inited';
                 }
             };
