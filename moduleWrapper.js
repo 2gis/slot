@@ -1,5 +1,4 @@
-var utils = require('./utils'),
-    _ = require('underscore'),
+var _ = require('underscore'),
     namer = require('./namer'),
     templateProvider = require('./templateProvider'),
     handlebars = require('handlebars');
@@ -92,6 +91,17 @@ module.exports = function(app, moduleConf, slot) {
         return tmpl(ctx, getTmplOptions());
     };
 
+    function renderTag(tag, attrs, content) {
+        // Собираем все HTML-аттрибуты в строку
+        var attributesString = _.reduce(attrs, makeAttributes, '');
+
+        function makeAttributes(memo, val, key) {
+            return memo + ' ' + key + '="' + val + '"';
+        }
+
+        return '<' + tag + attributesString + '>' + content + '</' + tag + '>';
+    }
+
     moduleWrapper = {
 
         // Initializes the module with the given params. Invokes callback when init process is ready
@@ -144,10 +154,11 @@ module.exports = function(app, moduleConf, slot) {
             }
         },
 
-        // Renders the module and wraps it in a div with special metadata to identify this module in DOM.
-        // Returns rendered HTML.
         /**
-         * @param {object} customViewContext - объект, который пошлется в шаблон вместо viewContext модуля
+         * Renders the module and wraps it in a div with special metadata to identify this module in DOM.
+         * @param {object} [customViewContext] - объект, который пошлется в шаблон вместо viewContext модуля
+         *
+         * @returns {String} rendered HTML
          */
         render: function(customViewContext) {
             var realvc,
@@ -163,8 +174,6 @@ module.exports = function(app, moduleConf, slot) {
                 moduleClass,
                 classString,
                 classes,
-                attributesString,
-                html,
                 blockName = moduleConf.block || moduleConf.type;
 
             realvc = (moduleConf.viewContext) ? moduleConf.viewContext(customViewContext) : ""; // Вызов метода viewContext должен быть всегда
@@ -199,27 +208,14 @@ module.exports = function(app, moduleConf, slot) {
             classes.push(moduleClass);
 
             _.each(mods, function(val, key) {
-                var modClass;
-
-                modClass = namer.modificatorClass(key, val);
+                var modClass = namer.modificatorClass(key, val);
 
                 classes.push(modClass);
             });
 
-            classes = _.uniq(classes);
+            attrs['class'] = _.uniq(classes).join(' ');
 
-            attrs['class'] = classes.join(' ');
-
-            // Собираем все HTML-аттрибуты в строку
-            attributesString = _.reduce(attrs, makeAttributes, '');
-
-            function makeAttributes(memo, val, key) {
-                return memo + ' ' + key + '="' + val + '"';
-            }
-
-            html = '<' + tag + attributesString + '>' + compiledTemplateHTML + '</' + tag + '>';
-
-            return html;
+            return renderTag(tag, attrs, compiledTemplateHTML);
         },
 
         bindEvents: function(elementName) {
