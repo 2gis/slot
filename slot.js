@@ -90,10 +90,10 @@ module.exports = function(app, params) {
             async.mapSeries(modules, slot.initModule, callback);
         },
 
-        requireComponent: function(name) {
+        requireComponent: function(name, extraArgs) {
             var component;
             if (_.contains(componentsInfo.cancelableApis, name)) {
-                component = app.newComponent(name);
+                component = app.newComponent(name, extraArgs);
                 component.on('request', function(req) {
                     requests.push(req);
                 });
@@ -101,7 +101,7 @@ module.exports = function(app, params) {
                     requests = _.without(requests, req);
                 });
             } else {
-                component = app.requireComponent(name);
+                component = app.requireComponent(name, extraArgs);
             }
             return component;
         },

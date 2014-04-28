@@ -61,6 +61,10 @@ module.exports = function() {
         return modificators;
     }
 
+    function loadComponent(app, name) {
+        return app.require('components/' + name + '/' + name);
+    }
+
     /**
      * Выставляем версию браузера
      *
@@ -279,16 +283,22 @@ module.exports = function() {
 
         newComponent: function(name, extraArgs) {
             extraArgs = extraArgs || [];
-            var componentConstructor = app.require('components/' + name + '/' + name);
+            var componentConstructor = loadComponent(app, name);
 
             return app.invoke(componentConstructor, [app].concat(extraArgs));
         },
 
         requireComponent: function(name, extraArgs) {
-            if (!app.components[name]) {
-                app.components[name] = app.newComponent(name, extraArgs);
+            var componentConstructor = loadComponent(app, name);
+
+            var identityKey = name;
+            if (componentConstructor.identity) {
+                identityKey = componentConstructor.identity.apply(componentConstructor, [name].concat(extraArgs));
             }
-            return app.components[name];
+            if (!app.components[identityKey]) {
+                app.components[identityKey] = app.newComponent(name, extraArgs);
+            }
+            return app.components[identityKey];
         },
 
         queryModules: queryModules,
