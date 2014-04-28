@@ -495,7 +495,9 @@ module.exports = function() {
         getModuleById: function(moduleId) {
             var module = internals.moduleInstances[moduleId];
 
-            if (!module) console.error('No module with moduleId ' + moduleId + ' found. All modules: ', internals.moduleInstances, '1');
+            if (!module) {
+                console.error('No module with moduleId ' + moduleId + ' found.');
+            }
 
             return module;
         },
