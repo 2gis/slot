@@ -25,11 +25,6 @@ module.exports = function(app, params) {
         modules: {},
         utils: utils,
         config: app.config,
-        isEnableShowTrack: true,
-
-        disableShowTrack: function() {
-            this.isEnableShowTrack = false;
-        },
 
         addTransition: app.addTransition,
         runInQueue: app.runInQueue,
