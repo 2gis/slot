@@ -30,19 +30,6 @@ function getNounDeclension(number, one, two, five) {
 }
 
 /**
- * Склоняет и добавляет число в начало
- *
- * @param {Number} number - число
- * @param {String} one - форма для 1-го
- * @param {String} two - форма для 2-х
- * @param {String} five - форма для 5-ти
- * @returns {String}
- */
-globals._t = exports._t = function(num, one, two, five) {
-    return num + ' ' + getNounDeclension(num, one, two, five);
-};
-
-/**
  * Склоняет и возвращает без числа
  *
  * @param {Number} number - число
