@@ -94,6 +94,10 @@ module.exports = function(app, moduleConf, slot) {
         return tmpl(ctx, getTmplOptions());
     };
 
+    slot.hasPartial = function(name) {
+        return name in templatePartials;
+    };
+
     function renderTag(tag, attrs, content) {
         // Собираем все HTML-аттрибуты в строку
         var attributesString = _.reduce(attrs, makeAttributes, '');
