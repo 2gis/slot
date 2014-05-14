@@ -376,35 +376,11 @@ module.exports = function() {
                 moduleConstructor = app.requireModuleJs(moduleName),
                 slot = app.invoke(slotConstructor, [app, {
                     moduleId: moduleId,
-                    templates: wrapTemplates(moduleName, moduleId)
+                    templates: templateProvider.getTemplatesForModule(moduleName)
                 }]);
 
             if (!_.isFunction(moduleConstructor)) { // если возвращает не функцию — ругаемся
                 throw new Error('Bad module: ' + moduleName);
-            }
-
-            function wrapTemplates(moduleName, moduleId) {
-                var templates = templateProvider.getTemplatesForModule(moduleName);
-                var wrappedTemplates = {};
-
-                _.each(templates, function(template, templateName) {
-                    wrappedTemplates[templateName] = function(templateData, options) {
-                        if (!templateData) {
-                            templateData = {};
-                        }
-
-                        templateData.module = {
-                            id: moduleId,
-                            type: moduleName
-                        };
-
-                        var html = template.call(this, templateData, options);
-
-                        return html;
-                    };
-                });
-
-                return wrappedTemplates;
             }
 
             var module = app.invoke(moduleConstructor, [slot], slot.requireComponent);

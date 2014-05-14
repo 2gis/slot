@@ -1,6 +1,5 @@
 var _ = require('underscore'),
     namer = require('./namer'),
-    templateProvider = require('./templateProvider'),
     handlebars = require('handlebars');
 
 // Module wrapper expects a raw module objects as an argument for constructor.
@@ -8,22 +7,13 @@ module.exports = function(app, moduleConf, slot) {
 
     // register default partials and helpers for current module
 
-    var templates = templateProvider.getTemplatesForModule(moduleConf.type),
+    var templates = slot.templates,
         templatePartials,
         templateHelpers,
         clientInitCalled = false,
         moduleWrapper;
 
-    templatePartials = (function() {
-        var partials = {};
-
-        _.each(templates, function(template, name) {
-            if (name == moduleConf.type) return;
-            partials[name] = template;
-        });
-
-        return partials;
-    })();
+    templatePartials = _.omit(templates, moduleConf.type);
 
     // Кастомные хелперы
     templateHelpers = {
