@@ -259,10 +259,8 @@ module.exports = function() {
                     dispatcher = module.dispatcher;
 
                 if (dispatcher) {
-                    var actions = _.compact(_.map(['*', notifiedModule.type], function(type) { // Выбираем существующие действия диспетчера по маскам *: и type:
-                        activeModule.slot.sender = notifiedModule;
-                        return dispatcher[type + ':' + message];
-                    }));
+                    activeModule.slot.sender = notifiedModule;
+                    var actions = _.flatten(_.compact([dispatcher['*:' + message], dispatcher[notifiedModule.type + ':' + message]]));
 
                     _.each(actions, function(action) { // Выполняем действия диспетчера
                         var result = action.apply(event, args);
