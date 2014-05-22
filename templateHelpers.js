@@ -1,5 +1,4 @@
 var _ = require('underscore'),
-    i18n =  require('./i18n'),
     templateProvider = require('./templateProvider'),
     env = require('./env'),
     helperBlocks = env.requirePrivate('helperBlocks');
@@ -10,12 +9,6 @@ exports.registerHelpers = function(handlebars, blockHelpers) {
     handlebars.registerHelper('increment', function(options) {
         return options.hash.index + 1;
     });
-
-    handlebars.registerHelper('_t', i18n._t);
-
-    handlebars.registerHelper('_tt', i18n._tt);
-
-    handlebars.registerHelper('_g', i18n._g);
 
     handlebars.registerHelper('ifand', function() {
         var options = arguments[arguments.length-1],
