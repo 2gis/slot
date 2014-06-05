@@ -6,55 +6,99 @@ var transitionsHelper = require('./transitions');
 
 
 module.exports = function() {
-    var baseApp = baseAppConstructor(),
-        app = baseApp.instance,
-        internals = baseApp.internals;
+    var baseApp = baseAppConstructor();
+    var app = baseApp.instance;
+    var internals = baseApp.internals;
+    var appBinded = false; // Флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
+
+    /**
+     * @param {string} str String seperated by '-'
+     * @returns {string} Camel case string
+     */
+    function dashedToCamelCase(str) {
+        return str.replace(/\-([a-z])/g, function(match, chr) {
+            return chr.toUpperCase();
+        });
+    }
+
+    // для сплита Element#className
+    var reSpace = /\s+/g;
+    // для проверки является ли кусок из Element#className модификатором
+    var reMod = /^_([^_]+)(?:_(.+))?/i;
 
     if (typeof $ != 'undefined') {
         /**
          * jQuery плагин, который:
-         * - выставляет модификатор элементу
-         * - запрашивает модификаторы элемента
+         * - выставляет модификаторы элементу;
+         * - запрашивает модификаторы элемента.
          *
          * Особенности:
-         * НЕ дергает modHandlers
-         * НЕ работает на сервере, соответственно не пытаемся собирать эти модификаторы на клиенте
-         * Частично повторяет логику app.mod
-         * При попытке получить или установить/запросить модификатор на несуществующий элемент, получаем undefined
+         * - НЕ дергает modHandlers;
+         * - НЕ работает на сервере, соответственно не пытаемся собирать эти модификаторы на клиенте;
+         * - частично повторяет логику app.mod ;
+         * - при отсутствии элементов, получаем undefined.
          *
-         * @param {object|undefined} modificators
-         *     Если объект, то устанавливает переданные модификаторы и возвращает все модификаторы
-         *     Если undefined, просто возвращает объект-модификаторы
+         * @param {Object} [modificators]
+         *     Если указан, то устанавливает переданные модификаторы и возвращает все модификаторы.
+         *     Если не указан, просто возвращает модификаторы.
          *
-         * @returns {object} модификаторы первого элемента. Если нужна другая логика - сообщите по адресу: г. Новосибирск, площадь Маркса 7.
+         * @returns {Object} Модификаторы первого элемента.
          */
-        $.fn.mod = function(modificators) {
-            var firstMod;
+        $.fn.mod = function(mods) {
+            var firstEl = this[0];
 
-            modificators = modificators || {};
+            if (firstEl === undefined) {
+                return firstEl;
+            }
 
-            this.each(function(i, element) {
-                var oldMods = element.mods || {};
+            // нет модификаторов для установки -> просто возращаем mods первого элемента
+            if (mods == null) {
+                // если mods не установлен, парсим и устанавливаем его из className
+                return firstEl.mods || (
+                    firstEl.mods = _.reduce(
+                        firstEl.className.trim().split(reSpace),
+                        function(mods, name) {
+                            if (reMod.test(name)) {
+                                mods[dashedToCamelCase(RegExp.$1)] = RegExp.$2 || true;
+                            }
+                            return mods;
+                        },
+                        {}
+                    )
+                );
+            }
 
-                _.each(modificators, function(val, key) {
-                    var oldModVal = oldMods[key];
+            this.each(function(index, el) {
+                // оптимизация: $.removeClass и $.addClass парсят регулярками при каждом применении,
+                // а так как применений может быть много, лучше распарсить один раз и работать уже с массивом.
+                var classNames = el.className.trim().split(reSpace);
+                // читаем через $.mod() , чтобы распарсился из className, если еще не успел.
+                var elMods = $(el).mod();
 
-                    if (oldModVal === val) return;
+                _.each(mods, function(value, name) {
+                    var modVal = elMods[name];
 
-                    if (oldModVal == undefined && (val === false || val === null)) { // Кейс когда html прилетел с сервера
-                        oldModVal = true;
+                    if (value == modVal) {
+                        return;
                     }
 
-                    $(element)
-                        .removeClass(namer.modificatorClass(key, oldModVal))
-                        .addClass(namer.modificatorClass(key, val));
+                    // есть что-то для удаления
+                    if (modVal != null && modVal != false && (typeof modVal != 'number' || !isNaN(modVal))) {
+                        classNames.splice(classNames.indexOf(namer.modificatorClass(name, modVal)), 1);
+                    }
+
+                    // есть что-то для добавления
+                    if (value != null && value != false && (typeof value != 'number' || !isNaN(value))) {
+                        classNames.push(namer.modificatorClass(name, value));
+                    }
+
+                    elMods[name] = value;
                 });
 
-                element.mods = _.extend(element.mods || {}, modificators);
-                firstMod = firstMod || element.mods;
+                el.className = classNames.join(' ');
             });
 
-            return firstMod;
+            return firstEl.mods;
         };
 
         /**

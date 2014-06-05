@@ -8,16 +8,16 @@ function convertDashToCamel(dashedString) {
 /**
  * Готовим значение модификатора для сохранения в класс
  * @param  {} typedValue может быть любым. Null, undefined, false и NaN вернут false, true вернет true, число будет преобразовано в строку
- * @return {Boolean|String}            true - надо выставить класс без значения, false - класс не нужен, string - значение модификатора
+ * @return {Boolean|String} true - надо выставить класс без значения, false - класс не нужен, string - значение модификатора
  */
 function convertTypeToValue(typedValue) {
-    // Boolean не передаем
+    // boolean возвращаем без изменений
     if (_(typedValue).isBoolean()) {
         return typedValue;
     }
 
-    // Undefined, NaN или null не передаем
-    if (!typedValue || _(typedValue).isNaN()) {
+    // null, undefined и NaN становятся false
+    if (typedValue == null || _(typedValue).isNaN()) {
         return false;
     }
 
