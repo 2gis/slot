@@ -11,21 +11,6 @@ module.exports = function() {
     var internals = baseApp.internals;
     var appBinded = false; // Флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
 
-    /**
-     * @param {string} str String seperated by '-'
-     * @returns {string} Camel case string
-     */
-    function dashedToCamelCase(str) {
-        return str.replace(/\-([a-z])/g, function(match, chr) {
-            return chr.toUpperCase();
-        });
-    }
-
-    // для сплита Element#className
-    var reSpace = /\s+/g;
-    // для проверки является ли кусок из Element#className модификатором
-    var reMod = /^_([^_]+)(?:_(.+))?/i;
-
     if (typeof $ != 'undefined') {
         /**
          * jQuery плагин, который:
@@ -35,7 +20,7 @@ module.exports = function() {
          * Особенности:
          * - НЕ дергает modHandlers;
          * - НЕ работает на сервере, соответственно не пытаемся собирать эти модификаторы на клиенте;
-         * - частично повторяет логику app.mod ;
+         * - частично повторяет логику app.mod;
          * - при отсутствии элементов, получаем undefined.
          *
          * @param {Object} [modificators]
@@ -52,47 +37,49 @@ module.exports = function() {
             }
 
             // нет модификаторов для установки -> просто возращаем mods первого элемента
-            if (mods == null) {
+            if (!mods) {
                 // если mods не установлен, парсим и устанавливаем его из className
                 return firstEl.mods || (
-                    firstEl.mods = _.reduce(
-                        firstEl.className.trim().split(reSpace),
-                        function(mods, name) {
-                            if (reMod.test(name)) {
-                                mods[dashedToCamelCase(RegExp.$1)] = RegExp.$2 || true;
-                            }
-                            return mods;
-                        },
-                        {}
-                    )
+                    firstEl.mods = namer.getModificatorsFromClassName(firstEl.className)
                 );
             }
 
             this.each(function(index, el) {
                 // оптимизация: $.removeClass и $.addClass парсят регулярками при каждом применении,
                 // а так как применений может быть много, лучше распарсить один раз и работать уже с массивом.
-                var classNames = el.className.trim().split(reSpace);
+                var classNames = el.className.match(/\S+/g) || [];
                 // читаем через $.mod() , чтобы распарсился из className, если еще не успел.
                 var elMods = $(el).mod();
 
-                _.each(mods, function(value, name) {
-                    var modVal = elMods[name];
+                _.each(mods, function(newValue, name) {
+                    var currentValue = elMods[name];
 
-                    if (value == modVal) {
+                    if (newValue == currentValue) {
                         return;
                     }
 
                     // есть что-то для удаления
-                    if (modVal != null && modVal != false && (typeof modVal != 'number' || !isNaN(modVal))) {
-                        classNames.splice(classNames.indexOf(namer.modificatorClass(name, modVal)), 1);
+                    if (
+                        currentValue != null &&
+                            currentValue != false &&
+                            (typeof currentValue != 'number' || !isNaN(currentValue))
+                    ) {
+                        classNames.splice(
+                            classNames.indexOf(namer.modificatorClass(name, currentValue)),
+                            1
+                        );
                     }
 
                     // есть что-то для добавления
-                    if (value != null && value != false && (typeof value != 'number' || !isNaN(value))) {
-                        classNames.push(namer.modificatorClass(name, value));
+                    if (
+                        newValue != null &&
+                            newValue != false &&
+                            (typeof newValue != 'number' || !isNaN(newValue))
+                    ) {
+                        classNames.push(namer.modificatorClass(name, newValue));
                     }
 
-                    elMods[name] = value;
+                    elMods[name] = newValue;
                 });
 
                 el.className = classNames.join(' ');

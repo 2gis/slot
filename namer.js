@@ -1,123 +1,89 @@
 var _ = require('lodash');
 
-function convertDashToCamel(dashedString) {
-    return dashedString.toString().replace(/(-[a-zA-Z])/g, function($1) {
-        return $1[1].toUpperCase(); // $1 это строка типа "-a", "-B", поэтому берем второй символ этой строки
-    });
-}
+// модификатор класса
+var reClassMod = /^_([\-0-9a-zA-Z]+)(?:_(\S+))?$/;
+
 /**
- * Готовим значение модификатора для сохранения в класс
- * @param  {} typedValue может быть любым. Null, undefined, false и NaN вернут false, true вернет true, число будет преобразовано в строку
- * @return {Boolean|String} true - надо выставить класс без значения, false - класс не нужен, string - значение модификатора
+ * Готовит значение для сохранения в модификаторе класса.
+ *
+ * @param {*} value Может быть любым. Null, undefined, false и NaN вернут false, true вернет true,
+ *                  число будет преобразовано в строку.
+ * @returns {boolean|string} true - надо выставить класс без значения, false - класс не нужен,
+ *                           string - значение модификатора.
  */
-function convertTypeToValue(typedValue) {
-    // boolean возвращаем без изменений
-    if (_(typedValue).isBoolean()) {
-        return typedValue;
+function prepareValueForClassMod(value) {
+    // boolean возвращается без изменений
+    if (typeof value == 'boolean') {
+        return value;
     }
 
     // null, undefined и NaN становятся false
-    if (typedValue == null || _(typedValue).isNaN()) {
+    if (value == null || _(value).isNaN()) {
         return false;
     }
 
-    return typedValue.toString();
+    return value.toString();
 }
 
-function convertValueToType(value) {
-    value = value.toString();
-
-    // Boolean не может прийти поэтому сразу пробуем преобразовать к числу
-    // Number
-    var convertedValue = parseFloat(value);
-    if (convertedValue.toString() === value) {
-        return convertedValue;
-    }
-
-    // Default
-    return value;
+/**
+ * @param {string} value
+ * @returns {number|string}
+ */
+function tryValueAsNumber(value) {
+    var num = Number(value);
+    return isNaN(num) ? value : num;
 }
 
 var namer = module.exports = {
-
-    // Генерирует имя CSS-класса для модуля
+    /**
+     * Генерирует имя CSS-класса для модуля.
+     *
+     * @param {string} moduleName
+     * @returns {string}
+     */
     moduleClass: function(moduleName) {
         return moduleName;
     },
 
-    // Генерирует имя CSS-класса для модификатора модуля по неймингу BEVIS
-    modificatorClass: function(name, value) {
-        var cls = '';
-        value = convertTypeToValue(value);
-
-        if (name && value) {
-            cls += '_' + name;
-
-            // Если бы value булевое true, то значение выставлять не надо
-            if (_(value).isString()) cls += '_' + value;
-        }
-
-        return cls;
-    },
-
     /**
-     * Класс может быть типа _key_value, или _key если имеет булевое знаечение true
-     * Смотрим, что:
-     * - класс начинается с _
-     * - в классе содержится 1 или 2 повторения _([a-zA-Z\-]*)
+     * Генерирует имя CSS-класса для внутреннего элемента модуля.
      *
-     * @param {string} className
-     * @returns {boolean}
-     */
-    isClassAModificator: function(className) {
-        var findUnderscores = /_([a-zA-Z0-9\-]*)/g,
-            counter = 0,
-            startsWithUnderscore = className.indexOf('_') == 0;
-        while ( findUnderscores.exec(className) != null ) {
-            counter++;
-        }
-        return startsWithUnderscore && counter >= 1 && counter <=2;
-    },
-
-    /**
-     * Возвращает объект модификатора исходя из класса.
-     * Берет слова (возможно, разделенные тире [a-zA-Z\-]) после подчеркивания, кемелкейсит их и возвращает объект.
-     * Пример: '_full-width_true' => { "fullWidth": "true" }, '_full-width' => { "fullWidth": true }
-     *
-     * @param {string} className
-     * @return {}
-     */
-    getModificatorFromClass: function(className) {
-        if (!namer.isClassAModificator(className)) return {};
-
-        var getModificator = /_([a-zA-Z0-9\-]*)/g,
-            key, value,
-            out = {},
-            camelCasedClassName = convertDashToCamel(className);
-
-        // Получаем ключ
-        var key = getModificator.exec(camelCasedClassName)[1];
-        // Получаем значение, которого может и не быть
-        var valueMatch = getModificator.exec(camelCasedClassName);
-        if (valueMatch === null || valueMatch[1] === "") {
-            value = true;
-        } else {
-            value = convertValueToType(valueMatch[1]);
-        }
-
-        out[key] = value;
-
-        return out;
-    },
-
-    /**
-     * Возвращает имя элемента в бэм-представлении
-     *
-     * @moduleName {string} имя модуля
-     * @elementName {string} имя элемента
-     * @return {string} имя элемента
+     * @param {string} moduleName
+     * @param {string} elementName
+     * @returns {string}
      */
     elementClass: function(moduleName, elementName) {
         return moduleName + '__' + elementName;
+    },
+
+    /**
+     * Генерирует имя CSS-класса для модификатора класса.
+     *
+     * @param {string} name
+     * @param {*} value
+     * @returns {string}
+     */
+    modificatorClass: function(name, value) {
+        value = prepareValueForClassMod(value);
+        return value === false ? '' : '_' + name + (value === true ? '' : '_' + value);
+    },
+
+    /**
+     * Вычисляет объект модификаторов класса.
+     *
+     * @param {string} className
+     * @returns {Object}
+     */
+    getModificatorsFromClassName: function(className) {
+        return _.reduce(
+            className.match(/\S+/g) || [],
+            function(mods, name) {
+                if (reClassMod.test(name)) {
+                    mods[RegExp.$1] = RegExp.$2 == '' ? true : tryValueAsNumber(RegExp.$2);
+                }
+                return mods;
+            },
+            {}
+        );
     }
 };
