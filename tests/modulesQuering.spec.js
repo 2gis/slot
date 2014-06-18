@@ -1,5 +1,5 @@
 
-var Quering = require('./modulesQuering'),
+var Quering = require('../modulesQuering'),
     _ = require('underscore'),
     assert = require('assert');
 

@@ -1,5 +1,6 @@
 
 var rootPath = './',
+    events = require('events'),
     _ = require('underscore');
 
 require('./polyfill');
@@ -53,8 +54,6 @@ exports.requirePrivate = function(name) {
     return require(getBuildPath() + 'private/' + name + '.js');
 };
 
-globals().requirePrivate = exports.requirePrivate;
-
 var isServer = typeof window == 'undefined';
 
 /**
@@ -76,11 +75,63 @@ function envRequire(serverName, clientName) {
     }
 }
 
+var conf = {};
+var confEmitter = new events.EventEmitter();
+
+/**
+ * Настройка окружения некоторым значением
+ * @param {object} cfg
+ */
+function _set(name, value) {
+    if (name in conf) {
+        throw new Error("Environment field " + name + " already configured");
+    }
+    conf[name] = value;
+    confEmitter.emit(name, value);
+}
+
+/**
+ * Берем что-либо из настроенного окружения
+ *
+ * Если значения нет - бросаем ошибку, мол, не все проинициализировали
+ * @param name
+ */
+function _get(name) {
+    if (name in conf) {
+        return conf[name];
+    }
+    throw new Error("Environment not configured for " + name + " field");
+}
+
+/**
+ * Настройка окружения некоторым конфигом
+ * @param {object} cfg
+ */
+exports.setup = function(cfg) {
+    for (var name in cfg) {
+        if (cfg.hasOwnProperty(name)) {
+            _set(name, cfg[name]);
+        }
+    }
+};
+
+exports.get = _get;
+exports.set = _set;
+
+exports.onceConfigured = function(name, callback) {
+    if (name in conf) {
+        callback(conf[name]);
+    } else {
+        confEmitter.once(name, callback);
+    }
+};
+
 
 // ---- expose same functions as globals -----
 
 globals().req = exports.require;
 globals().envRequire = envRequire;
+globals().requirePrivate = exports.requirePrivate;
 
 if (!Object.freeze) Object.freeze = _.identity;
 

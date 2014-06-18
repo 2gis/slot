@@ -5,14 +5,15 @@
 
 var _ = require('underscore');
 
-var utils = require('./utils'),
-    injector = require('./injector'),
+var injector = require('./injector'),
     env = require('./env'),
     templateProvider = require('./templateProvider'),
     modulesQuering = require('./modulesQuering'),
     smokesignals = envRequire('smokesignals'),
     namer = require('./namer'),
     config = require('./config');
+
+require('./templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
 
 module.exports = function() {
     var internals = {
@@ -59,10 +60,6 @@ module.exports = function() {
         collectModificators(moduleWrapper.block());
 
         return modificators;
-    }
-
-    function loadComponent(app, name) {
-        return app.require('components/' + name + '/' + name);
     }
 
     /**
@@ -279,15 +276,19 @@ module.exports = function() {
             return retValue;
         },
 
+        loadComponent: function(name) {
+            return app.require('components/' + name + '/' + name);
+        },
+
         newComponent: function(name, extraArgs) {
             extraArgs = extraArgs || [];
-            var componentConstructor = loadComponent(app, name);
+            var componentConstructor = app.loadComponent(name);
 
             return app.invoke(componentConstructor, [app].concat(extraArgs));
         },
 
         requireComponent: function(name, extraArgs) {
-            var componentConstructor = loadComponent(app, name);
+            var componentConstructor = app.loadComponent(name);
 
             var identityKey = name;
             if (componentConstructor.identity) {
@@ -376,7 +377,7 @@ module.exports = function() {
                 moduleConstructor = app.requireModuleJs(moduleName),
                 slot = app.invoke(slotConstructor, [app, {
                     moduleId: moduleId,
-                    templates: templateProvider.getTemplatesForModule(moduleName)
+                    templates: templateProvider.forModule(moduleName)
                 }]);
 
             if (!_.isFunction(moduleConstructor)) { // если возвращает не функцию — ругаемся

@@ -1,7 +1,5 @@
 var async = require('async'),
     _ = require('underscore'),
-    utils = require('./utils'),
-    env = require('./env'),
     smokesignals = envRequire('smokesignals');
 
 module.exports = function(app, params) {
@@ -18,12 +16,9 @@ module.exports = function(app, params) {
         return app.loadModule(conf);
     }
 
-    var componentsInfo = env.require('components/components.json');
-
     var slot = {
         templates: params.templates,
         modules: {},
-        utils: utils,
         config: app.config,
 
         addTransition: app.addTransition,
@@ -86,10 +81,12 @@ module.exports = function(app, params) {
         },
 
         requireComponent: function(name, extraArgs) {
-            var component;
-            if (_.contains(componentsInfo.cancelableApis, name)) {
+            var component,
+                componentMeta = app.loadComponent(name);
+
+            if (componentMeta.emitAbortablesBy) {
                 component = app.newComponent(name, extraArgs);
-                component.on('request', function(req) {
+                component.on(componentMeta.emitAbortablesBy, function(req) {
                     requests.push(req);
                 });
                 component.on('done', function(req) {

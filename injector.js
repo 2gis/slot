@@ -1,4 +1,12 @@
 
+/*
+ Терминология:
+
+ - Компонент: модуль который имеет в заголовке конструкцию module.exports = function(...)
+              и, возможно, содержит аргументы для аннотирования.
+              То есть это таже функция, но с обязательным 'module.exports =' в начале
+ */
+
 var _ = require('underscore');
 
 var COMPONENT_ARGS = /module\.exports\s*=\s*function\s*[^\(]*\(\s*([^\)]*)\)/m;
@@ -7,24 +15,49 @@ var FN_ARG_SPLIT = /,/;
 var FN_ARG = /^\s*(_?)(\S+?)\1\s*$/;
 var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 
+function getArgsDecl(src, argsRe) {
+    src = src.replace(STRIP_COMMENTS, '');
+    return src.match(argsRe);
+}
+
 function getArgs(src, argsRe) {
     var $inject = [];
-    src = src.replace(STRIP_COMMENTS, '');
-    var argDecl = src.match(argsRe);
+    var argDecl = getArgsDecl(src, argsRe);
 
-    _.each(argDecl[1].split(FN_ARG_SPLIT), function(arg) {
-        arg.replace(FN_ARG, function(all, underscore, name){
-            $inject.push(name);
+    if (argDecl) {
+        _.each(argDecl[1].split(FN_ARG_SPLIT), function(arg) {
+            arg.replace(FN_ARG, function(all, underscore, name) {
+                $inject.push(name);
+            });
         });
-    });
+    }
 
     return $inject;
 }
 
+/**
+ * Возвращает аргументы к аннотированию для компонента
+ * @param {String} src код компонента
+ * @returns {*}
+ */
 function annotateComponent(src) {
     return getArgs(src, COMPONENT_ARGS);
 }
 
+/**
+ * Можно ли аннотировать *компонент*
+ * @param {String} src
+ * @returns {boolean}
+ */
+function canAnnotate(src) {
+    return !!getArgsDecl(src, COMPONENT_ARGS);
+}
+
+/**
+ * Аннотирует функцию
+ * @param {Function|Array} fn
+ * @returns {*}
+ */
 function annotate(fn) {
     var $inject,
         last;
@@ -40,6 +73,15 @@ function annotate(fn) {
     return $inject;
 }
 
+/**
+ * Вызывает функцию, подставляя необходимые значения в аргументы
+ *
+ * @param {Function} fn
+ * @param {Array} simpleArgs значения "простых" аргументов, которые не нужно особым образом получать
+ * @param {Function} provider провайдер значений для аннотированных аргументов
+ * @param {Object} self контекст выполнения для функции
+ * @returns {*}
+ */
 function invoke(fn, simpleArgs, provider, self) {
     var $inject = annotate(fn);
     var args = [],
@@ -58,6 +100,8 @@ function invoke(fn, simpleArgs, provider, self) {
     return fn.apply(self, args);
 }
 
+exports.canAnnotate = canAnnotate;
 exports.annotateComponent = annotateComponent;
+
 exports.annotate = annotate;
 exports.invoke = invoke;

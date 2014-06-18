@@ -1,25 +1,28 @@
 var _ = require('underscore'),
     templateProvider = require('./templateProvider'),
     env = require('./env'),
-    helperBlocks = env.requirePrivate('helperBlocks');
+    stuff = require('./stuff');
 
-// Регистрирует все хелперы в хэндлебарсе
-exports.registerHelpers = function(handlebars, blockHelpers) {
-    // Инкремент для js to css нумерации
-    handlebars.registerHelper('increment', function(options) {
-        return options.hash.index + 1;
+/**
+ * Регистрирует хэлперблоки
+ *
+ * Должны лежать в проекте по пути helpers/blocks/
+ * @param handlebars
+ */
+function registerHelperBlocks(handlebars) {
+    var helpers = templateProvider.getStorage('helpers');
+    _.each(helpers, function(tmplSpec, name) {
+        handlebars.registerHelper(stuff.capitalize(name), function() {
+            var helper = env.require('helpers/blocks/' + name + '/' + name + '.js');
+
+            var ctx = helper.apply(this, arguments),
+                template = handlebars.template(tmplSpec);
+
+            return new handlebars.SafeString(template(ctx));
+        });
     });
+}
 
-    handlebars.registerHelper('ifand', function() {
-        var options = arguments[arguments.length-1],
-            args = [].slice.call(arguments, 0, arguments.length - 1);
-
-        var value = _.reduce(args, function(acc, val) {
-            return acc && val;
-        }, true);
-
-        return handlebars.helpers['if'].call(this, value, options);
-    });
-
-    helperBlocks(handlebars, templateProvider);
-};
+env.onceConfigured('handlebars', function(handlebars) {
+    registerHelperBlocks(handlebars);
+});
