@@ -1,10 +1,9 @@
+require('./shim.js');
 
 var rootPath = './',
     buildPath,
     events = require('events'),
     _ = require('lodash');
-
-require('./polyfill');
 
 exports.setRootPath = function(path) {
     rootPath = path;
