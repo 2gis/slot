@@ -1,7 +1,7 @@
 var assert = require('assert');
 
 describe('Core -> app', function() {
-    var app = require('../app.js');
+    /*var app = require('../app.js');
 
     it('blank', function() {
 
@@ -32,6 +32,6 @@ describe('Core -> app', function() {
             mods = appInstance.getModificators(moduleWrapper);
             assert.ok(mods);
         });
-    });
+    });*/
 
 });
