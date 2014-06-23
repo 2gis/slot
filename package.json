@@ -12,6 +12,7 @@
     "ua-parser-js": "~0.6.2",
     "winston": "~0.7.2",
     "request": "~2.27.0",
+    "setimmediate": "^1.0.2",
     "jquery-deferred": "~0.3.0"
   },
   "optionalDependencies": {
