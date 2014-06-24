@@ -1,13 +1,6 @@
-var async = require('async'),
-    fs = require('fs'),
-    path = require('path'),
-    handlebars = require('handlebars'),
-    _ = require('underscore'),
+var _ = require('underscore'),
     helpers = require('./templateHelpers'),
-    baseAppConstructor = require('./app'),
-    utils = require('./utils');
-
-helpers.registerHelpers(handlebars);
+    baseAppConstructor = require('./app');
 
 module.exports = function(params) {
 

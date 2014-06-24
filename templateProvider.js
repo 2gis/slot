@@ -1,52 +1,61 @@
+var _ = require('underscore');
 var env = require('./env');
-var handlebars = require('handlebars');
+var stuff = require('./stuff');
 
-// Возвращает объект, куда будем складывать шаблоны для неймспейса ns
-function templates(ns) {
+/**
+ * Возвращает хранилище шаблонов по нэймспэйcу
+ *
+ * Каждый нэймспэйс волен делать уровень вложенности по своему
+ * @param {String} ns нэймспэйс шаблонов
+ * @returns {*}
+ */
+function getStorage(ns) {
     ns = 'jst_' + ns;
-
-    var templateConstructor = env.requirePrivate(ns);
-
-    return templateConstructor(handlebars);
+    return env.isServer ? env.requirePrivate(ns)[ns] : window[ns];
 }
+exports.getStorage = getStorage;
 
-// ns - namespace
-var tmpl = exports.tmpl = function(ns, template) {
-    return templates(ns)[template];
-};
-
-var modulesCache = {};
-
-exports.getTemplatesForModule = function(moduleName) {
-    if (!(moduleName in modulesCache)) {
-        var name,
-            result = {},
-            tmpls = templates('modules');
-
-        for (name in tmpls) {
-            var parts = name.split('/'),
-                modName = parts[0],
-                tmplName = parts[parts.length - 1]; // в случае modules/geoCard/templates/geoCard.html название шаблона geoCard
-
-            if (modName == moduleName) {
-                result[tmplName] = tmpls[name];
-            }
-        }
-        modulesCache[moduleName] = result;
+function lazyWrap(tmplSpec, handlebars) {
+    if (!tmplSpec.wrapped) {
+        handlebars = handlebars || env.get('handlebars');
+        tmplSpec.wrapped = handlebars.template(tmplSpec);
     }
 
-    return modulesCache[moduleName];
+    return tmplSpec.wrapped;
+}
+exports.lazyWrap = lazyWrap;
+
+exports.wrapTemplateSpecs = function(templateSpecs, handlebars) {
+    if (!templateSpecs) return {};
+
+    if (!templateSpecs._wrapped) {
+        _.each(templateSpecs, function(tmpl, name) {
+            templateSpecs[name] = lazyWrap(tmpl, handlebars);
+        });
+        templateSpecs._wrapped = true;
+    }
+
+    return templateSpecs;
 };
 
-// Возвращает шаблон, где moduleName - имя модуля, tmplName - имя шаблона
-exports.moduleTmpl = function(moduleName, tmplName) {
-    tmplName = tmplName || moduleName;
-
-    return tmpl('modules', moduleName + '/' + tmplName);
+/**
+ * Вовзращает все шаблоны для заданного модуля
+ *
+ * @param {String} moduleName
+ * @returns {*}
+ */
+exports.forModule = function(moduleName) {
+    var storage = getStorage('modules')[moduleName];
+    return exports.wrapTemplateSpecs(storage)
 };
 
-exports.helperTmpl = function(blockName, tmplName) {
-    tmplName = tmplName || blockName;
-
-    return tmpl('helpers', blockName + '/' + tmplName);
+/**
+ * Возвращает шаблон в заданном нэймспэйсе по заданному пути
+ * @param {String} ns в каком нэймспэйсе берем шаблон
+ * @param {String} path путь разделенный точками
+ * @returns {Function}
+ */
+exports.resolve = function(ns, path) {
+    var templates = getStorage(ns);
+    return lazyWrap(stuff.getByPath(templates, path));
 };

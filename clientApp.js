@@ -1,14 +1,7 @@
-var async = require('async'),
-    handlebars = require('handlebars'),
-    _ = require('underscore'),
-    utils = require('./utils'),
+var _ = require('underscore'),
     baseAppConstructor = require('./app'),
-    helpers = require('./templateHelpers'),
     namer = require('./namer'),
-    env = require('./env'),
-    defer = env.require('components/defer/defer')();
-
-helpers.registerHelpers(handlebars);
+    defer = require('./defer');
 
 /**
  * В каком приоритете исполняем транзишены
@@ -217,7 +210,7 @@ module.exports = function() {
          */
         rerender: function(moduleId, options) {
             var activeModule = app.getModuleById(moduleId),
-                html = utils.invoke(activeModule.wrapper.render);
+                html = activeModule.wrapper.render();
 
             options = options || {};
 

@@ -1,13 +1,13 @@
 var _ = require('underscore'),
     namer = require('./namer'),
-    handlebars = require('handlebars');
+    env = require('./env');
 
 // Module wrapper expects a raw module objects as an argument for constructor.
 module.exports = function(app, moduleConf, slot) {
-
     // register default partials and helpers for current module
 
     var templates = slot.templates,
+        handlebars = env.get('handlebars'),
         templatePartials,
         templateHelpers,
         clientInitCalled = false,
