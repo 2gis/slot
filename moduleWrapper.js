@@ -10,7 +10,7 @@ module.exports = function(app, moduleConf, slot) {
         handlebars = env.get('handlebars'),
         templatePartials,
         templateHelpers,
-        clientInitCalled = false,
+        clientInited = false,
         moduleWrapper;
 
     templatePartials = _.omit(templates, moduleConf.type);
@@ -102,44 +102,47 @@ module.exports = function(app, moduleConf, slot) {
     }
 
     moduleWrapper = {
-
-        // Initializes the module with the given params. Invokes callback when init process is ready
+        // Initializes the module with the given params. Invokes callback when init process is ready.
         init: function(state, callback) {
             slot.stage = 'initing';
 
-            // moduleConf.init.length < 2 - показывает что moduleConf.init имеет менее 2х аргументов, то есть не имеет коллбэк
-            var isInitSync = !moduleConf.init || moduleConf.init.length < 2;
-
-            var done = function(err) {
-                if (callback) callback(err);
+            function done(err) {
                 // При асинхронном ините модуля слот мог умереть раньше,
-                // чем завершится инициализация, и не надо перезаписывать его стэйдж!
+                // чем завершится инициализация, и не надо менять его стэйдж!
                 if (!err && slot.stage == 'initing') {
                     slot.stage = 'inited';
                 }
-            };
 
-            if (moduleConf.init) {
-                moduleConf.init(state, done);
+                if (callback) {
+                    callback(err);
+                }
             }
 
-            // если нет инита или он есть, но не ждет коллбэков
-            if (!moduleConf.init || isInitSync) {
+            if (moduleConf.init) {
+                // Eсть второй аргумент (callback).
+                if (moduleConf.init.length >= 2) {
+                    moduleConf.init(state, done);
+                } else {
+                    moduleConf.init(state);
+                    done();
+                }
+            } else {
                 done();
             }
         },
 
         clientInit: function() {
-            if (clientInitCalled) return;
+            if (!clientInited) {
+                if (moduleConf.clientInit) {
+                    moduleConf.clientInit.apply(moduleConf, arguments);
+                }
 
-            if (moduleConf.clientInit) {
-                moduleConf.clientInit.apply(moduleConf, arguments);
-                clientInitCalled = true;
+                clientInited = true;
             }
         },
 
         /**
-         * Вызывается каждый раз после рендера представления
+         * Вызывается каждый раз после рендера представления.
          */
         bind: function() {
             if (moduleConf.bind) {
@@ -155,60 +158,49 @@ module.exports = function(app, moduleConf, slot) {
 
         /**
          * Renders the module and wraps it in a div with special metadata to identify this module in DOM.
-         * @param {object} [customViewContext] - объект, который пошлется в шаблон вместо viewContext модуля
          *
-         * @returns {String} rendered HTML
+         * @param {Object} [customViewContext] Объект, который пошлется в шаблон вместо viewContext модуля.
+         * @returns {string}
          */
         render: function(customViewContext) {
-            var realvc,
-                viewContext,
-                moduleId,
-                moduleInstance,
-                template,
-                tag,
-                attrs,
-                mods,
-                compiledTemplate,
-                compiledTemplateHTML,
-                moduleClass,
-                classString,
-                classes,
-                blockName = moduleConf.block || moduleConf.type;
+            var blockName = moduleConf.block || moduleConf.type;
 
-            realvc = (moduleConf.viewContext) ? moduleConf.viewContext(customViewContext) : ""; // Вызов метода viewContext должен быть всегда
-            viewContext = customViewContext || realvc || {};
+            // Вызов метода viewContext должен быть всегда.
+            var origViewContext = moduleConf.viewContext ? moduleConf.viewContext(customViewContext) : null,
+                viewContext = customViewContext || origViewContext || {};
 
             if (!_.isObject(viewContext)) {
-                throw new Error("viewContext must return object, but was returned " + viewContext);
+                throw new TypeError('viewContext must be an object, but а ' + viewContext);
             }
 
-            moduleId = moduleConf.uniqueId;
-            moduleInstance = app.getModuleById(moduleId);
-            template = moduleConf.type || moduleConf.template;
-            tag = moduleConf.tag || 'div';
-            attrs = {};
+            var moduleId = moduleConf.uniqueId,
+                moduleInstance = app.getModuleById(moduleId),
+                template = moduleConf.type || moduleConf.template,
+                tag = moduleConf.tag || 'div',
+                attrs = {};
+
             if (moduleConf.viewAttrs) {
                 attrs = _.isFunction(moduleConf.viewAttrs) ? moduleConf.viewAttrs() : moduleConf.viewAttrs;
             }
-            mods = moduleInstance.mods;
-            compiledTemplate = slot.templates[template];
-            compiledTemplateHTML = typeof compiledTemplate == 'function' ?
-                compiledTemplate(viewContext, getTmplOptions()) :
-                '';
+
+            var mods = moduleInstance.mods,
+                compiledTemplate = slot.templates[template],
+                compiledTemplateHTML = typeof compiledTemplate == 'function' ?
+                    compiledTemplate(viewContext, getTmplOptions()) :
+                    '';
 
             attrs.id = 'module-' + moduleId;
             attrs['data-module'] = moduleConf.type;
 
             // Генерируем CSS класс модуля
-            moduleClass = namer.moduleClass(blockName);
-            classString = attrs['class'] || '';
-            classes = classString.split(/\s+/);
+            var moduleClass = namer.moduleClass(blockName),
+                classString = attrs['class'] || '',
+                classes = classString.split(/\s+/);
 
             classes.push(moduleClass);
 
             _.each(mods, function(val, key) {
                 var modClass = namer.modificatorClass(key, val);
-
                 classes.push(modClass);
             });
 
@@ -219,19 +211,16 @@ module.exports = function(app, moduleConf, slot) {
 
         bindEvents: function(elementName) {
             var moduleId = moduleConf.uniqueId;
-
             app.bindEvents(moduleId, elementName);
         },
 
         block: function() {
             var moduleId = moduleConf.uniqueId;
-
             return app.block(moduleId);
         },
 
         id: function() {
             var moduleId = moduleConf.uniqueId;
-
             return moduleId;
         },
 

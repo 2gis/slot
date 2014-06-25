@@ -636,7 +636,7 @@ module.exports = function() {
     };
 
     if (DEBUG) {
-        env.globals().app = app;
+        env.global.app = app;
 
         app.modulesByType = function(type) {
             return _.filter(internals.moduleInstances, function(instance) {

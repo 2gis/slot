@@ -23,6 +23,6 @@ function registerHelperBlocks(handlebars) {
     });
 }
 
-env.onceConfigured('handlebars', function(handlebars) {
+env.whenSet('handlebars', function(handlebars) {
     registerHelperBlocks(handlebars);
 });
