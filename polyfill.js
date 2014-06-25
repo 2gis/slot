@@ -1,3 +1,5 @@
+// полифил для setImmediate использовать вместо setTimeout(,0)
+require('setimmediate');
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
 if (!String.prototype.trim) {
