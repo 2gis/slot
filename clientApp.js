@@ -17,7 +17,8 @@ var transitionsPriority = [
 module.exports = function() {
     var baseApp = baseAppConstructor(),
         app = baseApp.instance,
-        internals = baseApp.internals;
+        internals = baseApp.internals,
+        appBinded = false; //флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
 
     if (typeof $ != 'undefined') {
         /**
@@ -123,6 +124,8 @@ module.exports = function() {
 
             // Навешиваем события на все модули
             app.bindEvents(rootId);
+
+            appBinded = true; //отмечаем, что забиндились
 
             if (DEBUG) require('./debugInfo').init();
         },
@@ -287,7 +290,9 @@ module.exports = function() {
         },
 
         bindEvents: function(moduleId, elementName) {
-            app.processEvents(moduleId, elementName, true);
+            if (appBinded === true || app._stage === 'bind') {
+                app.processEvents(moduleId, elementName, true);
+            }
         },
 
         unbindEvents: function(moduleId, elementName) {
