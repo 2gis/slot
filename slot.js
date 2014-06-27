@@ -175,8 +175,6 @@ module.exports = function(app, params) {
 
         registry: app.registry,
 
-        removeRegistry: app.removeRegistry,
-
         raise: app.raise,
 
         onTransitionEnd: app.onTransitionEnd,
