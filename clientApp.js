@@ -65,6 +65,22 @@ module.exports = function() {
 
             return firstMod;
         };
+
+        /**
+         * jQuery плагин, который ставит или убирает модификатор элементу или элементам
+         * @param {string} modificators
+         * возвращает JQuery-коллекцию
+         */
+        $.fn.toggleMod = function(modificator) {
+            if (modificator) {
+                this.each(function(i, element) {
+                    var el = $(element),
+                        mod = namer.modificatorClass(modificator, true);
+                    el.hasClass(mod) ? el.removeClass(mod) : el.addClass(mod);
+                });
+            }
+            return this;
+        };
     }
 
     function moduleBlockId(moduleId) {
