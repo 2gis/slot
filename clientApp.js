@@ -68,7 +68,7 @@ module.exports = function() {
 
         /**
          * jQuery плагин, который ставит или убирает модификатор элементу или элементам
-         * @param {string} modificators
+         * @param {string} modificator
          * возвращает JQuery-коллекцию
          */
         $.fn.toggleMod = function(modificator) {
@@ -76,7 +76,7 @@ module.exports = function() {
                 this.each(function(i, element) {
                     var el = $(element),
                         mod = namer.modificatorClass(modificator, true);
-                    el.hasClass(mod) ? el.removeClass(mod) : el.addClass(mod);
+                    el.toggleClass(mod);
                 });
             }
             return this;
