@@ -73,12 +73,11 @@ module.exports = function() {
          */
         $.fn.toggleMod = function(modificator) {
             if (modificator) {
-                this.each(function(i, element) {
-                    var el = $(element),
-                        mod = namer.modificatorClass(modificator, true);
-                    el.toggleClass(mod);
-                });
+                var mod = namer.modificatorClass(modificator, true);
+
+                this.toggleClass(mod);
             }
+
             return this;
         };
     }
