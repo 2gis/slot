@@ -47,31 +47,6 @@ module.exports = function(app, params) {
             return module;
         },
 
-        /**
-         * Этим методом можно АСИНХРОННО инитить модули внутри clientInit'a, т.к. он происходит по таймауту,
-         * т.е. после того, как наши запланированные clientInit'ы детишек закончатся.
-         *
-         * Обычным initModule инитить модули нельзя внутри clientInit'a какого-то _модуля_, т.к. внутри clientInit
-         * происходит bindEvents и вызываются clientInit для всех детей _модуля_. Если сделать init (а инит чаще всего
-         * сопровождается bindEvents'ом) внутри clientInit _модуля_, то новоиспеченный модуль добавится в дети к
-         * _модулю_ и для него также вызовется clientInit, внутри которого произойдет второй bindEvents.
-         *
-         * [Пример]
-         * 1. В online.clientInit мы делаем initModule(dashboard) и делаем dashboard.bindEvents()
-         * 2. online.clientInit запускает clientInit всех детей (на этот момент дашборд уже ребенок онлайна)
-         * 3. dashboard.clientInit делает bindEvents (уже второй, т.к. первый мы сделали вручную)
-         *
-         * [async]
-         *
-         * @param moduleConf
-         * @param callback
-         */
-        initModuleAfter: function(moduleConf, callback) {
-            setTimeout(function() {
-                slot.initModule(moduleConf, callback);
-            }, 0);
-        },
-
         initModules: function(modules, callback) {
             async.map(modules, slot.initModule, callback);
         },
