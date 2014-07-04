@@ -306,7 +306,7 @@ module.exports = function() {
         },
 
         bindEvents: function(moduleId, elementName) {
-            if (appBinded === true || app._stage === 'bind') {
+            if (appBinded === true || app._stage === 'bind' || SKIP_APP_RUN) {
                 app.processEvents(moduleId, elementName, true);
             }
         },
