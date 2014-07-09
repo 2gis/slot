@@ -241,6 +241,8 @@ module.exports = function(app, moduleConf, slot) {
 
         slot: slot,
 
+        isEventsBound: false,
+
         type: moduleConf.type
     };
 

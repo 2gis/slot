@@ -17,8 +17,7 @@ var transitionsPriority = [
 module.exports = function() {
     var baseApp = baseAppConstructor(),
         app = baseApp.instance,
-        internals = baseApp.internals,
-        appBinded = false; //флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
+        internals = baseApp.internals;
 
     if (typeof $ != 'undefined') {
         /**
@@ -141,8 +140,6 @@ module.exports = function() {
             // Навешиваем события на все модули
             app.bindEvents(rootId);
 
-            appBinded = true; //отмечаем, что забиндились
-
             if (DEBUG) require('./debugInfo').init();
         },
 
@@ -234,6 +231,7 @@ module.exports = function() {
             options = options || {};
 
             $(moduleBlockId(moduleId)).replaceWith(html);
+            activeModule.wrapper.isEventsBound = false;
             if (!options.dontBindEvents) {
                 app.bindEvents(moduleId);
             }
@@ -275,6 +273,13 @@ module.exports = function() {
             var module = app.getModuleById(moduleId),
                 elements = module.instance.elements;
 
+            // Если у модуля уже навешены события, не навешиваем их еще раз
+            // Проверяем на SKIP_APP_RUN для того, чтобы работали dom-тесты. Вообще, надо выкосить такие dom-тесты
+            if (on && module.wrapper.isEventsBound === true && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
+                return;
+            }
+            module.wrapper.isEventsBound = on;
+
             if (elementName) {
                 elements = _.pick(module.instance.elements, elementName);
             }
@@ -306,9 +311,7 @@ module.exports = function() {
         },
 
         bindEvents: function(moduleId, elementName) {
-            if (appBinded === true || app._stage === 'bind' || (typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN) ) {
-                app.processEvents(moduleId, elementName, true);
-            }
+            app.processEvents(moduleId, elementName, true);
         },
 
         unbindEvents: function(moduleId, elementName) {
