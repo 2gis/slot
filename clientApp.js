@@ -231,7 +231,7 @@ module.exports = function() {
             options = options || {};
 
             $(moduleBlockId(moduleId)).replaceWith(html);
-            activeModule.wrapper.isEventsBinded = false;
+            activeModule.wrapper.isEventsBound = false;
             if (!options.dontBindEvents) {
                 app.bindEvents(moduleId);
             }
@@ -273,14 +273,12 @@ module.exports = function() {
             var module = app.getModuleById(moduleId),
                 elements = module.instance.elements;
 
-            if (on) {
-                if (module.wrapper.isEventsBinded === true && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
-                    return;
-                }
-                module.wrapper.isEventsBinded = true;
-            } else {
-                module.wrapper.isEventsBinded = false;
+            // Если у модуля уже навешены события, не навешиваем их еще раз
+            // Проверяем на SKIP_APP_RUN для того, чтобы работали dom-тесты. Вообще, надо выкосить такие dom-тесты
+            if (on && module.wrapper.isEventsBound === true && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
+                return;
             }
+            module.wrapper.isEventsBound = on;
 
             if (elementName) {
                 elements = _.pick(module.instance.elements, elementName);
