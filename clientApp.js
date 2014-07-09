@@ -17,8 +17,7 @@ var transitionsPriority = [
 module.exports = function() {
     var baseApp = baseAppConstructor(),
         app = baseApp.instance,
-        internals = baseApp.internals,
-        appBinded = false; //флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
+        internals = baseApp.internals;
 
     if (typeof $ != 'undefined') {
         /**
@@ -141,8 +140,6 @@ module.exports = function() {
             // Навешиваем события на все модули
             app.bindEvents(rootId);
 
-            appBinded = true; //отмечаем, что забиндились
-
             if (DEBUG) require('./debugInfo').init();
         },
 
@@ -234,6 +231,7 @@ module.exports = function() {
             options = options || {};
 
             $(moduleBlockId(moduleId)).replaceWith(html);
+            activeModule.wrapper.isEventsBinded = false;
             if (!options.dontBindEvents) {
                 app.bindEvents(moduleId);
             }
@@ -275,6 +273,15 @@ module.exports = function() {
             var module = app.getModuleById(moduleId),
                 elements = module.instance.elements;
 
+            if (on) {
+                if (module.wrapper.isEventsBinded === true && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
+                    return;
+                }
+                module.wrapper.isEventsBinded = true;
+            } else {
+                module.wrapper.isEventsBinded = false;
+            }
+
             if (elementName) {
                 elements = _.pick(module.instance.elements, elementName);
             }
@@ -306,9 +313,7 @@ module.exports = function() {
         },
 
         bindEvents: function(moduleId, elementName) {
-            if (appBinded === true || app._stage === 'bind' || (typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN) ) {
-                app.processEvents(moduleId, elementName, true);
-            }
+            app.processEvents(moduleId, elementName, true);
         },
 
         unbindEvents: function(moduleId, elementName) {
