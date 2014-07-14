@@ -206,8 +206,9 @@ module.exports = function(app, params) {
         /**
          * Заглушка для расширения партиалов в moduleWrapper
          */
-        extendPartials: function() {}
+        extendPartials: function() {},
 
+        cookie: app.cookie
     };
 
     app.setupSlot(slot);
