@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var _ = require('lodash'),
     baseAppConstructor = require('./app'),
     namer = require('./namer'),
     defer = require('./defer');

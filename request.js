@@ -6,7 +6,7 @@
  *
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 module.exports = typeof window == 'undefined' ? serverRequest : clientRequest;
 

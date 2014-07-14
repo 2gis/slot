@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 
 function convertDashToCamel(dashedString) {
     return dashedString.toString().replace(/(-[a-zA-Z])/g, function($1) {

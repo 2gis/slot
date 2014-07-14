@@ -1,7 +1,7 @@
 
 var rootPath = './',
     events = require('events'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 require('./polyfill');
 

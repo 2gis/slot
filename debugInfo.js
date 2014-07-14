@@ -1,5 +1,4 @@
-var _ = require('underscore'),
-    config = require('slot/config');
+var config = require('slot/config');
 
 /**
  * Дебажная информация.
