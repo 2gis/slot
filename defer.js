@@ -1,5 +1,5 @@
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     env = require('./env');
 
 module.exports = (function() {

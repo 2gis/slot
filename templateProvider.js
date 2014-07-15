@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 var env = require('./env');
 var stuff = require('./stuff');
 

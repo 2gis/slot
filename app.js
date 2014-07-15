@@ -3,7 +3,7 @@
  * Мы поехали в роддом! Кажется началось. надеюсь не в холостую
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 var injector = require('./injector'),
     env = require('./env'),

@@ -1,6 +1,6 @@
 
 var Quering = require('../modulesQuering'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     assert = require('assert');
 
 describe("Core->modulesQuering", function() {

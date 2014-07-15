@@ -7,7 +7,7 @@
               То есть это таже функция, но с обязательным 'module.exports =' в начале
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 var COMPONENT_ARGS = /module\.exports\s*=\s*function\s*[^\(]*\(\s*([^\)]*)\)/m;
 var FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m;

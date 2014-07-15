@@ -1,5 +1,5 @@
 var async = require('async'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     smokesignals = envRequire('smokesignals');
 
 module.exports = function(app, params) {
@@ -14,6 +14,10 @@ module.exports = function(app, params) {
         // даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
         conf.parentId = moduleId;
         return app.loadModule(conf);
+    }
+
+    function ensureFunction(f) {
+        return _.isFunction(f) ? f : function() {};
     }
 
     var slot = {
@@ -80,14 +84,14 @@ module.exports = function(app, params) {
             requests = [];
         },
 
-        notify: _.partial(app.notify, moduleId),
+        notify: _.partial(ensureFunction(app.notify), moduleId),
 
         // Рассылаем сообщения всем дочерним, и внучатым модулям :)
-        broadcast: _.partial(app.broadcast, moduleId),
+        broadcast: _.partial(ensureFunction(app.broadcast), moduleId),
 
-        queryModules: _.partial(app.queryModules, moduleId),
+        queryModules: _.partial(ensureFunction(app.queryModules), moduleId),
 
-        block: _.partial(app.block, moduleId),
+        block: _.partial(ensureFunction(app.block), moduleId),
 
         isServer: app.isServer,
 
@@ -103,7 +107,7 @@ module.exports = function(app, params) {
          */
         stateRendered: app.stateRendered,
 
-        rerender: _.partial(app.rerender, moduleId),
+        rerender: _.partial(ensureFunction(app.rerender), moduleId),
 
         rebind: function() {
             if (slot.isClient) {
@@ -112,14 +116,14 @@ module.exports = function(app, params) {
             }
         },
 
-        element: _.partial(app.element, moduleId),
+        element: _.partial(ensureFunction(app.element), moduleId),
 
-        bindEvents: _.partial(app.bindEvents, moduleId),
+        bindEvents: _.partial(ensureFunction(app.bindEvents), moduleId),
 
-        mod: _.partial(app.mod, moduleId),
+        mod: _.partial(ensureFunction(app.mod), moduleId),
 
         // Возвращает дочерний модуль по айдишнику
-        moduleById: _.partial(app.getChildModuleWrapperById, moduleId),
+        moduleById: _.partial(ensureFunction(app.getChildModuleWrapperById), moduleId),
 
         moduleId: function() {
             return moduleId;
@@ -179,7 +183,7 @@ module.exports = function(app, params) {
 
         onTransitionEnd: app.onTransitionEnd,
 
-        closestModule: _.partial(app.closestModule, moduleId),
+        closestModule: _.partial(ensureFunction(app.closestModule), moduleId),
 
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
         regFn: function(fn) {

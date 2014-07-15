@@ -1,5 +1,5 @@
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     smokesignals = envRequire('smokesignals');
 
 module.exports = function(internals) {
@@ -102,7 +102,7 @@ module.exports = function(internals) {
             if (!ids.length) break;
         }
 
-        return _(ids).map(function(id) {
+        return _.map(ids, function(id) {
             return internals.moduleInstances[id];
         });
     }

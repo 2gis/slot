@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var _ = require('lodash'),
     templateProvider = require('./templateProvider'),
     env = require('./env'),
     stuff = require('./stuff');
