@@ -1,7 +1,7 @@
 var assert = require('assert');
 
 describe('Core -> namer', function() {
-    var namer = require('../namer');
+    /*var namer = require('../namer');
 
     describe('.modificatorClassTemp', function() {
         it('Правильно составляет модификатор', function() {
@@ -295,5 +295,5 @@ describe('Core -> namer', function() {
 
             assert.equal(namer.elementClass(module, element, true), 'c-om-plex__form-button-out');
         });
-    });
+    });*/
 });

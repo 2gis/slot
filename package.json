@@ -21,5 +21,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "gulp": "^3.8.1",
+    "gulp-mocha": "^0.4.1",
+    "mocha": "^1.20.1",
+    "rimraf": "^2.2.8"
+  }
 }
