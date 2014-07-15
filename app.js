@@ -34,63 +34,7 @@ module.exports = function() {
         return _.compact([parentId, nextId]).join('-');
     }
 
-    var registryData = Object.create(null);
-
-    /**
-     * @param {string} name
-     * @param {*} [defaultValue={}]
-     * @returns {*}
-     */
-    function registry(name, defaultValue) {
-        if (name in registryData) {
-            return registryData[name];
-        }
-
-        if (defaultValue === undefined) {
-            defaultValue = {};
-        }
-
-        return registryData[name] = defaultValue;
-    }
-
-    /**
-     * @param {string} name
-     * @returns {boolean}
-     */
-    registry.has = function(name) {
-        return name in registryData;
-    };
-
-    /**
-     * @param {string} name
-     * @returns {*}
-     */
-    registry.get = function(name) {
-        return registryData[name];
-    };
-
-    /**
-     * @param {string} name
-     * @param {*} value
-     */
-    registry.set = function(name, value) {
-        registryData[name] = value;
-    };
-
-    /**
-     * @param {string} name
-     */
-    registry.remove = function(name) {
-        delete registryData[name];
-    };
-
-    /**
-     * @param {Object} data
-     */
-    registry.setup = function(data) {
-        Object.keys(data).forEach(function(name) {
-            registryData[name] = data[name];
-        });
+    var registry = {
     };
 
     /**
@@ -172,17 +116,12 @@ module.exports = function() {
         init: function(req, callback) {
             app._stage = 'init';
 
-            var data = {
-                host: req.host,
-                protocol: req.protocol,
-                port: req.port,
-                ip: req.ip,
-                ua: getBrowser(req.ua)
-            };
-
-            data[config['authApi.cookieName']] = req[config['authApi.cookieName']];
-
-            registry.setup(data);
+            registry.host = req.host;
+            registry.protocol = req.protocol;
+            registry.port = req.port;
+            registry.ip = req.ip;
+            registry.ua = getBrowser(req.ua);
+            registry[config['authApi.cookieName']] = req[config['authApi.cookieName']];
 
             var appState = app.requireComponent('appState'),
                 middleware = app.requireComponent('middleware');
@@ -577,7 +516,13 @@ module.exports = function() {
             return (prefix || '') + id;
         },
 
-        registry: registry,
+        registry: function(key, def) {
+            if (registry[key] == null) {
+                registry[key] = def == null ? {} : def;
+            }
+
+            return registry[key];
+        },
 
         /**
          * Для переопределения в конечных продуктах
@@ -605,6 +550,10 @@ module.exports = function() {
          */
         raised: function() {
             return raised;
+        },
+
+        removeRegistry: function(key) {
+            delete registry[key];
         },
 
         // публикуем функцию для тестов
