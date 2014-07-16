@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-describe('Core -> namer', function() {
+describe.skip('Core -> namer', function() {
     var namer = require('../namer');
 
     describe('.modificatorClassTemp', function() {

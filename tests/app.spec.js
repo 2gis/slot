@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-describe('Core -> app', function() {
+describe.skip('Core -> app', function() {
     var app = require('../app.js');
 
     it('blank', function() {

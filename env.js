@@ -1,5 +1,6 @@
 
 var rootPath = './',
+    buildPath,
     events = require('events'),
     _ = require('lodash');
 
@@ -16,8 +17,12 @@ exports.getRootPath = function() {
     return rootPath;
 };
 
+exports.setBuildPath = function(path) {
+    buildPath = path;
+};
+
 function getBuildPath() {
-    return rootPath + 'build/';
+    return buildPath || rootPath + 'build/';
 }
 
 /**
