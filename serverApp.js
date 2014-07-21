@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    helpers = require('./templateHelpers'),
     baseAppConstructor = require('./app');
 
 module.exports = function(params) {

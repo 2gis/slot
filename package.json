@@ -19,7 +19,12 @@
     "winston-graylog2": "git+ssh://git@github.com:krivchun/winston-graylog2.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
-  "license": "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "gulp": "~3.8.6",
+    "gulp-mocha": "~0.5.1",
+    "sinon": "~1.10.3"
+  }
 }

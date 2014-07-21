@@ -1,18 +1,9 @@
-var _ = require('lodash'),
-    baseAppConstructor = require('./app'),
-    namer = require('./namer'),
-    defer = require('./defer');
+var _ = require('lodash');
+var baseAppConstructor = require('../app');
+var namer = require('../namer');
+var defer = require('../defer');
+var transitionsHelper = require('./transitions');
 
-/**
- * В каком приоритете исполняем транзишены
- *
- * Чем выше, тем приоритетней
- * @type {Array}
- */
-var transitionsPriority = [
-    'map',
-    'callout'
-];
 
 module.exports = function() {
     var baseApp = baseAppConstructor(),
@@ -140,7 +131,7 @@ module.exports = function() {
             // Навешиваем события на все модули
             app.bindEvents(rootId);
 
-            if (DEBUG) require('./debugInfo').init();
+            if (DEBUG) require('./../debugInfo').init();
         },
 
         runInQueue: function(handler) {
@@ -173,20 +164,7 @@ module.exports = function() {
             if (transitionsAreRunning) return;
             transitionsAreRunning = true;
 
-            transitions.sort(function(a, b) {
-                a = a.purpose;
-                b = b.purpose;
-
-                if (!a || !b) return 0;
-
-                a = _(transitionsPriority).indexOf(a);
-                b = _(transitionsPriority).indexOf(b);
-
-                if (a == -1 || b == -1) return 0;
-
-                return a - b;
-            });
-
+            transitionsHelper.sort(transitions);
             transitionStep();
 
             function transitionStep() {

@@ -1,9 +1,10 @@
+/*
 var assert = require('assert'),
     sinon = require('sinon');
 
+
 describe('Core -> slot', function() {
-    var moduleName = 'zoom',
-        testEnv = require('../../testEnv')(),
+    var testEnv = require('./testEnv')(),
         module = testEnv.app.loadModule({type: 'zoom'}), //dataViewerModule(slot);
         slot = module.slot;
 
@@ -108,3 +109,4 @@ describe('Core -> slot', function() {
         });
     });
 });
+*/
