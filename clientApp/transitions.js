@@ -7,7 +7,7 @@ var _ = require('lodash');
  * @param b транзишен
  * @returns {number}
  */
-function mapIsBetterThanCallout(a, b) {
+function moveCalloutToEnd(a, b) {
     if (a.purpose != b.purpose) {
         if (a.purpose == 'callout') return 1;
         if (b.purpose == 'callout') return -1;
@@ -23,6 +23,6 @@ function mapIsBetterThanCallout(a, b) {
 exports.sort = function(transitions) {
     // если есть транзишен коллаута и карты, двигаем тразишен коллаута за карту
     if (_.find(transitions, {purpose: 'map'})) {
-        transitions.sort(mapIsBetterThanCallout);
+        transitions.sort(moveCalloutToEnd);
     }
 };
