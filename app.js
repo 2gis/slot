@@ -128,6 +128,8 @@ module.exports = function() {
 
             middleware.setup();
 
+            app.emit('init');
+
             // Makeup mode
             if (!DEBUG || !app.historyDisabled) {
                 appState.parse(req, initContinue);
@@ -554,6 +556,46 @@ module.exports = function() {
 
         removeRegistry: function(key) {
             delete registry[key];
+        },
+
+        /**
+         * Чтение или запись кук. Работает как на сервере, так и на клиенте
+         * Интерфейс как у jQuery
+         * Подразумевается, что на клиенте есть jQuery
+         */
+        cookie: function(key, value, params) {
+            params = params || {};
+
+            _.defaults(params, {
+                path: '/',
+                expires: 365
+            });
+
+            if (app.isClient) {
+                return $.cookie(key, value, params);
+            } else {
+                var cookie = {
+                    key: value
+                };
+
+                if (typeof value != 'undefined') {
+                    if (params.expires) {
+                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000) // jquery days to express ms
+                    }
+
+                    app.emit('cookie', key, value, params);
+                }
+
+                return cookie;
+            }
+        },
+
+        removeCookie: function(key) {
+            if (app.isClient) {
+                return $.removeCookie(key);
+            } else {
+                app.emit('cookie', key, undefined); // undefined -> clearCookie
+            }
         },
 
         // публикуем функцию для тестов
