@@ -210,6 +210,7 @@ module.exports = function() {
 
             $(moduleBlockId(moduleId)).replaceWith(html);
             activeModule.wrapper.isEventsBound = false;
+
             if (!options.dontBindEvents) {
                 app.bindEvents(moduleId);
             }

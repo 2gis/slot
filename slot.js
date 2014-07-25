@@ -28,19 +28,57 @@ module.exports = function(app, params) {
         addTransition: app.addTransition,
         runInQueue: app.runInQueue,
 
+        /**
+         * @deprecated. Use 'init' instead
+         */
         initModule: function(moduleConf, callback) {
+            return this.init(moduleConf, callback);
+        },
+
+        /**
+         * Инициализирует модуль
+         *
+         * @param name {string} - тип модуля, например firmCard
+         * @param data {string} - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
+         * @param callback {Function} - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
+         */
+        init: function(name, data, callback) {
+            var moduleConf;
+
             // Если слот умер - ничего инитить нет смысла,
             // потому что слот умирает вместе с родительским модулем
             if (slot.stage == 'disposed' || slot.stage == 'killed') return;
 
-            var module = loadModule(moduleConf);
+            // Старый интерфейс
+            if (_.isObject(name)) {
+                callback = data;
 
-            module.init(moduleConf.data, function(err) {
-                var moduleName = moduleConf.name || moduleConf.type;
+                var moduleConf = name;
+
+                name = moduleConf.type;
+                data = moduleConf.data;
+            }
+
+            var module = loadModule({ type: name, data: data });
+
+            module.init(data, function(err) {
+                var moduleName = name;
+
                 if (err) {
                     module.dispose();
                 } else {
-                    slot.modules[moduleName] = module;
+                    var modules = slot.modules[moduleName];
+
+                    // Если модуль такого типа уже есть, то преобразуем в массив
+                    if (modules) {
+                        if (!_.isArray(modules)) { // Если сейчас только 1 инстанс, и ещё не преобразовано в массив
+                            slot.modules[moduleName] = [modules];
+                        }
+
+                        slot.modules[moduleName].push(module);
+                    } else {
+                        slot.modules[moduleName] = module;
+                    }
                 }
 
                 if (callback) {
@@ -52,11 +90,11 @@ module.exports = function(app, params) {
         },
 
         initModules: function(modules, callback) {
-            async.map(modules, slot.initModule, callback);
+            async.map(modules, slot.init, callback);
         },
 
         initModulesSeries: function(modules, callback) {
-            async.mapSeries(modules, slot.initModule, callback);
+            async.mapSeries(modules, slot.init, callback);
         },
 
         requireComponent: function(name, extraArgs) {
@@ -189,13 +227,13 @@ module.exports = function(app, params) {
 
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
         regFn: function(fn) {
-            function ret() {
+            function slotRegFn() {
                 if (slot.stage != 'killed' && slot.stage != 'disposed') {
                     fn.apply(this, arguments);
                 }
             }
 
-            return ret;
+            return slotRegFn;
         },
 
         /**

@@ -10,7 +10,6 @@ module.exports = function(params) {
     var app = baseApp.instance;
 
     _.extend(app, {
-
         wasRendered: false
     });
 
