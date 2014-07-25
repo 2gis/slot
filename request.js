@@ -71,6 +71,7 @@ function serverRequest(conf) {
                 }
             }
         }
+
         conf.complete.call(conf.context, error, body, xhr);
     });
 }
@@ -97,8 +98,10 @@ function clientRequest(conf) {
                 userAgent: navigator.userAgent,
                 url: document.location.toString()
             };
+
             sendError('AJAX request error - ' + conf.url, sendErrorData);
         }
+
         errorCallback(xhr, error);
     };
 
@@ -114,5 +117,6 @@ function clientRequest(conf) {
         conf.error = noop;
         abort.call(xhr);
     };
+
     return xhr;
 }

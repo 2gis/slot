@@ -30,7 +30,9 @@ module.exports = function(app, moduleConf, slot) {
         module: function(module) {
             var moduleName = module;
 
-            module = _.isString(module) ? slot.modules[module] : module; // Это неочевидно, копий шаблонов может быть много
+            module = _.isString(module) ? slot.modules[module] : module;
+
+            if (_.isArray(module)) throw new Error("Module helper: unable to render array of modules");
 
             // Из какого-то шаблона подключается несуществующий модуль
             if (!module) throw new Error("Module helper: unable to render module " + moduleName);

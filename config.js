@@ -1,5 +1,5 @@
-var env = require('./env');
-var _ = require('lodash');
+var env = require('./env'),
+    _ = require('lodash');
 
 var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : dg.config;
 

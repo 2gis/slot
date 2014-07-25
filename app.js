@@ -357,11 +357,7 @@ module.exports = function() {
 
             var fn = 'modules/' + moduleName + '/' + fileName;
 
-            try {
-                return app.require(fn);
-            } catch (ex) {
-                return null;
-            }
+            return app.require(fn);
         },
 
         invoke: function(fn, args, provider, self) {
@@ -541,6 +537,7 @@ module.exports = function() {
          * Например raise(404) на сервере показывает глобальную 404 страницу, т.е. данная функция некоторый
          * аналог конструкции throw, но она не подходит в силу обрыва контекста исполнения при вызове асинхронных
          * функций в javascript'e
+         * А как работает? Тупо смотрится значение raised в server.js
          * @param value объект исключения
          */
         raise: function(value) {
