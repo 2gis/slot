@@ -285,7 +285,7 @@ module.exports = function() {
 
             // Если у модуля уже навешены события, не навешиваем их еще раз
             // Проверяем на SKIP_APP_RUN для того, чтобы работали dom-тесты. Вообще, надо выкосить такие dom-тесты
-            if (on && module.wrapper.isEventsBound === true && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
+            if (on && module.wrapper.isEventsBound === true && module.slot.stateRendered() && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
                 return;
             }
             module.wrapper.isEventsBound = on;
