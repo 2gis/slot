@@ -25,6 +25,8 @@ function getBuildPath() {
     return buildPath || rootPath + 'build/';
 }
 
+exports.getBuildPath = getBuildPath;
+
 /**
  * Запрашивает модуль относительно корня проекта
  *
@@ -52,11 +54,28 @@ exports.globals = globals;
 /**
  * Запрашивает модуль относительно папки куда складываются собираемые файлы
  *
- * @param name
- * @returns {*}
+ * @param path
  */
-exports.requirePrivate = function(name) {
-    return require(getBuildPath() + 'private/' + name + '.js');
+function requireFromBuild(path) {
+    return require(getBuildPath() + path);
+}
+
+/**
+ * Запрашивает модуль относительно папки куда складываются собираемые приватные файлы
+ *
+ * @param {String} path
+ */
+exports.requirePrivate = function(path) {
+    return requireFromBuild('private/' + path);
+};
+
+/**
+ * Запрашивает модуль относительно папки куда складываются собираемые публичные файлы
+ *
+ * @param {String} path
+ */
+exports.requirePublic = function(path) {
+    return requireFromBuild('public/' + path);
 };
 
 var isServer = typeof window == 'undefined';
