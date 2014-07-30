@@ -7,12 +7,9 @@
 
     var objectProto = Object.prototype;
     var arrayProto = Array.prototype;
-    var functionProto = Function.prototype;
     var stringProto = String.prototype;
 
-    var object_hasOwnProperty = objectProto.hasOwnProperty;
     var object_toString = objectProto.toString;
-    var array_slice = arrayProto.slice;
 
     function isArray(obj) {
         return object_toString.call(obj) == '[object Array]';
@@ -35,67 +32,6 @@
             return (num < 0 ? -1 : 1) * Math.floor(Math.abs(num));
         }
         return num;
-    }
-
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create
-     */
-    if (!Object.create) {
-        var createEmpty = function() {
-            var iframe = document.createElement('iframe');
-            var container = document.body || document.documentElement;
-
-            iframe.style.display = 'none';
-            container.appendChild(iframe);
-            iframe.src = 'javascript:';
-
-            var empty = iframe.contentWindow.Object.prototype;
-
-            container.removeChild(iframe);
-            iframe = null;
-            container = null;
-
-            delete empty.constructor;
-            delete empty.isPrototypeOf;
-            delete empty.hasOwnProperty;
-            delete empty.propertyIsEnumerable;
-            delete empty.valueOf;
-            delete empty.toString;
-            delete empty.toLocaleString;
-
-            function Empty() {}
-
-            Empty.prototype = empty;
-
-            createEmpty = function () {
-                return new Empty();
-            };
-
-            return new Empty();
-        };
-
-        Object.create = function(proto, props) {
-            if (arguments.length >= 2) {
-                if (props === null) {
-                    throw new TypeError('props is not a non-null object');
-                } else if (props !== undefined) {
-                    throw new TypeError('Second argument not supported');
-                }
-            }
-
-            if (proto === null) {
-                return createEmpty();
-            }
-
-            if (proto != Object(proto)) {
-                throw new TypeError(proto + ' is not an object or null');
-            }
-
-            function F() {}
-            F.prototype = proto;
-
-            return new F();
-        };
     }
 
     /**
