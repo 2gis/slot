@@ -8,7 +8,7 @@
      * @private
      */
     function getClassNames(el) {
-        return el.className.match(/\S+/g) || [];
+        return (el.className.baseVal !== undefined ? el.className.baseVal : el.className).toString().match(/\S+/g) || [];
     }
 
     /**
