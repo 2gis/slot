@@ -99,25 +99,12 @@ module.exports = function() {
      * Получить модификаторы.
      * Только на клиенте, т.к. используем dom элемент.
      *
-     * @param {object} moduleWrapper
-     * @returns {_.map|*}
+     * @param {Object} moduleWrapper
+     * @returns {Object}
      */
     function getModificators(moduleWrapper) {
-        var modificators = {};
-
-        function collectModificators(element) {
-            if (!_.isObject(element[0])) return;
-
-            var elementClasses = element[0].className.split(' ');
-
-            _.each(elementClasses, function(className) {
-                modificators = _.extend(modificators, namer.getModificatorFromClass(className));
-            });
-        }
-
-        collectModificators(moduleWrapper.block());
-
-        return modificators;
+        var el = moduleWrapper.block()[0];
+        return el ? namer.getModificatorsFromClassName(el.className) : {};
     }
 
     /**
@@ -218,12 +205,8 @@ module.exports = function() {
 
             if (modificators) { // Без аргумента работает как геттер
                 var oldMods = _.clone(module.mods),
-                    newMods = {},
+                    newMods = _.clone(modificators),
                     block;
-
-                _.each(modificators, function(val, key) {
-                    newMods[key] = val;
-                });
 
                 _.extend(module.mods, newMods);
 
@@ -245,7 +228,7 @@ module.exports = function() {
                         }
 
                         var handlers = module.instance.modHandlers;
-                        if (handlers && handlers[key]) { // Вызов деклараций установки или удаления модификатора
+                        if (handlers && handlers[key]) { // Вызов обработчиков установки или удаления модификатора
                             if (val != null) {
                                 if (handlers[key].set) handlers[key].set.call(module.instance, val);
                             } else {
