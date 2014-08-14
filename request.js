@@ -33,7 +33,7 @@ function serverRequest(conf) {
     // Browserify хак, специально имя пакето вынесено в переменную
     var pkg = 'request';
     var request = require(pkg),
-        loggerModule = './logger', // move module name to separate value to avoid browserify include on client    
+        loggerModule = './logger', // move module name to separate value to avoid browserify include on client
         winston = require(loggerModule),
         config = require('./config');
 
@@ -76,6 +76,10 @@ function serverRequest(conf) {
     });
 }
 
+if (typeof window != 'undefined') {
+    window._slotXHRActiveCount = 0;
+}
+
 function clientRequest(conf) {
     var reqwest = require('reqwest'),
         sendError = req('lib/sendError');
@@ -109,7 +113,10 @@ function clientRequest(conf) {
         conf.crossOrigin = true;
     }
 
-    var xhr = reqwest(conf);
+    var xhr = reqwest(conf).always(function() {
+        window._slotXHRActiveCount--;
+    });
+    window._slotXHRActiveCount++;
 
     // во время аборта запроса не логируем его как ошибку
     var abort = xhr.abort;
