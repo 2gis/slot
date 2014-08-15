@@ -464,6 +464,8 @@ module.exports = function() {
             var moduleWrapperConstructor = require('./moduleWrapper'),
                 moduleWrapper = moduleWrapperConstructor(app, module, slot);
 
+            app.fetchTmplHelpers(slot);
+
             // Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве
             var kill = function() {
                 if (!moduleWrapper || slot.stage == slot.STAGE_KILLED) return;
@@ -575,11 +577,25 @@ module.exports = function() {
         registry: registry,
 
         /**
-         * Для переопределения в конечных продуктах
-         * вызывается на каждом новом слоте
-         * @param slot
+         * Вызывается на каждом новом слоте
+         *
+         * @param {Object} slot
+         *
+         * # Для переопределения в конечных продуктах
          */
         setupSlot: function(slot) {
+
+        },
+
+        /**
+         * Собирает кастомные template helpers
+         * Вызывается после создания каждого нового moduleWrapper
+         *
+         * @param {Object} slot
+         *
+         * # Для переопределения в конечных продуктах
+         */
+        fetchTmplHelpers: function(slot) {
 
         },
 

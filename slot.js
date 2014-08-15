@@ -229,16 +229,6 @@ module.exports = function(app, params) {
             }
         },
 
-        /**
-         * Заглушка для расширения хелперов в moduleWrapper
-         */
-        extendHelpers: function() {},
-
-        /**
-         * Заглушка для расширения партиалов в moduleWrapper
-         */
-        extendPartials: function() {},
-
         cookie: app.cookie
     };
 
