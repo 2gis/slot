@@ -76,9 +76,12 @@ function serverRequest(conf) {
     });
 }
 
+
 if (typeof window != 'undefined') {
-    window._slotXHRActiveCount = 0;
+    window.TestHandles = window.TestHandles || {};
+    window.TestHandles.XHRActiveCount = 0;
 }
+
 
 function clientRequest(conf) {
     var reqwest = require('reqwest'),
@@ -114,9 +117,9 @@ function clientRequest(conf) {
     }
 
     var xhr = reqwest(conf).always(function() {
-        window._slotXHRActiveCount--;
+        window.TestHandles.XHRActiveCount--;
     });
-    window._slotXHRActiveCount++;
+    window.TestHandles.XHRActiveCount++;
 
     // во время аборта запроса не логируем его как ошибку
     var abort = xhr.abort;
