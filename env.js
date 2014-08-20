@@ -5,21 +5,36 @@ var rootPath = './',
     events = require('events'),
     _ = require('lodash');
 
-exports.setRootPath = function(path) {
-    rootPath = path;
-    if (!rootPath.endsWith('/')) {
-        rootPath = rootPath + '/';
-    }
-};
+var isServer = typeof window == 'undefined';
 
+if (!isServer) {
+    window.global = window;
+}
+
+var rootPath = './';
+
+/**
+ * @type {global}
+ */
+exports.global = global;
+
+/**
+ * @returns {string}
+ */
 exports.getRootPath = function() {
     return rootPath;
 };
 
-exports.setBuildPath = function(path) {
-    buildPath = path;
+/**
+ * @param {string} path
+ */
+exports.setRootPath = function(path) {
+    rootPath = path.endsWith('/') ? path : path + '/';
 };
 
+/**
+ * @returns {string}
+ */
 function getBuildPath() {
     return buildPath || rootPath + 'build/';
 }
@@ -27,9 +42,16 @@ function getBuildPath() {
 exports.getBuildPath = getBuildPath;
 
 /**
- * Запрашивает модуль относительно корня проекта
+ * @param {string} path
+ */
+exports.setBuildPath = function(path) {
+    buildPath = path;
+};
+
+/**
+ * Запрашивает модуль относительно корня проекта.
  *
- * @param name
+ * @param {string} name
  * @returns {*}
  */
 exports.require = function(name) {
@@ -40,121 +62,118 @@ exports.require = function(name) {
 };
 
 /**
- * Возвращает глобальный контекст среды исполнения (в node.js или браузере)
- *
- * @returns {global|window}
- */
-function globals() {
-    return typeof global != 'undefined' ? global : window;
-}
-
-exports.globals = globals;
-
-/**
  * Запрашивает модуль относительно папки куда складываются собираемые файлы
  *
- * @param path
+ * @param {string} path
  */
 function requireFromBuild(path) {
     return require(getBuildPath() + path);
 }
 
 /**
- * Запрашивает модуль относительно папки куда складываются собираемые приватные файлы
+ * Запрашивает модуль относительно папки, куда складываются собираемые приватные файлы.
  *
- * @param {String} path
+ * @param {string} path
+ * @returns {*}
  */
-exports.requirePrivate = function(path) {
+function requirePrivate(path) {
     return requireFromBuild('private/' + path);
-};
+}
+
+exports.requirePrivate = requirePrivate;
 
 /**
- * Запрашивает модуль относительно папки куда складываются собираемые публичные файлы
+ * Запрашивает модуль относительно папки, куда складываются собираемые публичные файлы.
  *
- * @param {String} path
+ * @param {string} path
+ * @returns {*}
  */
 exports.requirePublic = function(path) {
     return requireFromBuild('public/' + path);
 };
 
-var isServer = typeof window == 'undefined';
-
 /**
- * Определяем, Грым ли это (Грым это десктопная версия 2gis).
+ * @param {string} serverName
+ * @param {string} clientName
+ * @returns {*}
  */
-exports.isGrym = typeof DGOfflineAPI != 'undefined' && !!DGOfflineAPI.systemContext;
-exports.isServer = isServer;
-exports.isClient = !isServer;
-
 function envRequire(serverName, clientName) {
     if (isServer) {
         return require(serverName);
     } else {
         if (!clientName) {
-            clientName = serverName.charAt(0).toUpperCase() + serverName.substr(1);
+            clientName = serverName.charAt(0).toUpperCase() + serverName.slice(1);
             clientName = window[clientName] ? clientName : serverName;
         }
         return window[clientName];
     }
 }
 
-var conf = {};
-var confEmitter = new events.EventEmitter();
+var vars = {},
+    varsObserver = new events.EventEmitter();
 
 /**
- * Настройка окружения некоторым значением
- * @param {object} cfg
- */
-function _set(name, value) {
-    if (name in conf) {
-        throw new Error("Environment field " + name + " already configured");
-    }
-    conf[name] = value;
-    confEmitter.emit(name, value);
-}
-
-/**
- * Берем что-либо из настроенного окружения
+ * Читает переменную окружения. Если переменная не определена - бросает ошибку.
  *
- * Если значения нет - бросаем ошибку, мол, не все проинициализировали
- * @param name
+ * @param {string} name
+ * @returns {*}
  */
 function _get(name) {
-    if (name in conf) {
-        return conf[name];
+    if (!(name in vars)) {
+        throw new Error('Environment variable "' + name + '" not defined');
     }
-    throw new Error("Environment not configured for " + name + " field");
+    return vars[name];
 }
 
+exports.get = _get;
+
 /**
- * Настройка окружения некоторым конфигом
- * @param {object} cfg
+ * Устанавливает переменную окружения.
+ *
+ * @param {string} name
+ * @param {*} value
  */
-exports.setup = function(cfg) {
-    for (var name in cfg) {
-        if (cfg.hasOwnProperty(name)) {
-            _set(name, cfg[name]);
+function _set(name, value) {
+    if (name in vars) {
+        throw new Error('Environment variable ' + name + ' already configured');
+    }
+    vars[name] = value;
+    varsObserver.emit(name, value);
+}
+
+exports.set = _set;
+
+/**
+ * Настройка окружения.
+ * @param {Object} conf
+ */
+exports.setup = function(conf) {
+    for (var name in conf) {
+        if (conf.hasOwnProperty(name)) {
+            _set(name, conf[name]);
         }
     }
 };
 
-exports.get = _get;
-exports.set = _set;
-
-exports.onceConfigured = function(name, callback) {
-    if (name in conf) {
-        callback(conf[name]);
+/**
+ * Подписка на определение переменной окружения. Срабатывает немедленно, если переменная уже определена.
+ *
+ * @param {string} name
+ * @param {Function} callback
+ */
+exports.whenSet = function(name, callback) {
+    if (name in vars) {
+        callback(vars[name]);
     } else {
-        confEmitter.once(name, callback);
+        varsObserver.once(name, callback);
     }
 };
 
+exports.isServer = isServer;
+exports.isClient = !isServer;
+// Определяем, Грым ли это (Грым - это десктопная версия 2gis).
+exports.isGrym = typeof DGOfflineAPI != 'undefined' && !!DGOfflineAPI.systemContext;
 
-// ---- expose same functions as globals -----
-
-globals().req = exports.require;
-globals().envRequire = envRequire;
-globals().requirePrivate = exports.requirePrivate;
-
-if (!Object.freeze) Object.freeze = _.identity;
-
+global.req = exports.require;
+global.requirePrivate = requirePrivate;
+global.envRequire = envRequire;
