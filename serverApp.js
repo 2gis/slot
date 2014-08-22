@@ -1,5 +1,4 @@
-var _ = require('lodash'),
-    baseAppConstructor = require('./app');
+var baseAppConstructor = require('./app');
 
 module.exports = function(params) {
 
@@ -8,10 +7,7 @@ module.exports = function(params) {
     });
 
     var app = baseApp.instance;
-
-    _.extend(app, {
-        wasRendered: false
-    });
+    app.wasRendered = false;
 
     return app;
 };

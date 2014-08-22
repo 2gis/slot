@@ -210,18 +210,15 @@ module.exports = function(app, moduleConf, slot) {
         },
 
         bindEvents: function(elementName) {
-            var moduleId = moduleConf.uniqueId;
-            app.bindEvents(moduleId, elementName);
+            app.bindEvents(moduleConf.uniqueId, elementName);
         },
 
         block: function() {
-            var moduleId = moduleConf.uniqueId;
-            return app.block(moduleId);
+            return app.block(moduleConf.uniqueId);
         },
 
         id: function() {
-            var moduleId = moduleConf.uniqueId;
-            return moduleId;
+            return moduleConf.uniqueId;
         },
 
         interface: moduleConf.interface,

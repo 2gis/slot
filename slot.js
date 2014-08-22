@@ -17,7 +17,7 @@ module.exports = function(app, params) {
     }
 
     function ensureFunction(f) {
-        return _.isFunction(f) ? f : function() {};
+        return _.isFunction(f) ? f : _.noop;
     }
 
     var slot = {
@@ -38,13 +38,11 @@ module.exports = function(app, params) {
         /**
          * Инициализирует модуль
          *
-         * @param name {string} - тип модуля, например firmCard
-         * @param data {string} - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
-         * @param callback {Function} - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
+         * @param {string} name - тип модуля, например firmCard
+         * @param {object} [data] - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
+         * @param {Function} callback - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
          */
         init: function(name, data, callback) {
-            var moduleConf;
-
             // Если слот умер - ничего инитить нет смысла,
             // потому что слот умирает вместе с родительским модулем
             if (slot.stage == 'disposed' || slot.stage == 'killed') return;
@@ -57,6 +55,9 @@ module.exports = function(app, params) {
 
                 name = moduleConf.type;
                 data = moduleConf.data;
+            } else if (_.isFunction(data)) {
+                callback = data;
+                data = {};
             }
 
             var module = loadModule({ type: name, data: data });
