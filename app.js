@@ -493,7 +493,7 @@ module.exports = function() {
                 }
                 delete internals.moduleInstances[moduleId];
                 moduleWrapper = moduleInstance = module = slot = null;
-            }
+            };
 
             var dispose = function() {
                 if (moduleWrapper) { // Могли вызвать повторно

@@ -1,12 +1,61 @@
-/*
-var assert = require('assert'),
-    sinon = require('sinon');
 
+var assert = require('assert');
 
 describe('Core -> slot', function() {
-    var testEnv = require('./testEnv')(),
-        module = testEnv.app.loadModule({type: 'zoom'}), //dataViewerModule(slot);
-        slot = module.slot;
+    var slot;
+
+    before(function() {
+        var testEnv = require('./testEnv')();
+
+        slot = testEnv.slot;
+
+        testEnv.app.loadModule = function(conf) {
+            return {
+                id: function() {
+                    return conf.moduleId;
+                },
+                type: conf.type,
+                slot: slot,
+                init: function(data, cb) {
+                    cb();
+                }
+            };
+        };
+    });
+
+    it('#init с параметрами (type, callback)', function(cb) {
+        assert(slot.init, 'slot имеет метод init');
+
+        slot.init('foo', function(err, module) {
+            assert(!err);
+            assert(module);
+            assert.equal(module.type, 'foo');
+
+            cb();
+        });
+    });
+
+    it('#init с параметрами (type, data, callback)', function(cb) {
+        slot.init('foo', {}, function(err, module) {
+            assert(!err);
+            assert(module);
+            assert.equal(module.type, 'foo');
+
+            cb();
+        });
+    });
+
+    it('#init с параметрами (moduleConf, callback)', function(cb) {
+        slot.init({type: 'foo', data: {}}, function(err, module) {
+            assert(!err);
+            assert(module);
+            assert.equal(module.type, 'foo');
+
+            cb();
+        });
+    });
+
+    /*
 
     it('blank', function() {
 
@@ -108,5 +157,6 @@ describe('Core -> slot', function() {
             assert(result, 'Функция была вызвана после slot.dispose');
         });
     });
+
+    */
 });
-*/
