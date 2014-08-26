@@ -607,9 +607,8 @@ module.exports = function() {
             if (app.isClient) {
                 return $.cookie(key, value, params);
             } else {
-                var cookie = {
-                    key: value
-                };
+                var cookie = {};
+                cookie[key] = value;
 
                 if (typeof value != 'undefined') {
                     if (params.expires) {
