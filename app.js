@@ -21,7 +21,8 @@ module.exports = function() {
             ids: {}
         },
         queryModules = modulesQuering(internals),
-        raised;
+        raised,
+        cookies; // Куки, прилетевшие в инит приложения (используется на сервере)
 
     var uniqueIdCounter = 0;
 
@@ -168,6 +169,8 @@ module.exports = function() {
                 ip: req.ip,
                 ua: getBrowser(req.ua)
             };
+
+            cookies = req.cookies;
 
             data[config['authApi.cookieName']] = req[config['authApi.cookieName']];
 
@@ -607,19 +610,17 @@ module.exports = function() {
             if (app.isClient) {
                 return $.cookie(key, value, params);
             } else {
-                var cookie = {
-                    key: value
-                };
-
                 if (typeof value != 'undefined') {
                     if (params.expires) {
                         params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000) // jquery days to express ms
                     }
 
                     app.emit('cookie', key, value, params);
+                } else {
+                    value = cookies[key]; // Извлечь значение куки key на сервере из запроса клиента
                 }
 
-                return cookie;
+                return value;
             }
         },
 
@@ -627,7 +628,7 @@ module.exports = function() {
             if (app.isClient) {
                 return $.removeCookie(key);
             } else {
-                app.emit('cookie', key, undefined); // undefined -> clearCookie
+                app.emit('removeCookie', key);
             }
         },
 

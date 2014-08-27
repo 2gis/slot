@@ -34,4 +34,30 @@ describe.skip('Core -> app', function() {
         });
     });
 
+    describe('-> cookie', function() {
+        it('Выставление значения на сервере', function() {
+            var callback = sinon.spy();
+            app.on('cookie', callback);
+
+            app.cookie('cookieName', 'cookieVal');
+            assert.equal(app.cookie('cookieName'), 'cookieVal', 'app.cookie должен вернуть выставленное ранее значение');
+
+            assert(callback.calledOnce, 'callback должен был быть вызван единажды');
+        });
+
+        it('Чтение на сервере клиентских кук', function() {
+            var value = 'qwebaksfgahli8';
+
+            app.init({
+                cookies: {
+                    key: value
+                }
+            });
+
+            assert.equal(app.cookie('key'), value, 'app.cookie должен вернуть выставленное на клиенте значение');
+
+            app.removeCookie('key');
+            assert(!app.cookie('key'), 'app.cookie не должен вернуть выставленное на клиенте значение, ведь его удалили выше');
+        });
+    });
 });
