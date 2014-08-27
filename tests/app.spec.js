@@ -1,4 +1,5 @@
 var assert = require('assert');
+var sinon = require('sinon');
 
 describe.skip('Core -> app', function() {
     var app = require('../app.js');
@@ -31,6 +32,17 @@ describe.skip('Core -> app', function() {
             };
             mods = appInstance.getModificators(moduleWrapper);
             assert.ok(mods);
+        });
+    });
+
+    describe('-> cookie', function() {
+        it('app.cookie возвращает верное значение на сервере и бросает событие', function() {
+            var callback = sinon.spy();
+            app.on('cookie', callback);
+
+            assert.deepEqual(app.cookie('cookieName', 'cookieVal'), {cookieName: 'cookieVal'}, 'app.cookie должен вернуть объект {cookieName: \'cookieVal\'}');
+
+            assert(callback.calledOnce, 'callback должен был быть вызван единажды');
         });
     });
 
