@@ -93,6 +93,7 @@ var stuff = module.exports = {
 
     /**
      * Удаляет с конца массива переданное значение
+     * @param array
      * @param value
      */
     pop: function(array, value) {
@@ -107,7 +108,7 @@ var stuff = module.exports = {
      * Get property for object by path like prop1.prop2.prop3
      * @param obj
      * @param path
-     * @param String [separator=.] Separotor for splitting path
+     * @param {String} [separator=.] Separotor for splitting path
      * @returns {*}
      */
     getByPath: function(obj, path, separator) {

@@ -104,13 +104,13 @@ module.exports = function(app, moduleConf, slot) {
     moduleWrapper = {
         // Initializes the module with the given params. Invokes callback when init process is ready.
         init: function(state, callback) {
-            slot.stage = 'initing';
+            slot.stage = slot.STAGE_INITING;
 
             function done(err) {
                 // При асинхронном ините модуля слот мог умереть раньше,
                 // чем завершится инициализация, и не надо менять его стэйдж!
-                if (!err && slot.stage == 'initing') {
-                    slot.stage = 'inited';
+                if (!err && slot.stage == slot.STAGE_INITING) {
+                    slot.stage = slot.STAGE_INITED;
                 }
 
                 if (callback) {
@@ -209,14 +209,6 @@ module.exports = function(app, moduleConf, slot) {
             return renderTag(tag, attrs, compiledTemplateHTML);
         },
 
-        bindEvents: function(elementName) {
-            app.bindEvents(moduleConf.uniqueId, elementName);
-        },
-
-        block: function() {
-            return app.block(moduleConf.uniqueId);
-        },
-
         id: function() {
             return moduleConf.uniqueId;
         },
@@ -233,6 +225,12 @@ module.exports = function(app, moduleConf, slot) {
 
         type: moduleConf.type
     };
+
+    if (app.isClient) {
+        moduleWrapper.block = _.partial(app.block, moduleConf.uniqueId);
+        moduleWrapper.bindEvents = _.partial(app.bindEvents, moduleConf.uniqueId);
+        moduleWrapper.unbindEvents = _.partial(app.unbindEvents, moduleConf.uniqueId);
+    }
 
     return moduleWrapper;
 };

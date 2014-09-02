@@ -130,10 +130,13 @@ module.exports = function() {
         stateNotRendered: false,
         server: true,
 
-        stateRendered: function() {
-            var notRendered = (!app.server && history.emulate) || app.stateNotRendered;
-
-            return !app.isBound() && !notRendered;
+        /**
+         * Отвечает на вопрос нужно ли отрисовывать стэйт в случае инита приложения
+         * (когда приложение уже проиничино есс-но вернет true)
+         * @returns {boolean}
+         */
+        needRenderState: function() {
+            return app.isBound() || app.stateNotRendered;
         },
 
         isBound: function() {
@@ -286,9 +289,13 @@ module.exports = function() {
          */
         notify: function (moduleId, message) {
             var args = [].slice.call(arguments, 2),
-                activeModule,
-                notifiedModule = internals.moduleInstances[moduleId], // Модуль, пославший нотифай
-                currentModuleId = notifiedModule.parentId,
+                notifiedModule = internals.moduleInstances[moduleId]; // Модуль, пославший нотифай
+
+            if (!notifiedModule) {
+                throw new Error("app.notify: module with id " + moduleId + " doesn't exists, message: " + message);
+            }
+
+            var currentModuleId = notifiedModule.parentId,
                 retValue;
 
             var needStop = false;
@@ -299,6 +306,8 @@ module.exports = function() {
                     needStop = true;
                 }
             };
+
+            var activeModule;
 
             while (currentModuleId) {
                 activeModule = internals.moduleInstances[currentModuleId]; // Текущий модуль, у которого будем искать диспетчеры
@@ -457,8 +466,8 @@ module.exports = function() {
 
             // Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве
             var kill = function() {
-                if (!moduleWrapper || moduleWrapper.stage == 'killed') return;
-                moduleWrapper.stage = slot.stage = 'killed';
+                if (!moduleWrapper || slot.stage == slot.STAGE_KILLED) return;
+                slot.stage = slot.STAGE_KILLED;
 
                 slot.clearTimeouts();
                 slot.clearIntervals();
@@ -479,7 +488,7 @@ module.exports = function() {
                 if (slot.isClient) {
                     slot.block().remove();
                 }
-                moduleWrapper.stage = slot.stage = 'disposed'; // Сомнительно, ведь дальше враппер и слот удаляются
+                slot.stage = slot.STAGE_DISPOSED;
 
                 var children = internals.moduleInstances[moduleId].children;
                 if (children) {

@@ -21,6 +21,15 @@ module.exports = function(app, params) {
     }
 
     var slot = {
+        STAGE_INITING: 1,
+        STAGE_INITED: 2,
+        STAGE_KILLED: 4,
+        STAGE_DISPOSED: 8,
+        STAGE_ALIVE: 3, // = STAGE_INITING | STAGE_INITED
+        STAGE_NOT_ALIVE: 12, // = STAGE_DISPOSED | STAGE_KILLED
+
+        stage: 1,
+
         templates: params.templates,
         modules: {},
         config: app.config,
@@ -45,7 +54,7 @@ module.exports = function(app, params) {
         init: function(name, data, callback) {
             // Если слот умер - ничего инитить нет смысла,
             // потому что слот умирает вместе с родительским модулем
-            if (slot.stage == 'disposed' || slot.stage == 'killed') return;
+            if (slot.stage & slot.STAGE_NOT_ALIVE) return;
 
             // Старый интерфейс
             if (_.isObject(name)) {
@@ -141,10 +150,11 @@ module.exports = function(app, params) {
         domBound: app.isBound,
 
         /**
-         * Отвечает на вопрос отрисованы ли в dom-дереве модули находящиеся в начальном стейте
+         * Отвечает на вопрос нужно ли отрисовывать стэйт в случае инита приложения
+         * (когда приложение уже проиничино есс-но вернет true)
          * @returns {boolean}
          */
-        stateRendered: app.stateRendered,
+        needRenderState: app.needRenderState,
 
         rerender: _.partial(ensureFunction(app.rerender), moduleId),
 
@@ -168,24 +178,10 @@ module.exports = function(app, params) {
             return moduleId;
         },
 
-        wrapData: function(type, data) {
-            var args = [].slice.call(arguments, 1),
-                modelConstructor = function() {},
-                model = app.require('models/' + type);
-
-            modelConstructor.prototype = model.prototype;
-
-            var wrapper = function() {
-                var obj = new modelConstructor();
-                model.apply(obj, arguments);
-                return obj;
-            };
-
-            return args.length ? wrapper.apply(null, args) : wrapper;
-        },
-
         // Выставить таймаут для возможности его автоматической отмены при диспозе.
         setTimeout: function(func, delay) {
+            if (slot.stage & slot.STAGE_NOT_ALIVE) return;
+
             var timer = app.setTimeout(func, delay);
 
             if (timer) timeouts.push(timer);
@@ -225,14 +221,12 @@ module.exports = function(app, params) {
         closestModule: _.partial(ensureFunction(app.closestModule), moduleId),
 
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
-        regFn: function(fn) {
-            function slotRegFn() {
-                if (slot.stage != 'killed' && slot.stage != 'disposed') {
+        ifAlive: function(fn) {
+            return function() {
+                if (!(slot.stage & slot.STAGE_NOT_ALIVE)) {
                     fn.apply(this, arguments);
                 }
             }
-
-            return slotRegFn;
         },
 
         /**

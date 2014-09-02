@@ -9,7 +9,6 @@ module.exports = function() {
     var baseApp = baseAppConstructor();
     var app = baseApp.instance;
     var internals = baseApp.internals;
-    var appBinded = false; // Флаг указывает, биндились ли события глобально после инициализации приложения, или еще нет
 
     if (typeof $ != 'undefined') {
         /**
@@ -23,7 +22,7 @@ module.exports = function() {
          * - частично повторяет логику app.mod;
          * - при отсутствии элементов, получаем undefined.
          *
-         * @param {Object} [modificators]
+         * @param {Object} [mods]
          *     Если указан, то устанавливает переданные модификаторы и возвращает все модификаторы.
          *     Если не указан, просто возвращает модификаторы.
          *
@@ -136,7 +135,7 @@ module.exports = function() {
     _.extend(app, {
         server: false,
 
-        bind: function(params) {
+        bind: function() {
             app._stage = 'bind';
 
             var rootId = app.mainModule.id();
@@ -229,22 +228,16 @@ module.exports = function() {
          * Перерисовать модуль.
          *
          * @param {string} moduleId
-         * @param {object} options
-         *        {boolean} options.dontBindEvents не навешивать обработчики событий
-         *                  (может пригодиться, если вызвать rerender в init модуля)
          */
-        rerender: function(moduleId, options) {
+        rerender: function(moduleId) {
             var activeModule = app.getModuleById(moduleId),
                 html = activeModule.wrapper.render();
 
-            options = options || {};
+            app.unbindEvents(moduleId);
 
             $(moduleBlockId(moduleId)).replaceWith(html);
-            activeModule.wrapper.isEventsBound = false;
 
-            if (!options.dontBindEvents) {
-                app.bindEvents(moduleId);
-            }
+            app.bindEvents(moduleId);
         },
 
         /**
@@ -280,12 +273,14 @@ module.exports = function() {
          * @param {boolean} on
          */
         processEvents: function(moduleId, elementName, on) {
+            // во время инициализации события не навешиваем и не отвешиваем вообще, в принципе.
+            if (app._stage == 'init') return;
+
             var module = app.getModuleById(moduleId),
                 elements = module.instance.elements;
 
             // Если у модуля уже навешены события, не навешиваем их еще раз
-            // Проверяем на SKIP_APP_RUN для того, чтобы работали dom-тесты. Вообще, надо выкосить такие dom-тесты
-            if (on && module.wrapper.isEventsBound === true && module.slot.stateRendered() && !(typeof SKIP_APP_RUN != 'undefined' && SKIP_APP_RUN)) {
+            if (on && module.wrapper.isEventsBound) {
                 return;
             }
             module.wrapper.isEventsBound = on;
@@ -300,12 +295,10 @@ module.exports = function() {
                     containerId = moduleBlockId(moduleId);
 
                 // Выбираем все значения из объекта, за исключением селектора
-                var handlers  = _.omit(eventsConfig, 'selector');
+                var handlers = _.omit(eventsConfig, 'selector');
 
                 _.each(handlers, function(handler, eventName) {
-                    var container = $(containerId);
-
-                    bind(selector, elementName, container, eventName, handler, on);
+                    bind(selector, elementName, $(containerId), eventName, handler, on);
                 });
             });
 

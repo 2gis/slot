@@ -13,7 +13,8 @@ module.exports = (function() {
     }
 
     defer.when = function() {
-        var promise = $.when.apply($, arguments);
+        var args = _.compact(_.flatten(arguments, true));
+        var promise = $.when.apply($, args);
         promise.nodeify = _.partial(defer.nodeify, promise);
         return promise;
     };
