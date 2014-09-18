@@ -499,6 +499,8 @@ module.exports = function() {
 
                 if (module.dispose) module.dispose();
 
+                app.emit('moduleDisposed', moduleInstance);
+
                 if (parentId) {
                     internals.moduleInstances[parentId].children = _.without(internals.moduleInstances[parentId].children, moduleId);
                     delete internals.moduleInstances[parentId].slot.modules[moduleName];
@@ -529,6 +531,8 @@ module.exports = function() {
             if (module.block) {
                 slot.mod({module: moduleWrapper.type});
             }
+
+            app.emit('moduleLoaded', moduleInstance);
 
             return moduleWrapper;
         },
