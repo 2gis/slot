@@ -62,8 +62,11 @@ module.exports = function(app, moduleConf, slot) {
         }
     };
 
-    slot.extendHelpers(templateHelpers); // для расширения в конечных приложениях
-    slot.extendPartials(templatePartials); // для расширения в конечных приложениях
+    slot.templateHelpers = templateHelpers;
+
+    slot.extendTmplHelpers = function(helpersToAdd) {
+        _.extend(templateHelpers, helpersToAdd);
+    };
 
     function getTmplOptions() {
         var options = {},
