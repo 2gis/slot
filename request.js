@@ -85,6 +85,8 @@ if (typeof window != 'undefined') {
 
 function clientRequest(conf) {
     var reqwest = require('reqwest'),
+        config = require('./config'),
+        env = require('./env'),
         sendError = req('lib/sendError');
     // @doclink: https://github.com/ded/reqwest
 
@@ -116,16 +118,35 @@ function clientRequest(conf) {
         conf.crossOrigin = true;
     }
 
+    var timeoutId;
+    // эмулируем таймаут, чтобы создать 2 различных поведения: аборт по таймауту и аборт в коде
+    if (conf.timeout) {
+        var complete = conf.complete;
+
+        conf.complete = function(result) {
+            clearTimeout(timeoutId);
+            complete(result);
+        };
+
+        timeoutId = setTimeout(function () {
+            conf.error = errorCallback;
+            xhr.request.abort();
+        }, conf.timeout);
+
+        delete conf.timeout;
+    }
+
     var xhr = reqwest(conf).always(function() {
         window.TestHandles.XHRActiveCount--;
     });
     window.TestHandles.XHRActiveCount++;
 
     // во время аборта запроса не логируем его как ошибку
-    var abort = xhr.abort;
     xhr.abort = function() {
+        clearTimeout(timeoutId);
         conf.error = noop;
-        abort.call(xhr);
+        conf.complete = noop;
+        xhr.request.abort();
     };
 
     return xhr;
