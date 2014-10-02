@@ -59,6 +59,25 @@ module.exports = function(app, moduleConf, slot) {
             }
 
             return templateHelpers.partial.call(this, tmpl, options);
+        },
+
+        /**
+         * Модификаторы для элементов
+         * Пример использования: {{mods 'elemBase elem'}} при этом модификаторы из последних
+         * элементов будут приоритетнее.
+         *
+         * @returns {string}
+         */
+        mods: function() {
+            var mods = {};
+
+            for (var i = 0, len = arguments.length; i < len - 1; i++) {
+                mods = _.extend(mods, slot.element(arguments[i]).mod());
+            }
+
+            return _.map(mods, function(value, name) {
+                return namer.modificatorClass(name, value);
+            }).join(' ');
         }
     };
 
