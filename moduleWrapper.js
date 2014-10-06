@@ -63,8 +63,12 @@ module.exports = function(app, moduleConf, slot) {
 
         /**
          * Модификаторы для элементов
-         * Пример использования: {{mods 'elemBase elem'}} при этом модификаторы из последних
-         * элементов будут приоритетнее.
+         *
+         * Пример использования:
+         * <div class="dashboard__title {{mods 'elemBase elem'}}"></div>
+         * При этом модификаторы из последних элементов будут приоритетнее.
+         *
+         * На сервере проставляются через slot.element('name').mod({...})
          *
          * @returns {string}
          */
@@ -78,6 +82,25 @@ module.exports = function(app, moduleConf, slot) {
             return _.map(mods, function(value, name) {
                 return namer.modificatorClass(name, value);
             }).join(' ');
+        },
+
+        /**
+         * Хелпер для проверки наличия заиниченного модуля
+         *
+         * {{#ifmodule 'searchBar'}}
+         *    {{module 'searchBar'}}
+         * {{/ifmodule}}
+         *
+         * @param {String} name имя модуля
+         * @param {Object} options
+         * @returns {String}
+         */
+        ifmodule: function(name, options) {
+            if (slot.modules[name]) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
         }
     };
 
