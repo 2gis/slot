@@ -267,19 +267,6 @@ module.exports = function() {
             return module.mods;
         },
 
-        closestModule: function(moduleId, type) {
-            var module = internals.moduleInstances[moduleId];
-            while (module && module.type != type) {
-                module = internals.moduleInstances[module.parentId];
-            }
-
-            if (module) {
-                return module;
-            } else {
-                return false;
-            }
-        },
-
         /**
          * Посылает сообщение модулям-родителям (антоним broadcast).
          *

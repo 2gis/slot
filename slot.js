@@ -218,7 +218,11 @@ module.exports = function(app, params) {
 
         onTransitionEnd: app.onTransitionEnd,
 
-        closestModule: _.partial(ensureFunction(app.closestModule), moduleId),
+        self: function() {
+            var module = app.getModuleById(moduleId);
+
+            return module && module.instance;
+        },
 
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
         ifAlive: function(fn) {
