@@ -268,6 +268,27 @@ module.exports = function() {
         },
 
         /**
+         * Возвращает на сервере объект с методом mod для простановки модификаторов элементу.
+         * Чтобы модификаторы выставились не забудьте воспользоваться хелпером mods.
+         * @param {String} moduleId
+         * @param {String} elementName
+         * @returns {{mod: Function}}
+         */
+        element: function(moduleId, elementName) {
+            var module = app.getModuleById(moduleId);
+
+            return {
+                mod: function(mods) {
+                    var elemMods = (module.elementsMods[elementName] = module.elementsMods[elementName] || {});
+                    if (mods != null) {
+                        _.extend(elemMods, mods);
+                    }
+                    return elemMods;
+                }
+            };
+        },
+
+        /**
          * Посылает сообщение модулям-родителям (антоним broadcast).
          *
          * @param {string} moduleId
@@ -439,7 +460,8 @@ module.exports = function() {
                 parentId: parentId,
                 children: data.children || [],
                 container: data.container,
-                mods: data.mods || {}
+                mods: data.mods || {}, // модификаторы блока
+                elementsMods: {} // модификаторы элементов
             };
 
             internals.moduleInstances[moduleId] = moduleInstance;

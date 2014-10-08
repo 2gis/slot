@@ -49,7 +49,7 @@ module.exports = function(app, params) {
          *
          * @param {string} name - тип модуля, например firmCard
          * @param {object} [data] - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
-         * @param {Function} callback - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
+         * @param {Function} [callback] - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
          */
         init: function(name, data, callback) {
             // Если слот умер - ничего инитить нет смысла,
@@ -165,7 +165,7 @@ module.exports = function(app, params) {
             }
         },
 
-        element: _.partial(ensureFunction(app.element), moduleId),
+        element: _.partial(app.element, moduleId),
 
         bindEvents: _.partial(ensureFunction(app.bindEvents), moduleId),
 

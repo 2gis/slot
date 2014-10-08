@@ -59,6 +59,48 @@ module.exports = function(app, moduleConf, slot) {
             }
 
             return templateHelpers.partial.call(this, tmpl, options);
+        },
+
+        /**
+         * Модификаторы для элементов
+         *
+         * Пример использования:
+         * <div class="dashboard__title {{mods 'elemBase elem'}}"></div>
+         * При этом модификаторы из последних элементов будут приоритетнее.
+         *
+         * На сервере проставляются через slot.element('name').mod({...})
+         *
+         * @returns {string}
+         */
+        mods: function() {
+            var mods = {};
+
+            for (var i = 0, len = arguments.length; i < len - 1; i++) {
+                mods = _.extend(mods, slot.element(arguments[i]).mod());
+            }
+
+            return _.map(mods, function(value, name) {
+                return namer.modificatorClass(name, value);
+            }).join(' ');
+        },
+
+        /**
+         * Хелпер для проверки наличия заиниченного модуля
+         *
+         * {{#ifmodule 'searchBar'}}
+         *    {{module 'searchBar'}}
+         * {{/ifmodule}}
+         *
+         * @param {String} name имя модуля
+         * @param {Object} options
+         * @returns {String}
+         */
+        ifmodule: function(name, options) {
+            if (slot.modules[name]) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
         }
     };
 
