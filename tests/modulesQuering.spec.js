@@ -7,7 +7,7 @@ describe("Core->modulesQuering", function() {
 
     var m = function(cfg) {
         return _.defaults(cfg, {
-            instance: {},
+            moduleConf: {},
             slot: {
                 mod: function() {
                     return {};
@@ -17,14 +17,14 @@ describe("Core->modulesQuering", function() {
     };
 
     var internals = {
-        moduleInstances: {
+        moduleDescriptors: {
             "1": m({
                 type: "root",
                 children: ["1-1", "1-2"]
             }),
             "1-1": m({
                 type: "moscow",
-                instance: {
+                moduleConf: {
                     interface: {
                         now: function(id) {
                             return id == 1;
@@ -35,7 +35,7 @@ describe("Core->modulesQuering", function() {
             }),
             "1-2": m({
                 type: "moscow",
-                instance: {
+                moduleConf: {
                     interface: {
                         now: function(id) {
                             return id == 2;
@@ -65,7 +65,7 @@ describe("Core->modulesQuering", function() {
     var query = Quering(internals);
 
     function byId(id) {
-        return internals.moduleInstances[id];
+        return internals.moduleDescriptors[id];
     }
 
     it("Простой селектор", function() {

@@ -17,7 +17,7 @@ require('./templateHelpers'); // регистрирует хелперы сам,
 
 module.exports = function() {
     var internals = {
-            moduleInstances: {},
+            moduleDescriptors: {},
             ids: {}
         },
         queryModules = modulesQuering(internals),
@@ -152,13 +152,17 @@ module.exports = function() {
                 name = app.config.mainModule,
                 slug = url.split('/')[0];
 
-            if (DEBUG && (app.config.makeups && slug in app.config.makeups)) {
-                name = app.config.makeups[slug];
-                app.emit('resolveDevPage', name);
+            // То самое место, где вместо online подставляется makeup
+            var devPageConfig = app.config.devPages[slug];
+            if (DEBUG && devPageConfig) {
+                name = devPageConfig.module;
+                historyDisabled = !devPageConfig.history; // Чтоб запретить модификацию урла в мейкапе
             }
+
             if (app.config.isLandingPage(req)) {
                 name = 'landingPage';
             }
+
             return app.loadModule({type: name});
         },
 
@@ -207,14 +211,14 @@ module.exports = function() {
         },
 
         mod: function(moduleId, modificators) {
-            var module = app.getModuleById(moduleId);
+            var descriptor = app.getModuleDescriptorById(moduleId);
 
             if (modificators) { // Без аргумента работает как геттер
-                var oldMods = _.clone(module.mods),
+                var oldMods = _.clone(descriptor.mods),
                     newMods = _.clone(modificators),
                     block;
 
-                _.extend(module.mods, newMods);
+                _.extend(descriptor.mods, newMods);
 
                 _.each(newMods, function(val, key) {
                     var oldModVal = oldMods[key];
@@ -233,12 +237,12 @@ module.exports = function() {
                             if (newModClass) block.addClass(newModClass);
                         }
 
-                        var handlers = module.instance.modHandlers;
+                        var handlers = descriptor.moduleConf.modHandlers;
                         if (handlers && handlers[key]) { // Вызов обработчиков установки или удаления модификатора
                             if (val != null) {
-                                if (handlers[key].set) handlers[key].set.call(module.instance, val);
+                                if (handlers[key].set) handlers[key].set.call(descriptor.moduleConf, val);
                             } else {
-                                if (handlers[key].remove) handlers[key].remove.call(module.instance);
+                                if (handlers[key].remove) handlers[key].remove.call(descriptor.moduleConf);
                             }
 
                         }
@@ -257,14 +261,14 @@ module.exports = function() {
                              * }
                              */
                             if (handlers && handlers._any) {
-                                if (handlers._any.change) handlers._any.change.call(module.instance, key, val);
+                                if (handlers._any.change) handlers._any.change.call(descriptor.moduleConf, key, val);
                             }
                         }
                     }
                 });
             }
 
-            return module.mods;
+            return descriptor.mods;
         },
 
         /**
@@ -275,11 +279,11 @@ module.exports = function() {
          * @returns {{mod: Function}}
          */
         element: function(moduleId, elementName) {
-            var module = app.getModuleById(moduleId);
+            var descriptor = app.getModuleDescriptorById(moduleId);
 
             return {
                 mod: function(mods) {
-                    var elemMods = (module.elementsMods[elementName] = module.elementsMods[elementName] || {});
+                    var elemMods = (descriptor.elementsMods[elementName] = descriptor.elementsMods[elementName] || {});
                     if (mods != null) {
                         _.extend(elemMods, mods);
                     }
@@ -297,35 +301,35 @@ module.exports = function() {
          */
         notify: function (moduleId, message) {
             var args = [].slice.call(arguments, 2),
-                notifiedModule = internals.moduleInstances[moduleId]; // Модуль, пославший нотифай
+                notifier = internals.moduleDescriptors[moduleId]; // Модуль, пославший нотифай
 
-            if (!notifiedModule) {
+            if (!notifier) {
                 throw new Error("app.notify: module with id " + moduleId + " doesn't exists, message: " + message);
             }
 
-            var currentModuleId = notifiedModule.parentId,
+            var currentModuleId = notifier.parentId,
                 retValue;
 
             var needStop = false;
 
             var event = {
-                sender: notifiedModule,
+                sender: notifier,
                 stop: function() {
                     needStop = true;
                 }
             };
 
-            var activeModule;
+            var currentDescriptor;
 
             while (currentModuleId) {
-                activeModule = internals.moduleInstances[currentModuleId]; // Текущий модуль, у которого будем искать диспетчеры
+                currentDescriptor = internals.moduleDescriptors[currentModuleId]; // Текущий модуль, у которого будем искать диспетчеры
 
-                var module = activeModule.instance,
+                var module = currentDescriptor.moduleConf,
                     dispatcher = module.dispatcher;
 
                 if (dispatcher) {
-                    activeModule.slot.sender = notifiedModule;
-                    var actions = _.flatten(_.compact([dispatcher['*:' + message], dispatcher[notifiedModule.type + ':' + message]]));
+                    currentDescriptor.slot.sender = notifier;
+                    var actions = _.flatten(_.compact([dispatcher['*:' + message], dispatcher[notifier.type + ':' + message]]));
 
                     _.each(actions, function(action) { // Выполняем действия диспетчера
                         var result = action.apply(event, args);
@@ -338,7 +342,7 @@ module.exports = function() {
 
                 if (needStop) break;
 
-                currentModuleId = activeModule.parentId; // Ползём вверх по иерархии модулей
+                currentModuleId = currentDescriptor.parentId; // Ползём вверх по иерархии модулей
             }
 
             return retValue;
@@ -371,9 +375,9 @@ module.exports = function() {
         queryModules: queryModules,
 
         processModules: function(moduleId, selector, handler, inclusive) {
-            var modules = queryModules(moduleId, selector, inclusive);
-            _.each(modules, function(module) {
-                handler(module.instance, module);
+            var moduleDescriptors = queryModules(moduleId, selector, inclusive);
+            _.each(moduleDescriptors, function(moduleDescriptor) {
+                handler(moduleDescriptor.instance, moduleDescriptor);
             });
         },
 
@@ -407,11 +411,11 @@ module.exports = function() {
                 action = message.substr(lastIndexOfDelim + 1),
                 retValue;
 
-            app.processModules(moduleId, selector, function(instance) {
-                if (instance.interface) {
-                    var handler = instance.interface[action];
+            app.processModules(moduleId, selector, function(moduleInstance) {
+                if (moduleInstance.interface) {
+                    var handler = moduleInstance.interface[action];
                     if (handler) {
-                        retValue = handler.apply(instance.interface, args);
+                        retValue = handler.apply(moduleInstance.interface, args);
                     }
                 }
             });
@@ -448,13 +452,13 @@ module.exports = function() {
                 throw new Error('Bad module: ' + moduleName);
             }
 
-            var module = app.invoke(moduleConstructor, [slot], slot.requireComponent);
-            module.uniqueId = moduleId;
-            module.type = moduleName;
+            var moduleConf = app.invoke(moduleConstructor, [slot], slot.requireComponent);
+            moduleConf.uniqueId = moduleId;
+            moduleConf.type = moduleName;
 
-            var moduleInstance = {
+            var moduleDescriptor = {
                 id: moduleId,
-                instance: module,
+                moduleConf: moduleConf,
                 slot: slot,
                 type: moduleName,
                 parentId: parentId,
@@ -464,20 +468,20 @@ module.exports = function() {
                 elementsMods: {} // модификаторы элементов
             };
 
-            internals.moduleInstances[moduleId] = moduleInstance;
+            internals.moduleDescriptors[moduleId] = moduleDescriptor;
 
             if (parentId) {
-                internals.moduleInstances[parentId].children.push(moduleId);
+                internals.moduleDescriptors[parentId].children.push(moduleId);
             }
 
-            var moduleWrapperConstructor = require('./moduleWrapper'),
-                moduleWrapper = moduleWrapperConstructor(app, module, slot);
+            var moduleConstructor = require('./moduleConstructor'),
+                moduleInstance = moduleConstructor(app, moduleConf, slot);
 
             app.fetchTmplHelpers(slot);
 
             // Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве
             var kill = function() {
-                if (!moduleWrapper || slot.stage == slot.STAGE_KILLED) return;
+                if (!moduleInstance || slot.stage == slot.STAGE_KILLED) return;
                 slot.stage = slot.STAGE_KILLED;
 
                 slot.clearTimeouts();
@@ -486,10 +490,10 @@ module.exports = function() {
                 if (app.isBound()) {
                     app.unbindEvents(moduleId);
                 }
-                var children = internals.moduleInstances[moduleId].children;
+                var children = internals.moduleDescriptors[moduleId].children;
                 if (children) {
                     _.each(children, function(childrenId) {
-                        internals.moduleInstances[childrenId].wrapper.kill();
+                        internals.moduleDescriptors[childrenId].instance.kill();
                     });
                 }
             };
@@ -501,67 +505,72 @@ module.exports = function() {
                 }
                 slot.stage = slot.STAGE_DISPOSED;
 
-                var children = internals.moduleInstances[moduleId].children;
+                var children = internals.moduleDescriptors[moduleId].children;
                 if (children) {
                     _.each(children, function(childrenId) {
-                        internals.moduleInstances[childrenId].wrapper.remove();
+                        internals.moduleDescriptors[childrenId].instance.remove();
                     });
                 }
 
-                if (module.dispose) module.dispose();
+                if (moduleConf.dispose) moduleConf.dispose();
 
-                app.emit('moduleDisposed', moduleInstance);
+                app.emit('moduleDisposed', moduleDescriptor);
 
                 if (parentId) {
-                    internals.moduleInstances[parentId].children = _.without(internals.moduleInstances[parentId].children, moduleId);
-                    delete internals.moduleInstances[parentId].slot.modules[moduleName];
+                    internals.moduleDescriptors[parentId].children = _.without(internals.moduleDescriptors[parentId].children, moduleId);
+                    delete internals.moduleDescriptors[parentId].slot.modules[moduleName];
                 }
-                delete internals.moduleInstances[moduleId];
-                moduleWrapper = moduleInstance = module = slot = null;
+                delete internals.moduleDescriptors[moduleId];
+                moduleInstance = moduleDescriptor = moduleConf = slot = null;
             };
 
             var dispose = function() {
-                if (moduleWrapper) { // Могли вызвать повторно
-                    moduleWrapper.kill();
-                    moduleWrapper.remove();
+                if (moduleInstance) { // Могли вызвать повторно
+                    moduleInstance.kill();
+                    moduleInstance.remove();
                 }
             };
 
-            moduleInstance.wrapper = moduleWrapper;
-            moduleWrapper.kill = slot.kill = kill;
-            moduleWrapper.remove = slot.remove = remove;
-            moduleWrapper.dispose = slot.dispose = dispose;
-            moduleWrapper.viewContext = module.viewContext;
+            moduleDescriptor.instance = moduleInstance;
+            moduleInstance.kill = slot.kill = kill;
+            moduleInstance.remove = slot.remove = remove;
+            moduleInstance.dispose = slot.dispose = dispose;
+            moduleInstance.viewContext = moduleConf.viewContext;
 
             // На клиенте собираем модификаторы, расставленные при рендеринге на сервере.
             if (slot.isClient) {
-                slot.mod(getModificators(moduleWrapper));
+                slot.mod(getModificators(moduleInstance));
             }
 
             // Кастомный блок для модуля
-            if (module.block) {
-                slot.mod({module: moduleWrapper.type});
+            if (moduleConf.block) {
+                slot.mod({module: moduleInstance.type});
             }
 
-            app.emit('moduleLoaded', moduleInstance);
+            app.emit('moduleLoaded', moduleDescriptor);
 
-            return moduleWrapper;
+            return moduleInstance;
         },
 
-        getModuleById: function(moduleId) {
-            var module = internals.moduleInstances[moduleId];
+        /**
+         * Возвращает дескриптор модуля по его id
+         * @param  {String} moduleId - id модуля, который будет искаться в moduleDescriptors
+         * @return {Object} - дескриптор найденного объекта
+         */
+        getModuleDescriptorById: function(moduleId) {
+            var descriptor = internals.moduleDescriptors[moduleId];
 
-            if (!module) {
+            if (!descriptor) {
                 console.error('No module with moduleId ' + moduleId + ' found.');
             }
 
-            return module;
+            return descriptor;
         },
 
         getChildModuleWrapperById: function(moduleId, childModuleId) {
-            var moduleInstance = app.getModuleById(childModuleId);
-            if (moduleInstance.parentId == moduleId) {
-                return moduleInstance.wrapper;
+            var moduleDescriptor = app.getModuleDescriptorById(childModuleId);
+            if (moduleDescriptor.parentId == moduleId) {
+                return moduleDescriptor.instance;
             }
         },
 
@@ -678,8 +687,8 @@ module.exports = function() {
         env.global.app = app;
 
         app.modulesByType = function(type) {
-            return _.filter(internals.moduleInstances, function(instance) {
-                return instance.type == type;
+            return _.filter(internals.moduleDescriptors, function(descriptor) {
+                return descriptor.type == type;
             });
         };
 
