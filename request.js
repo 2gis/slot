@@ -25,10 +25,6 @@ module.exports = typeof window == 'undefined' ? serverRequest : clientRequest;
  * @param conf.timeout in milliseconds
  * @returns {*}
  */
-
-function noop() {}
-
-
 function serverRequest(conf) {
     // Browserify хак, специально имя пакето вынесено в переменную
     var pkg = 'request';
@@ -47,9 +43,9 @@ function serverRequest(conf) {
         headers: {
             referer: config['server.referer']
         },
-        success: noop,
-        error: noop,
-        complete: noop,
+        success: _.noop,
+        error: _.noop,
+        complete: _.noop,
         pool: false
     });
 
@@ -84,33 +80,14 @@ if (typeof window != 'undefined') {
 
 
 function clientRequest(conf) {
-    var reqwest = require('reqwest'),
-        sendError = req('lib/sendError');
+    var reqwest = require('reqwest');
     // @doclink: https://github.com/ded/reqwest
 
     _.defaults(conf, {
-        success: noop,
-        error: noop,
-        complete: noop
+        success: _.noop,
+        error: _.noop,
+        complete: _.noop
     });
-
-    var errorCallback = conf.error;
-    conf.error = function(xhr, error) {
-        if (conf.url != '/log') { //do not allow loops
-            var sendErrorData = {
-                requestParams: conf,
-                responseCode: xhr && xhr.statusCode,
-                error: error,
-                xhr: xhr,
-                userAgent: navigator.userAgent,
-                url: document.location.toString()
-            };
-
-            sendError('AJAX request error - ' + conf.url, sendErrorData);
-        }
-
-        errorCallback(xhr, error);
-    };
 
     if (conf.type == 'json') {
         conf.crossOrigin = true;
@@ -124,7 +101,7 @@ function clientRequest(conf) {
     // во время аборта запроса не логируем его как ошибку
     var abort = xhr.abort;
     xhr.abort = function() {
-        conf.error = noop;
+        conf.error = _.noop;
         abort.call(xhr);
     };
 
