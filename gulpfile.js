@@ -3,6 +3,9 @@ var gulp = require('gulp');
 var requireDir = require('require-dir');
 requireDir('./tasks');
 
+var requireDir = require('require-dir');
+var dir = requireDir('./tasks');
+
 var exitCode = 0;
 
 function errHandler(message) {
