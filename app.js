@@ -597,7 +597,6 @@ module.exports = function() {
             }
         },
 
-        isGrym: env.isGrym,
         isServer: env.isServer,
         isClient: env.isClient,
 
