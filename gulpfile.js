@@ -2,6 +2,9 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 
+var requireDir = require('require-dir');
+var dir = requireDir('./tasks');
+
 var exitCode = 0;
 
 function errHandler() {

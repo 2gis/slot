@@ -25,6 +25,8 @@
   "devDependencies": {
     "gulp": "~3.8.6",
     "gulp-mocha": "~0.5.1",
-    "sinon": "~1.10.3"
+    "sinon": "~1.10.3",
+    "require-dir": "~0.1.0",
+    "rimraf": "~2.2.8"
   }
 }
