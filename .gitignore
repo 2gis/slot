@@ -2,3 +2,4 @@ node_modules
 /.idea/*
 /nbproject/*
 /nbproject/private/
+.DS_Store
