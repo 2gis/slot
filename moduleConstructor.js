@@ -211,15 +211,15 @@ module.exports = function(app, moduleConf, slot) {
             var blockName = moduleConf.block || moduleConf.type;
 
             // Вызов метода viewContext должен быть всегда.
-            var origViewContext = moduleConf.viewContext ? moduleConf.viewContext(customViewContext) : null,
-                viewContext = customViewContext || origViewContext || {};
+            var originalViewContext = moduleConf.viewContext ? moduleConf.viewContext(customViewContext) : slot.viewContext,
+                viewContext = customViewContext || originalViewContext || {};
 
             if (!_.isObject(viewContext)) {
                 throw new TypeError('viewContext must be an object, but а ' + viewContext);
             }
 
             var moduleId = moduleConf.uniqueId,
-                moduleInstance = app.getModuleById(moduleId),
+                moduleInstance = app.getModuleDescriptorById(moduleId),
                 template = moduleConf.type || moduleConf.template,
                 tag = moduleConf.tag || 'div',
                 attrs = {};

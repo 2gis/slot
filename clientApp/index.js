@@ -4,7 +4,6 @@ var namer = require('../namer');
 var defer = require('../defer');
 var transitionsHelper = require('./transitions');
 
-
 module.exports = function() {
     var baseApp = baseAppConstructor();
     var app = baseApp.instance;
@@ -100,6 +99,7 @@ module.exports = function() {
                     el.toggleClass(mod);
                 });
             }
+
             return this;
         };
     }
@@ -109,7 +109,7 @@ module.exports = function() {
     }
 
     function bind(selector, elementName, container, eventName, handler, on) {
-        var exceptions = ['scroll', 'block', 'error'],
+        var exceptions = ['scroll', 'block', 'error'], // Эти события нельзя подписывать как live, потому что они не всплывают
             method = on ? 'on' : 'off',
             selectorParam = elementName == 'block' ? null : selector;
 
@@ -230,8 +230,8 @@ module.exports = function() {
          * @param {string} moduleId
          */
         rerender: function(moduleId) {
-            var activeModule = app.getModuleById(moduleId),
-                html = activeModule.wrapper.render();
+            var descriptor = app.getModuleDescriptorById(moduleId),
+                html = descriptor.instance.render();
 
             app.unbindEvents(moduleId);
 
@@ -247,9 +247,9 @@ module.exports = function() {
          * @param {string} elementName
          */
         element: function(moduleId, elementName) {
-            var module = app.getModuleById(moduleId),
-                moduleElements = module.instance.elements,
-                blockName = module.instance.block || module.type;
+            var descriptor = app.getModuleDescriptorById(moduleId),
+                moduleElements = descriptor.moduleConf.elements,
+                blockName = descriptor.moduleConf.block || descriptor.type;
 
             if (moduleElements && moduleElements[elementName]) {
                 var selector = moduleElements[elementName].selector || '.' + namer.elementClass(blockName, elementName),
@@ -276,22 +276,22 @@ module.exports = function() {
             // во время инициализации события не навешиваем и не отвешиваем вообще, в принципе.
             if (app._stage == 'init') return;
 
-            var module = app.getModuleById(moduleId),
-                elements = module.instance.elements;
+            var descriptor = app.getModuleDescriptorById(moduleId),
+                elements = descriptor.moduleConf.elements;
 
             // Если у модуля уже навешены события, не навешиваем их еще раз
-            if (on && module.wrapper.isEventsBound) {
+            if (on && descriptor.instance.isEventsBound) {
                 return;
             }
-            module.wrapper.isEventsBound = on;
+            descriptor.instance.isEventsBound = on;
 
             if (elementName) {
-                elements = _.pick(module.instance.elements, elementName);
+                elements = _.pick(descriptor.moduleConf.elements, elementName);
             }
 
             // Пробегаемся по ассоциативному массиву элементов, заданном в модуле
             _.each(elements, function(eventsConfig, elementName) {
-                var selector = eventsConfig.selector || '.' + namer.elementClass(module.instance.block || module.type, elementName),
+                var selector = eventsConfig.selector || '.' + namer.elementClass(descriptor.moduleConf.block || descriptor.type, elementName),
                     containerId = moduleBlockId(moduleId);
 
                 // Выбираем все значения из объекта, за исключением селектора
@@ -303,12 +303,12 @@ module.exports = function() {
             });
 
             if (on) {
-                module.wrapper.clientInit();
-                module.wrapper.bind();
+                descriptor.instance.clientInit();
+                descriptor.instance.bind();
             }
 
             // Рекурсивно вызываем функцию для всех дочерних элементов
-            _.each(module.children, function(childModuleId) {
+            _.each(descriptor.children, function(childModuleId) {
                 app.processEvents(childModuleId, null, on);
             });
         },

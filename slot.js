@@ -219,9 +219,9 @@ module.exports = function(app, params) {
         onTransitionEnd: app.onTransitionEnd,
 
         self: function() {
-            var module = app.getModuleById(moduleId);
+            var descriptor = app.getModuleDescriptorById(moduleId);
 
-            return module && module.instance;
+            return descriptor && descriptor.instance;
         },
 
         // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит

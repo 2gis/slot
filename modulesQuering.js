@@ -5,22 +5,22 @@ var _ = require('lodash'),
 module.exports = function(internals) {
 
     function filterModules(fromId, name, predicate, inclusive) {
-        var currModule = internals.moduleInstances[fromId],
+        var currModuleDesc = internals.moduleDescriptors[fromId],
             result = [];
 
         function matchType(type) {
             return name == '*' || name == type;
         }
 
-        function matchPredicate(instance, module) {
+        function matchPredicate(moduleConf, module) {
             if (!predicate) return true;
 
             if (!predicate.isMod) {
-                if (!instance.interface) {
+                if (!moduleConf.interface) {
                     return false;
                 }
 
-                return instance.interface[predicate.name].apply(instance, predicate.args);
+                return moduleConf.interface[predicate.name].apply(moduleConf, predicate.args);
             } else {
                 var mods = module.slot.mod(),
                     res = predicate.name in mods;
@@ -34,19 +34,19 @@ module.exports = function(internals) {
         }
 
         function accumulate(id) {
-            var currModule = internals.moduleInstances[id];
+            var localModuleDesc = internals.moduleDescriptors[id];
 
-            if (matchType(currModule.type) && matchPredicate(currModule.instance, currModule)) {
+            if (matchType(localModuleDesc.type) && matchPredicate(localModuleDesc.moduleConf, localModuleDesc)) {
                 result.push(id);
             }
 
-            _.each(currModule.children, accumulate);
+            _.each(localModuleDesc.children, accumulate);
         }
 
         if (inclusive) {
             accumulate(fromId);
         } else {
-            _.each(currModule.children, accumulate);
+            _.each(currModuleDesc.children, accumulate);
         }
 
         return result;
@@ -103,7 +103,7 @@ module.exports = function(internals) {
         }
 
         return _.map(ids, function(id) {
-            return internals.moduleInstances[id];
+            return internals.moduleDescriptors[id];
         });
     }
 
