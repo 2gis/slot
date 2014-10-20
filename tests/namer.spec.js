@@ -1,4 +1,6 @@
-var assert = require('assert');
+var assert = require('chai').assert;
+var _ = require('lodash');
+var async = require('async');
 
 describe('Namer', function() {
 
@@ -123,58 +125,112 @@ describe('Namer', function() {
 
             assert.equal(mod, '_addressExistance_true');
         });
+
+        it('Возвращает ничего если в ключе нет символов', function(done) {
+            var name = '',
+                value = 'true';
+
+            try {
+                namer.modificatorClass(name, value);
+            } catch (e) {
+                done();
+            }
+        });
     });
 
-    describe('.getModificatorsFromClassName', function() {
+    describe('.parseMods', function() {
         it('Правильно вычисляет модификаторы для className == ""', function() {
             var className = '';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), {});
+            assert.deepEqual(namer.parseMods(className), {});
         });
 
         it('Правильно вычисляет модификаторы для className == "   "', function() {
-            var className = '';
+            var className = '    ';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), {});
+            assert.deepEqual(namer.parseMods(className), {});
         });
 
         it('Правильно вычисляет модификаторы для className == "otherClass"', function() {
             var className = 'otherClass';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), {});
+            assert.deepEqual(namer.parseMods(className), {});
         });
 
         it('Правильно вычисляет модификаторы для className == "_one "', function() {
             var className = '_one ';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), { one: true });
+            assert.deepEqual(namer.parseMods(className), { one: true });
         });
 
         it('Правильно вычисляет модификаторы для className == "otherClass _one"', function() {
             var className = 'otherClass _one';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), { one: true });
+            assert.deepEqual(namer.parseMods(className), { one: true });
         });
 
         it('Правильно вычисляет модификаторы для className == " otherClass _one_true "', function() {
             var className = ' otherClass _one_true ';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), { one: 'true' });
+            assert.deepEqual(namer.parseMods(className), { one: 'true' });
         });
 
         it('Правильно вычисляет модификаторы для className == " otherClass _one_1054 "', function() {
             var className = ' otherClass _one_1054 ';
 
-            assert.deepEqual(namer.getModificatorsFromClassName(className), { one: 1054 });
+            assert.deepEqual(namer.parseMods(className), { one: 1054 });
         });
 
         it('Правильно вычисляет модификаторы для className == " otherClass _one_1054 _two_str _tree "', function() {
             var className = '_one_1054 _two_str _tree _four_false otherClass';
 
             assert.deepEqual(
-                namer.getModificatorsFromClassName(className),
+                namer.parseMods(className),
                 { one: 1054, two: 'str', tree: true, four: 'false' }
             );
+        });
+    });
+
+    describe('.stringifyMods', function() {
+        var data = [{
+            mods: {},
+            expected: [],
+            comment: 'Пустой объект модификаторов должен возвращать пустой массив классов'
+        }, {
+            mods: {'0': null, 'false': false},
+            expected: [],
+            comment: 'false-значения не должны попадать в классы'
+        }, {
+            mods: {'a0_290': 'inq', key: 'value', a: 'b', qwe: false, asd: true},
+            expected: ['_a0_290_inq', '_key_value', '_a_b', '_asd'],
+            comment: 'Должно правильно конкатинировать _key_value'
+        }];
+
+        it('Получение класснеймов из объекта модификаторов', function() {
+            _.each(data, function(it) {
+                var result = namer.stringifyMods(it.mods);
+                assert.deepEqual(result, it.expected, it.comment + ':' + result);
+            });
+        });
+
+        it('Бросание exception при неправильных аргументах', function(done) {
+            var wrongVals = [
+                null,
+                false,
+                NaN,
+                4,
+                'asd'
+            ];
+
+            async.series(_.map(wrongVals, function(val) {
+                return function(cb) {
+                    try {
+                        namer.stringifyMods(val);
+                    } catch (e) {
+                        cb();
+                    }
+                };
+            }), done);
         });
     });
 
