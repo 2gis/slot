@@ -1,7 +1,15 @@
+/**
+ * Реализация правил нейминга
+ * Сейчас возможно использовать только ru-версию БЭМа, приправленного BEViS синтаксисом для модификаторов
+ * Если это не подходит, используйте поле selector в элементах, и не используйте модификаторы элементов
+ */
+
 var _ = require('lodash');
 
 // модификатор класса
 var reClassMod = /^_([\-0-9a-zA-Z]+)(?:_(\S+))?$/;
+var be = '__';
+var mm = '_';
 
 /**
  * Готовит значение для сохранения в модификаторе класса.
@@ -34,56 +42,85 @@ function tryValueAsNumber(value) {
     return isNaN(num) ? value : num;
 }
 
-var namer = module.exports = {
-    /**
-     * Генерирует имя CSS-класса для модуля.
-     *
-     * @param {string} moduleName
-     * @returns {string}
-     */
-    moduleClass: function(moduleName) {
-        return moduleName;
-    },
+/**
+ * Генерирует имя CSS-класса для модуля.
+ *
+ * @param {string} moduleName
+ * @returns {string}
+ */
+exports.moduleClass = function(moduleName) {
+    return moduleName;
+};
 
-    /**
-     * Генерирует имя CSS-класса для внутреннего элемента модуля.
-     *
-     * @param {string} moduleName
-     * @param {string} elementName
-     * @returns {string}
-     */
-    elementClass: function(moduleName, elementName) {
-        return moduleName + '__' + elementName;
-    },
+/**
+ * Генерирует имя CSS-класса для внутреннего элемента модуля.
+ *
+ * @param {string} moduleName
+ * @param {string} elementName
+ * @returns {string}
+ */
+exports.elementClass = function(moduleName, elementName) {
+    return moduleName + be + elementName;
+};
 
-    /**
-     * Генерирует имя CSS-класса для модификатора класса.
-     *
-     * @param {string} name
-     * @param {*} value
-     * @returns {string}
-     */
-    modificatorClass: function(name, value) {
-        value = prepareValueForClassMod(value);
-        return value === false ? '' : '_' + name + (value === true ? '' : '_' + value);
-    },
-
-    /**
-     * Вычисляет объект модификаторов класса.
-     *
-     * @param {string} className
-     * @returns {Object}
-     */
-    getModificatorsFromClassName: function(className) {
-        return _.reduce(
-            className.match(/\S+/g) || [],
-            function(mods, name) {
-                if (reClassMod.test(name)) {
-                    mods[RegExp.$1] = RegExp.$2 == '' ? true : tryValueAsNumber(RegExp.$2);
-                }
-                return mods;
-            },
-            {}
-        );
+/**
+ * Генерирует имя CSS-класса для модификатора класса.
+ *
+ * @param {string} name
+ * @param {*} value
+ * @returns {string}
+ */
+exports.modificatorClass = function(name, value) {
+    if (!_.isString(name) || name.length == 0) {
+        throw new Erorr('name must be a non-empty string');
     }
+
+    value = prepareValueForClassMod(value);
+
+    if (value === false) {
+        return '';
+    } else {
+        return mm + name + (value === true ? '' : mm + value);
+    }
+};
+
+/**
+ * Вычисляет объект модификаторов блока из списка классов на нём
+ *
+ * @param {string|Array} classList - содержимое html-атрибута class либо массив строк-классов
+ * @returns {Object} - объект всех понятых модификаторов
+ */
+exports.parseMods = function(classList) {
+    if (_.isString(classList)) {
+        classList = classList.match(/\S+/g) || [];
+    }
+
+    return _.reduce(
+        classList,
+        function(mods, name) {
+            if (reClassMod.test(name)) {
+                mods[RegExp.$1] = RegExp.$2 == '' ? true : tryValueAsNumber(RegExp.$2);
+            }
+            return mods;
+        },
+        {}
+    );
+};
+
+/**
+ * Метод, обратный parseMods
+ * @param  {Object} mods объект модификаторов
+ * @return {Array}       массив (!) классов, восстановленных из модификаторов
+ */
+exports.stringifyMods = function(mods) {
+    if (!_.isObject(mods)) throw new TypeError('mods must be an Object');
+
+    var classes = [];
+
+    _.each(mods, function(val, key) {
+        var modClass = exports.modificatorClass(key, val);
+        classes.push(modClass);
+    });
+
+    return _.compact(classes);
 };

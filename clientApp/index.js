@@ -38,7 +38,7 @@ module.exports = function() {
             if (!mods) {
                 // если mods не установлен, парсим и устанавливаем его из className
                 return firstEl.mods || (
-                    firstEl.mods = namer.getModificatorsFromClassName(firstEl.className)
+                    firstEl.mods = namer.parseMods(firstEl.className)
                 );
             }
 
