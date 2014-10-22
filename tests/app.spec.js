@@ -1,19 +1,41 @@
 var assert = require('assert');
 
-describe.skip('Core -> app', function() {
-    var app = require('../app.js');
+DEBUG = true;
+
+describe('Core -> app', function() {
+    var app;
+
+    beforeEach(function() {
+        app = require('../app.js');
+    });
 
     it('blank', function() {
-
         assert(app);
     });
 
-    describe('-> getModificators', function() {
+    describe('-> resolveEntryPoint', function() {
+        it('Не падает когда devPages нет в конфиге', function(done) {
+            var cfg = app().appConfig;
+
+            cfg.config = {};
+            cfg.loadModule = function() {};
+
+            cfg.resolveEntryPoint();
+            done();
+        });
+    });
+
+    describe.skip('-> getModificators', function() {
         var mods;
-        var appInstance = app().instance;
-        var moduleWrapper = {
-            type: 'online'
-        };
+        var appInstance;
+        var moduleWrapper;
+
+        before(function() {
+            appInstance = app().instance;
+            moduleWrapper = {
+                type: 'online'
+            };
+        });
 
         it('Элемент moduleWrapper.block()[0] есть объект', function() {
             moduleWrapper.block = function() {
@@ -34,7 +56,7 @@ describe.skip('Core -> app', function() {
         });
     });
 
-    describe('-> cookie', function() {
+    describe.skip('-> cookie', function() {
         it('Выставление значения на сервере', function() {
             var callback = sinon.spy();
             app.on('cookie', callback);

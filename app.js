@@ -148,18 +148,20 @@ module.exports = function() {
         },
 
         resolveEntryPoint: function(req, appState) {
-            var url = req.url,
+            req = req || {};
+
+            var url = req.url || '',
                 name = app.config.mainModule,
                 slug = url.split('/')[0];
 
             // То самое место, где вместо online подставляется makeup
-            var devPageConfig = app.config.devPages[slug];
+            var devPageConfig = app.config.devPages && app.config.devPages[slug];
             if (DEBUG && devPageConfig) {
                 name = devPageConfig.module;
                 historyDisabled = !devPageConfig.history; // Чтоб запретить модификацию урла в мейкапе
             }
 
-            if (app.config.isLandingPage(req)) {
+            if (app.config.isLandingPage && app.config.isLandingPage(req)) { // @TODO выпилить зависимость четвёрки
                 name = 'landingPage';
             }
 
@@ -683,6 +685,11 @@ module.exports = function() {
         getModificators: getModificators
     };
 
+    var out = {
+        instance: smokesignals.convert(app),
+        internals: internals
+    };
+
     if (DEBUG) {
         env.global.app = app;
 
@@ -695,10 +702,9 @@ module.exports = function() {
         app.findModule = function(type) {
             return app.modulesByType(type)[0];
         };
+
+        out.appConfig = app;
     }
 
-    return {
-        instance: smokesignals.convert(app),
-        internals: internals
-    };
+    return out;
 };
