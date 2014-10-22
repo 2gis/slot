@@ -76,7 +76,9 @@ module.exports = function(app, moduleConf, slot) {
             var mods = {};
 
             for (var i = 0, len = arguments.length; i < len - 1; i++) {
-                mods = _.extend(mods, slot.element(arguments[i]).mod());
+                if (slot.element(arguments[i])) {
+                    mods = _.extend(mods, slot.element(arguments[i]).mod());
+                }
             }
 
             return _.map(mods, function(value, name) {
