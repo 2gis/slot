@@ -13,9 +13,6 @@ var winstonModule = 'winston', // move module name to separate value to avoid br
     confGraylog = conf.graylog;
     confLogstash = conf.logstash;
 
-confGraylog.graylogHostname = config.innerhost;
-confLogstash.graylogHostname = config.innerhost;
-
 var configured = false;
 
 if (!configured) {
