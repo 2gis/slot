@@ -12,9 +12,6 @@ var winston = require('winston'),
     confGraylog = conf.graylog;
     confLogstash = conf.logstash;
 
-confGraylog.graylogHostname = config.innerhost;
-confLogstash.graylogHostname = config.innerhost;
-
 var configured = false;
 
 if (!configured) {
