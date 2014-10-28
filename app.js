@@ -41,13 +41,13 @@ module.exports = function() {
      * @param {*} [defaultValue={}]
      * @returns {*}
      */
-    function registry(name, defaultValue) {
+    function registry(name, value) {
         if (!registryData.hasOwnProperty(name)) {
-            if (typeof defaultValue == 'undefined') {
-                defaultValue = {};
+            if (_.isUndefined(value)) {
+                value = {};
             }
 
-            registryData[name] = defaultValue;
+            registryData[name] = value;
         }
 
         return registryData[name];
@@ -138,7 +138,7 @@ module.exports = function() {
 
             var name;
 
-            if (typeof app.config.mainModule == 'function') {
+            if (_.isFunction(app.config.mainModule)) {
                 name = app.config.mainModule(req);
             } else {
                 name = app.config.mainModule;
