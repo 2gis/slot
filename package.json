@@ -23,10 +23,15 @@
   },
   "license": "BSD",
   "devDependencies": {
+    "colors": "~1.0.3",
     "gulp": "~3.8.6",
+    "gulp-jscs": "git://github.com/anru/gulp-jscs.git",
+    "gulp-jshint": "~1.6.3",
     "gulp-mocha": "~0.5.1",
+    "jshint-stylish": "~0.2.0",
     "sinon": "~1.10.3",
     "require-dir": "~0.1.0",
-    "rimraf": "~2.2.8"
+    "rimraf": "~2.2.8",
+    "through2": "~0.6.3"
   }
 }

@@ -301,7 +301,7 @@ module.exports = function() {
          * @param message
          * @returns {*}
          */
-        notify: function (moduleId, message) {
+        notify: function(moduleId, message) {
             var args = [].slice.call(arguments, 2),
                 notifier = internals.moduleDescriptors[moduleId]; // Модуль, пославший нотифай
 
@@ -406,7 +406,7 @@ module.exports = function() {
          *
          * @returns {*}
          */
-        broadcast: function (moduleId, message) {
+        broadcast: function(moduleId, message) {
             var args = [].slice.call(arguments, 2),
                 lastIndexOfDelim = message.lastIndexOf(':'),
                 selector = message.substr(0, lastIndexOfDelim),
@@ -444,17 +444,17 @@ module.exports = function() {
                 moduleName = data.type;
 
             var slotConstructor = require('./slot'),
-                moduleConstructor = app.requireModuleJs(moduleName),
+                moduleJs = app.requireModuleJs(moduleName),
                 slot = app.invoke(slotConstructor, [app, {
                     moduleId: moduleId,
                     templates: templateProvider.forModule(moduleName)
                 }]);
 
-            if (!_.isFunction(moduleConstructor)) { // если возвращает не функцию — ругаемся
+            if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
                 throw new Error('Bad module: ' + moduleName);
             }
 
-            var moduleConf = app.invoke(moduleConstructor, [slot], slot.requireComponent);
+            var moduleConf = app.invoke(moduleJs, [slot], slot.requireComponent);
             moduleConf.uniqueId = moduleId;
             moduleConf.type = moduleName;
 
@@ -684,7 +684,7 @@ module.exports = function() {
             } else {
                 if (typeof value != 'undefined') {
                     if (params.expires) {
-                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000) // jquery days to express ms
+                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000); // jquery days to express ms
                     }
 
                     app.emit('cookie', key, value, params);

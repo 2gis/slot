@@ -46,7 +46,7 @@ exports.wrapTemplateSpecs = function(templateSpecs, handlebars) {
  */
 exports.forModule = function(moduleName) {
     var storage = getStorage('modules')[moduleName];
-    return exports.wrapTemplateSpecs(storage)
+    return exports.wrapTemplateSpecs(storage);
 };
 
 /**
