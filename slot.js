@@ -238,7 +238,7 @@ module.exports = function(app, params) {
                 if (!(slot.stage & slot.STAGE_NOT_ALIVE)) {
                     fn.apply(this, arguments);
                 }
-            }
+            };
         },
 
         cookie: app.cookie

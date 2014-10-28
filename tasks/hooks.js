@@ -43,7 +43,8 @@ gulp.task('hooks.clear', function(cb) {
 // @TODO: refactor hooks - move verbosity logic to js land
 gulp.task('hooks.run', function(cb) {
     var scripts = [
-        'run-10-tests.sh'
+        'run-10-tests.sh',
+        'run-20-code-style.sh'
     ];
 
     var tasks = scripts.map(function(script) {

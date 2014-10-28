@@ -1,13 +1,14 @@
 
 var gulp = require('gulp');
-var mocha = require('gulp-mocha');
-
 var requireDir = require('require-dir');
-var dir = requireDir('./tasks');
+requireDir('./tasks');
 
 var exitCode = 0;
 
-function errHandler() {
+function errHandler(message) {
+    if (message) {
+        console.log(message.red);
+    }
     exitCode = 1;
     process.stdout.write('\u0007'); // beep sound if possible
 }
@@ -16,19 +17,7 @@ gulp.on('err', function(e) {
     errHandler();
     console.error(e.err.stack);
 });
-
-gulp.task('test', function() {
-    return gulp.src([
-        'tests/unitTestConfig.js',
-        '**/*.spec.js'
-    ], {read: false})
-        .pipe(mocha({
-            globals: ['DEBUG']
-        }));
-});
-
-gulp.task('default', ['test']);
-
+gulp.on('tl.fail', errHandler);
 
 // last exit handler in gulpfile
 process.on('exit', function() {

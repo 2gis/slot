@@ -1,0 +1,17 @@
+{
+    "indent": 4,
+    "node": true,
+    "predef": [ "DEBUG" ],
+    "browser": true,
+    "jquery": true,
+    "eqnull": true,
+    "eqeqeq": false,
+    "devel": false,
+    "esnext": true,
+    "boss": true,
+    "trailing": true,
+    "loopfunc": true,
+    "-W041": true,
+    "-W015": true,
+    "sub": true
+}
