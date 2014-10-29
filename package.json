@@ -33,5 +33,10 @@
     "require-dir": "~0.1.0",
     "rimraf": "~2.2.8",
     "through2": "~0.6.3"
+  },
+  "browser": {
+    "jquery-deferred": false,
+    "request": false,
+    "./logger": false
   }
 }
