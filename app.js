@@ -43,15 +43,15 @@ module.exports = function() {
      * @returns {*}
      */
     function registry(name, defaultValue) {
-        if (registryData.hasOwnProperty(name)) {
-            return registryData[name];
+        if (!registryData.hasOwnProperty(name)) {
+            if (typeof defaultValue == 'undefined') {
+                defaultValue = {};
+            }
+
+            registryData[name] = defaultValue;
         }
 
-        if (defaultValue === undefined) {
-            defaultValue = {};
-        }
-
-        return registryData[name] = defaultValue;
+        return registryData[name];
     }
 
     /**
@@ -150,22 +150,15 @@ module.exports = function() {
         resolveEntryPoint: function(req, appState) {
             req = req || {};
 
-            var url = req.url || '',
-                name = app.config.mainModule,
-                slug = url.split('/')[0];
+            var name;
 
-            // То самое место, где вместо online подставляется makeup
-            var devPageConfig = app.config.devPages && app.config.devPages[slug];
-            if (DEBUG && devPageConfig) {
-                name = devPageConfig.module;
-                historyDisabled = !devPageConfig.history; // Чтоб запретить модификацию урла в мейкапе
+            if (typeof app.config.mainModule == 'function') {
+                name = app.config.mainModule(req);
+            } else {
+                name = app.config.mainModule;
             }
 
-            if (app.config.isLandingPage && app.config.isLandingPage(req)) { // @TODO выпилить зависимость четвёрки
-                name = 'landingPage';
-            }
-
-            return app.loadModule({type: name});
+            return app.loadModule({ type: name });
         },
 
         init: function(req, callback) {
@@ -597,7 +590,6 @@ module.exports = function() {
             }
         },
 
-        isGrym: env.isGrym,
         isServer: env.isServer,
         isClient: env.isClient,
 
@@ -614,9 +606,9 @@ module.exports = function() {
         },
 
         uniqueId: function(prefix) {
-            var id = uniqueIdCounter++;
+            uniqueIdCounter = uniqueIdCounter + 1;
 
-            return (prefix || '') + id;
+            return (prefix || '') + uniqueIdCounter;
         },
 
         registry: registry,
@@ -682,7 +674,7 @@ module.exports = function() {
             } else {
                 if (typeof value != 'undefined') {
                     if (params.expires) {
-                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000) // jquery days to express ms
+                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000); // Days → milliseconds
                     }
 
                     app.emit('cookie', key, value, params);

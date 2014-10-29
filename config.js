@@ -1,19 +1,21 @@
 var env = require('./env'),
     _ = require('lodash');
 
-var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : dg.config;
+var config = typeof window == 'undefined' ? env.requirePrivate('config') : {};
 
-module.exports = cfg;
+module.exports = config;
 
-module.exports.group = function(name) {
-    var ret = {};
-    for (var key in cfg) {
-        if (cfg.hasOwnProperty(key) && key.startsWith(name + '.')) {
-            var newKey = key.substr(name.length + 1);
-            ret[newKey] = cfg[key];
+module.exports.group = function(groupName) {
+    var groupConfig = {};
+
+    for (var key in config) {
+        if (config.hasOwnProperty(key) && key.startsWith(groupName + '.')) {
+            var groupKey = key.substr(groupName.length + 1);
+            groupConfig[groupKey] = config[key];
         }
     }
-    return ret;
+
+    return groupConfig;
 };
 
 module.exports.merge = function(upstream) {
@@ -26,11 +28,11 @@ module.exports.merge = function(upstream) {
                 key = key.substr(1);
             }
 
-            var origin = cfg[key];
-            if (doPush && key in cfg && _.isArray(origin)) {
+            var origin = config[key];
+            if (doPush && key in config && _.isArray(origin)) {
                 origin.push.apply(origin, value);
             } else {
-                cfg[key] = value;
+                config[key] = value;
             }
         }
     }
