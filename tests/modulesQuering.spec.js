@@ -3,7 +3,7 @@ var Quering = require('../modulesQuering'),
     _ = require('lodash'),
     assert = require('assert');
 
-describe("Core->modulesQuering", function() {
+describe("ModulesQuering", function() {
 
     var m = function(cfg) {
         return _.defaults(cfg, {
@@ -16,84 +16,132 @@ describe("Core->modulesQuering", function() {
         });
     };
 
-    var internals = {
-        moduleDescriptors: {
-            "1": m({
-                type: "root",
-                children: ["1-1", "1-2"]
-            }),
-            "1-1": m({
-                type: "moscow",
-                moduleConf: {
-                    interface: {
-                        now: function(id) {
-                            return id == 1;
-                        }
-                    }
-                },
-                children: ["1-1-1", "1-1-2"]
-            }),
-            "1-2": m({
-                type: "moscow",
-                moduleConf: {
-                    interface: {
-                        now: function(id) {
-                            return id == 2;
-                        }
-                    }
-                },
-                children: ["1-2-1"]
-            }),
-            "1-1-1": m({
-                type: "himki",
-                slot: {
-                    mod: function() {
-                        return {'active': 'true'};
+    var moduleDescriptors = {
+        "1": m({
+            type: "root",
+            children: ["1-1", "1-2"]
+        }),
+        "1-1": m({
+            type: "moscow",
+            moduleConf: {
+                interface: {
+                    now: function(id) {
+                        return id == 1;
                     }
                 }
-            }),
-            "1-1-2": m({
-                type: "birulevo"
+            },
+            slot: {
+                mod: function() {
+                    return {'active': true};
+                }
+            },
+            children: ["1-1-1", "1-1-2"]
+        }),
+        "1-2": m({
+            type: "moscow",
+            moduleConf: {
+                interface: {
+                    now: function(id) {
+                        return id == 2;
+                    }
+                }
+            },
+            children: ["1-2-1"]
+        }),
+        "1-1-1": m({
+            type: "himki",
+            slot: {
+                mod: function() {
+                    return {'active': 1};
+                }
+            },
+            moduleConf: {
+                interface: {
+                    xx: function(id) {
+                        return id == 6;
+                    }
+                }
+            }
+        }),
+        "1-1-2": m({
+            type: "birulevo"
 
-            }),
-            "1-2-1": m({
-                type: "himki"
-            })
-        }
+        }),
+        "1-2-1": m({
+            type: "himki"
+        })
     };
 
-    var query = Quering(internals);
+    var query = Quering(moduleDescriptors);
 
     function byId(id) {
-        return internals.moduleDescriptors[id];
+        return moduleDescriptors[id];
     }
 
     it("Простой селектор", function() {
         assert.deepEqual(query('1', 'moscow')[0], byId("1-1"));
     });
 
-    it("Составной с предикатами", function() {
-        var r = query('1', 'moscow[now=1] himki');
+    it("Составной с предикатам по модификатору", function() {
+        var r = query('1', 'moscow[active] himki');
         assert.equal(r.length, 1, "himki=1, actual:" + r.length);
 
         assert.deepEqual(r[0], byId("1-1-1"));
     });
 
+    it("Составной с предикатам по методу", function() {
+        var r = query('1', 'moscow[::now(1)] himki');
+        assert.equal(r.length, 1, "himki=1, actual:" + r.length);
+
+        assert.deepEqual(r[0], byId("1-1-1"));
+    });
+
+    it("Составной с предикатам по методу которого нет", function() {
+        var r = query('1', 'moscow[::sg(1)]');
+        assert.equal(r.length, 0, "himki=0, actual:" + r.length);
+    });
+
+    it('Простой с предикатом на вложенный элемент', function() {
+        var r = query('1', 'himki[::xx(6)]');
+        assert.equal(r.length, 1, "himki=1, actual:" + r.length);
+
+        assert.deepEqual(r[0], byId("1-1-1"));
+    });
+
+    it('Простой на вложенный элемент', function() {
+        var r = query('1', 'himki');
+        assert.equal(r.length, 2, "himki=2, actual:" + r.length);
+
+        assert.deepEqual(r[0], byId("1-1-1"));
+    });
+
     it("wildcard с предикатами", function() {
-        var r = query('1', '*[now=2]');
+        var r = query('1', '*[::now(2)]');
         assert.equal(r.length, 1);
 
         assert.deepEqual(r[0], byId("1-2"));
     });
 
+    it('предикат :first', function() {
+        var r = query('1', 'moscow[:first]');
+        assert.equal(r.length, 1);
+        assert.deepEqual(r[0], byId('1-1'));
+    });
+
+    it('предикат :last', function() {
+        var r = query('1', 'moscow[:last]');
+        assert.equal(r.length, 1);
+        assert.deepEqual(r[0], byId('1-2'));
+    });
+
     it("предикат с модификатором", function() {
-        var r = query('1', '*[:active]');
+        var r = query('1', '*[active]');
         assert.equal(r.length, 1);
 
-        r = query('1', '*[:active=true]');
-        assert.equal(r.length, 1);
+        r = query('1', '*[active=*]');
+        assert.equal(r.length, 2);
 
-        r = query('1', '*[:active=false]');
+        r = query('1', '*[active=2]');
         assert.equal(r.length, 0);
     });
 

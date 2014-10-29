@@ -1,87 +1,178 @@
+
 var _ = require('lodash');
 
-module.exports = function(internals) {
+/**
+ * Типы предикатов
+ * @readonly
+ * @enum {number}
+ */
+var predicateTypes = {
+    MOD: 1, // online[active]
+    ATOM: 2, // miniCard[:first]
+    METHOD: 4 // searchBar[::valueIs(544)]
+};
 
-    function filterModules(fromId, name, predicate, inclusive) {
-        var currModuleDesc = internals.moduleDescriptors[fromId],
+/**
+ * Конструктор функции для дескрипторов модулей приложения
+ *
+ * @param {Array} moduleDescriptors дескрипторы модулей в приложении
+ * @returns {queryModules} функция которая умеет запрашивать модули по селектору
+ */
+module.exports = function(moduleDescriptors) {
+
+    /**
+     * Фильтруем модули по уже распарсенному предикату
+     *
+     * @param {String} fromId с какого модуля фильтруем
+     * @param {String} name тип модулей который нужен, если равен * то любой тип подходит
+     * @param {Object} predicate распарсенный объект предиката, см. метод parsePredicate
+     *
+     * @returns {String[]} список отфильтрованных айдишников
+     */
+    function filterModules(fromId, name, predicate) {
+        var currModuleDesc = moduleDescriptors[fromId],
             result = [];
 
         function matchType(type) {
             return name == '*' || name == type;
         }
 
-        function matchPredicate(moduleConf, module) {
+        /**
+         * Проверяет подходит ли предикат к заданному модулю
+         *
+         * @param {Object} moduleConf конфиг модуля
+         * @param {Object} moduleDesc дескриптор модуля
+         * @param {Number} index позиция модуля относительно родителя
+         * @param {Array} all все родительские модули
+         * @returns {boolean}
+         */
+        function matchPredicate(moduleConf, moduleDesc, index, all) {
             if (!predicate) return true;
 
-            if (!predicate.isMod) {
-                if (!moduleConf.interface) {
+            if (predicate.type & predicateTypes.METHOD) {
+                if (!moduleConf.interface || !_.isFunction(moduleConf.interface[predicate.name])) {
                     return false;
                 }
+                var ref = predicate.ref == null ? true : predicate.ref;
 
-                return moduleConf.interface[predicate.name].apply(moduleConf, predicate.args);
-            } else {
-                var mods = module.slot.mod(),
-                    res = predicate.name in mods;
 
-                if (res && predicate.args.length) {
-                    res = mods[predicate.name] == predicate.args.join(',');
+                return moduleConf.interface[predicate.name].apply(moduleConf, predicate.args) == ref;
+            } else if (predicate.type & predicateTypes.MOD) {
+                var mods = moduleDesc.slot.mod();
+                var value = mods[predicate.name];
+
+                if (!predicate.ref) {
+                    return value === true;
+                } else if (predicate.ref == '*') {
+                    return value != null && value != false;
+                } else {
+                    return value == predicate.ref;
                 }
-
-                return res;
+            } else if (predicate.type & predicateTypes.ATOM) {
+                switch (predicate.name) {
+                    case 'first':
+                        return index == 0;
+                    case 'last':
+                        return index == all.length - 1;
+                }
             }
         }
 
-        function accumulate(id) {
-            var localModuleDesc = internals.moduleDescriptors[id];
+        /**
+         * Рекурсивно накапливает в result модули которые удовлетворяют типу и предикату
+         * @param {String} id модуль который будем тестировать, его дети рекурсивно тоже будут обработаны
+         * @param {Number} index позиция модуля относительно родителя
+         * @param {Array} all все родительские модули
+         */
+        function accumulate(id, index, all) {
+            var moduleDesc = moduleDescriptors[id];
 
-            if (matchType(localModuleDesc.type) && matchPredicate(localModuleDesc.moduleConf, localModuleDesc)) {
+            if (matchType(moduleDesc.type) && matchPredicate(moduleDesc.moduleConf, moduleDesc, index, all)) {
                 result.push(id);
             }
 
-            _.each(localModuleDesc.children, accumulate);
+            _.each(moduleDesc.children, accumulate);
         }
 
-        if (inclusive) {
-            accumulate(fromId);
-        } else {
-            _.each(currModuleDesc.children, accumulate);
-        }
+        _.each(currModuleDesc.children, accumulate);
 
         return result;
     }
 
-    function queryModules(fromId, selector, inclusive) {
+    /**
+     * Возвращает дескрипторы модулей по заданному селектору
+     *
+     * @param {String} fromId рутовый модуль откуда начинаем выборку
+     * @param {String} selector селектор запроса
+     * @returns {Array}
+     */
+    function queryModules(fromId, selector) {
         var sel = selector.split(/\s+/);
 
+        // элемент каскада
         var ruleRe = /([\w\*]+)(\[([^\]]+)\])?/;
+        // один аргумент в конструкции [::foo(1, 'arg2', "arg3')]
+        var argsRe = /(?:"(?:\\.|[^"])*"|'(?:\\.|[^'])*'|[^"'\s\,]+)+/g;
+        // регулярка на все аргументы вместе со скобками, сами аргументы могут отсутствовать
+        var argsGroupRe = /(\w+)\(([^\)]*)\)/;
+        // триминг кавычек строчек
+        var trimRe = /^['"]+|['"]+$/g;
 
+        /**
+         * Парсит предикат вида [:name(args)=ref] в соответствующую структуру
+         *
+         * Предикаты бывают трех типов:
+         * 1. [active] предикат по модификатору, равен predicateTypes.MOD
+         * 2. [:first] предикат по заранее определенному поведению, равен predicateTypes.ATOM
+         * 3. [::isDone(4,6)] предикат по интерфейсному методу, метод должен вернуть true либо значение ref если он указан, равен predicateTypes.METHOD
+         *
+         * @param {String} str тело предиката
+         * @returns {{name: String, ref: *, type: predicateTypes, args: Array}}
+         */
         function parsePredicate(str) {
             var name = str,
-                args = [],
-                isMod = false;
+                type = predicateTypes.MOD; // см predicateTypes
 
 
             if (str.charAt(0) == ':') {
-                isMod = true;
+                type = predicateTypes.ATOM;
                 name = str.substr(1);
+                if (str.charAt(1) == ':') {
+                    type = predicateTypes.METHOD;
+                    name = name.substr(1);
+                }
             }
 
             var indexOfEq = name.indexOf('=');
+            var reference = null; // то что стоит после равно
 
             if (indexOfEq != -1) {
-                args = name.substr(indexOfEq + 1).split(',');
+                reference = name.substr(indexOfEq + 1);
                 name = name.substr(0, indexOfEq);
+            }
+
+            var args = [],
+                argGroupMatch = name.match(argsGroupRe);
+
+            if ((type & predicateTypes.METHOD) && argGroupMatch) {
+                name = argGroupMatch[1];
+                args = argGroupMatch[2].match(argsRe) || [];
+                args = args.map(function(s) {
+                    return s.replace(trimRe, '');
+                });
             }
 
             return {
                 name: name,
-                args: args,
-                isMod: isMod
+                ref: reference,
+                type: type,
+                args: args
             };
         }
 
         var ids = [fromId];
 
+        // итерация по элементам каскада, каждый раз выборка уточняется
         for (var i = 0, len = sel.length; i < len; i++) {
             var rule = ruleRe.exec(sel[i]);
             if (!rule) throw new Error("Invalid selector " + selector);
@@ -93,16 +184,14 @@ module.exports = function(internals) {
 
             for (var k = 0, kLen = ids.length; k < kLen; k++) {
                 var id = ids[k];
-                newIds = newIds.concat(filterModules(id, name, predicate, inclusive));
+                newIds = newIds.concat(filterModules(id, name, predicate));
             }
 
             ids = newIds.slice();
             if (!ids.length) break;
         }
 
-        return _.map(ids, function(id) {
-            return internals.moduleDescriptors[id];
-        });
+        return _.at(moduleDescriptors, ids);
     }
 
     return queryModules;
