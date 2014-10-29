@@ -43,6 +43,7 @@
 "add/my-feature"
 "remove/old-feature"
 "fix/crazy-bug"
+"improve/my-feature"
 ```
 
 ###Именование коммитов
