@@ -43,15 +43,15 @@ module.exports = function() {
      * @returns {*}
      */
     function registry(name, defaultValue) {
-        if (registryData.hasOwnProperty(name)) {
-            return registryData[name];
+        if (!registryData.hasOwnProperty(name)) {
+            if (typeof defaultValue == 'undefined') {
+                defaultValue = {};
+            }
+
+            registryData[name] = defaultValue;
         }
 
-        if (defaultValue === undefined) {
-            defaultValue = {};
-        }
-
-        return registryData[name] = defaultValue;
+        return registryData[name];
     }
 
     /**
