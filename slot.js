@@ -39,17 +39,60 @@ module.exports = function(app, params) {
         /**
          * Инициализирует модуль
          *
+         * Метод имеет два интерфейса
+         * Простой: на вход принимает 3 аргумента (название модуля, данные для инициализации, колбэк)
+         * Расширенный: на взод принмает 2 аргумента (объект в формате {type: "название_модуля", data: {}} и колбэк)
+         * См. примеры.
+         *
+         * @example
+         * // Simple module init
+         * slot.init('moduleName');
+         *
+         * @example
+         * // Init module with some init data
+         * slot.init('moduleName', {
+         *     // Init data for module
+         * });
+         *
+         * @example
+         * // Init module with callback
+         * slot.init('moduleName', function () {}
+         *     // Some code here
+         * );
+         *
+         * @example
+         * // Init module with some init data and callback
+         * slot.init('moduleName', {
+         *     // Init data for module
+         * }, function () {
+         *     // Some code here
+         * );
+         *
+         * @example
+         * // Init module with some init data
+         * slot.init({
+         *     type: 'moduleName',
+         *     data: {} // Init data for module
+         * });
+         *
+         * @example
+         * // Init module with some init data and callback
+         * slot.init({
+         *     type: 'moduleName',
+         *     data: {} // Init data for module
+         * }, function () {
+         *     // Some code here
+         * );
+         *
          * @param {string} name - тип модуля, например firmCard
          * @param {object} [data] - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
-         * @param {Function} [callback] - колбек, вызываемый инитом модуля асинхнонно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
+         * @param {Function} [callback] - колбек, вызываемый инитом модуля асинхронно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
          */
         init: function(name, data, callback) {
-            // Если слот умер - ничего инитить нет смысла,
-            // потому что слот умирает вместе с родительским модулем
+            // Если слот умер - ничего инитить нет смысла, потому что слот умирает вместе с родительским модулем
             if (slot.stage & slot.STAGE_NOT_ALIVE) return;
 
-            // Старый интерфейс
-            if (_.isObject(name)) {
+            if (_.isObject(name)) { // Обработка расширенного интерфейса метода
                 callback = data;
 
                 var moduleConf = name;
@@ -62,7 +105,6 @@ module.exports = function(app, params) {
             }
 
             var module = loadModule({ type: name, data: data });
-
             module.init(data, function(err) {
                 var moduleName = name;
 
