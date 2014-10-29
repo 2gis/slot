@@ -606,9 +606,9 @@ module.exports = function() {
         },
 
         uniqueId: function(prefix) {
-            var id = uniqueIdCounter++;
+            uniqueIdCounter = uniqueIdCounter + 1;
 
-            return (prefix || '') + id;
+            return (prefix || '') + uniqueIdCounter;
         },
 
         registry: registry,
@@ -674,7 +674,7 @@ module.exports = function() {
             } else {
                 if (typeof value != 'undefined') {
                     if (params.expires) {
-                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000) // jquery days to express ms
+                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000); // Days → milliseconds
                     }
 
                     app.emit('cookie', key, value, params);
