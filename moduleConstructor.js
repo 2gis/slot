@@ -35,7 +35,7 @@ module.exports = function(app, moduleConf, slot) {
             if (_.isArray(module)) throw new Error("Module helper: unable to render array of modules");
 
             // Из какого-то шаблона подключается несуществующий модуль
-            if (!module) throw new Error("Module helper: unable to render module " + moduleName);
+            if (!module) return '';
 
             return new handlebars.SafeString(module.render());
         },
@@ -225,6 +225,10 @@ module.exports = function(app, moduleConf, slot) {
                 template = moduleConf.type || moduleConf.template,
                 tag = moduleConf.tag || 'div',
                 attrs = {};
+
+            if (!moduleInstance) {
+                throw new Error('Module with id ' + moduleId + ' not found');
+            }
 
             if (moduleConf.viewAttrs) {
                 attrs = _.isFunction(moduleConf.viewAttrs) ? moduleConf.viewAttrs() : moduleConf.viewAttrs;

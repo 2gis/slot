@@ -77,17 +77,19 @@ module.exports = function(app, params) {
                 if (err) {
                     module.dispose();
                 } else {
-                    var modules = slot.modules[moduleName];
+                    if (module.slot.stage == slot.STAGE_INITED) { // На случай, если суицид модуля
+                        var modules = slot.modules[moduleName];
 
-                    // Если модуль такого типа уже есть, то преобразуем в массив
-                    if (modules) {
-                        if (!_.isArray(modules)) { // Если сейчас только 1 инстанс, и ещё не преобразовано в массив
-                            slot.modules[moduleName] = [modules];
+                        // Если модуль такого типа уже есть, то преобразуем в массив
+                        if (modules) {
+                            if (!_.isArray(modules)) { // Если сейчас только 1 инстанс, и ещё не преобразовано в массив
+                                slot.modules[moduleName] = [modules];
+                            }
+
+                            slot.modules[moduleName].push(module);
+                        } else {
+                            slot.modules[moduleName] = module;
                         }
-
-                        slot.modules[moduleName].push(module);
-                    } else {
-                        slot.modules[moduleName] = module;
                     }
                 }
 
@@ -99,8 +101,14 @@ module.exports = function(app, params) {
             return module;
         },
 
+        /**
+         * Палаллельная нициализация массива модулей
+         * @param  {Array}    modules  Массив описаний инициализируемых модулей
+         * @param  {Function} callback Опциональный колбек, вызываемый после инициализации всех модулей
+         * @return {undefined}         Ничего не возвращает
+         */
         initModules: function(modules, callback) {
-            async.map(modules, slot.init, callback);
+            async.map(modules, slot.init, callback || _.noop);
         },
 
         initModulesSeries: function(modules, callback) {

@@ -492,10 +492,33 @@ module.exports = function() {
                 if (app.isBound()) {
                     app.unbindEvents(moduleId);
                 }
+
+                // Убиваем ссылку на модуль из родительского slot.modules
+                var parentId = internals.moduleDescriptors[moduleId].parentId;
+                if (parentId) {
+                    var parent = internals.moduleDescriptors[parentId];
+                    var childrenOfParent = parent.slot.modules[moduleInstance.type];
+
+                    if (_.isObject(childrenOfParent)) {
+                        delete parent.slot.modules[moduleInstance.type];
+                    } else if (_.isArray(childrenOfParent)) {
+                        _.each(childrenOfParent, function(child, index) {
+                            if (child.id() == moduleId) { // Удаляем из массива элемент с таким id-шником
+                                childrenOfParent.splice(index, 1);
+                            }
+                        });
+
+                        if (childrenOfParent.length == 0) {
+                            delete parent.slot.modules[moduleInstance.type];
+                        }
+                    }
+                }
+
+                // Убиваем все дочерние модули
                 var children = internals.moduleDescriptors[moduleId].children;
                 if (children) {
-                    _.each(children, function(childrenId) {
-                        internals.moduleDescriptors[childrenId].instance.kill();
+                    _.each(children, function(childId) {
+                        internals.moduleDescriptors[childId].instance.kill();
                     });
                 }
             };
@@ -509,8 +532,8 @@ module.exports = function() {
 
                 var children = internals.moduleDescriptors[moduleId].children;
                 if (children) {
-                    _.each(children, function(childrenId) {
-                        internals.moduleDescriptors[childrenId].instance.remove();
+                    _.each(children, function(childId) {
+                        internals.moduleDescriptors[childId].instance.remove();
                     });
                 }
 
