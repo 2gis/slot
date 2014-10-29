@@ -160,8 +160,6 @@ module.exports = function() {
 
             // Навешиваем события на все модули
             app.bindEvents(rootId);
-
-            if (DEBUG) require('./../debugInfo').init();
         },
 
         runInQueue: function(handler) {
