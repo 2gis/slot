@@ -38,13 +38,6 @@ module.exports = function(app, params) {
         runInQueue: app.runInQueue,
 
         /**
-         * @deprecated. Use 'init' instead
-         */
-        initModule: function(moduleConf, callback) {
-            return this.init(moduleConf, callback);
-        },
-
-        /**
          * Инициализирует модуль
          *
          * @param {string} name - тип модуля, например firmCard
