@@ -172,11 +172,9 @@ module.exports = function() {
                 ua: getBrowser(req.ua)
             };
 
-            cookies = req.cookies;
-
-            data[config['authApi.cookieName']] = req[config['authApi.cookieName']];
-
             registry.setup(data);
+
+            cookies = req.cookies;
 
             var appState = app.requireComponent('appState'),
                 middleware = app.requireComponent('middleware');
