@@ -20,7 +20,7 @@ module.exports = function() {
             moduleDescriptors: {},
             ids: {}
         },
-        queryModules = modulesQuering(internals),
+        queryModules = modulesQuering(internals.moduleDescriptors),
         raised,
         cookies; // Куки, прилетевшие в инит приложения (используется на сервере)
 
