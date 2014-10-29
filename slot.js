@@ -1,6 +1,5 @@
 var async = require('async'),
-    _ = require('lodash'),
-    smokesignals = envRequire('smokesignals');
+    _ = require('lodash');
 
 module.exports = function(app, params) {
     var moduleId = params.moduleId,
