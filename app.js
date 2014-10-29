@@ -502,10 +502,8 @@ module.exports = function() {
                     if (_.isObject(childrenOfParent)) {
                         delete parent.slot.modules[moduleInstance.type];
                     } else if (_.isArray(childrenOfParent)) {
-                        _.each(childrenOfParent, function(child, index) {
-                            if (child.id() == moduleId) { // Удаляем из массива элемент с таким id-шником
-                                childrenOfParent.splice(index, 1);
-                            }
+                        _.remove(childrenOfParent, function(child) { // Удаляем из массива элемент с таким id-шником
+                            return child.id() == moduleId;
                         });
 
                         if (childrenOfParent.length == 0) {
