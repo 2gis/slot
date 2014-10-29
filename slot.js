@@ -233,9 +233,7 @@ module.exports = function(app, params) {
 
         // Отменить все таймауты для данного модуля. Вызывается при диспозе.
         clearTimeouts: function() {
-            _.each(timeouts, function(timer) {
-                clearTimeout(timer);
-            });
+            _.each(timeouts, clearTimeout);
         },
 
         setInterval: function(func, delay) {
@@ -247,9 +245,7 @@ module.exports = function(app, params) {
         },
 
         clearIntervals: function() {
-            _.each(intervals, function(interval) {
-                clearInterval(interval);
-            });
+            _.each(intervals, clearInterval);
         },
 
         uniqueId: app.uniqueId,
