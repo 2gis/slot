@@ -1,6 +1,4 @@
-
-var _ = require('lodash'),
-    smokesignals = envRequire('smokesignals');
+var _ = require('lodash');
 
 module.exports = function(internals) {
 
