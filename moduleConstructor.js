@@ -2,12 +2,19 @@ var _ = require('lodash'),
     namer = require('./namer'),
     env = require('./env');
 
-// Module wrapper expects a raw module objects as an argument for constructor.
-module.exports = function(app, moduleConf, slot) {
+/**
+ * Конструктор модулей. Создаёт инстанс модуля, обвешивая его конфиг всякими методами
+ * @param  {Object} app
+ * @param  {Object} moduleConf конфиг модуля - тот самый js-объект из файла модуля
+ * @param  {Object} slot       инстанс слота для этого модуля
+ * @param  {Object} cte        кастомный шаблонизатор, по-умолчанию handlebars
+ * @return {Object}            инстанс модуля
+ */
+module.exports = function(app, moduleConf, slot, cte) {
     // register default partials and helpers for current module
 
     var templates = slot.templates,
-        handlebars = env.get('handlebars'),
+        templateEngine = cte || env.get('handlebars'),
         templatePartials,
         templateHelpers,
         clientInited = false,
@@ -23,7 +30,7 @@ module.exports = function(app, moduleConf, slot) {
 
             if (!tmpl) throw new Error("Unable to render partial " + partial);
 
-            return new handlebars.SafeString(tmpl(options.hash.context || this, getTmplOptions()));
+            return new templateEngine.SafeString(tmpl(options.hash.context || this, getTmplOptions()));
         },
 
         // Подключение модуля. Модуль должен быть проинициализирован.
@@ -37,7 +44,7 @@ module.exports = function(app, moduleConf, slot) {
             // Из какого-то шаблона подключается несуществующий модуль
             if (!module) return '';
 
-            return new handlebars.SafeString(module.render());
+            return new templateEngine.SafeString(module.render());
         },
 
         // Подключение первого имеющегося (из списка) партиала
@@ -117,8 +124,8 @@ module.exports = function(app, moduleConf, slot) {
             partials = moduleConf.getPartials ? moduleConf.getPartials() : {},
             helpers = moduleConf.getHelpers ? moduleConf.getHelpers() : {};
 
-        options.partials = _.defaults(partials, templatePartials, handlebars.partials);
-        options.helpers = _.defaults(helpers, templateHelpers, handlebars.helpers);
+        options.partials = _.defaults(partials, templatePartials, templateEngine.partials);
+        options.helpers = _.defaults(helpers, templateHelpers, templateEngine.helpers);
 
         return options;
     }
@@ -206,21 +213,19 @@ module.exports = function(app, moduleConf, slot) {
         /**
          * Renders the module and wraps it in a div with special metadata to identify this module in DOM.
          *
-         * @param {Object} [customViewContext] Объект, который пошлется в шаблон вместо viewContext модуля.
          * @returns {string}
          */
-        render: function(customViewContext) {
+        render: function() {
             var blockName = moduleConf.block || moduleConf.type;
 
             // Вызов метода viewContext должен быть всегда.
-            var originalViewContext = moduleConf.viewContext ? moduleConf.viewContext(customViewContext) : slot.viewContext,
-                viewContext = customViewContext || originalViewContext || {};
+            var viewContext = (moduleConf.viewContext ? moduleConf.viewContext() : slot.viewContext) || {};
 
             if (!_.isObject(viewContext)) {
                 throw new TypeError('viewContext must be an object, but а ' + viewContext);
             }
 
-            var moduleId = moduleConf.uniqueId,
+            var moduleId = this.id,
                 moduleInstance = app.getModuleDescriptorById(moduleId),
                 template = moduleConf.type || moduleConf.template,
                 tag = moduleConf.tag || 'div',
@@ -234,7 +239,7 @@ module.exports = function(app, moduleConf, slot) {
                 attrs = _.isFunction(moduleConf.viewAttrs) ? moduleConf.viewAttrs() : moduleConf.viewAttrs;
             }
 
-            var mods = moduleInstance.mods,
+            var mods = moduleInstance.mods || {},
                 compiledTemplate = slot.templates[template],
                 compiledTemplateHTML = typeof compiledTemplate == 'function' ?
                     compiledTemplate(viewContext, getTmplOptions()) :
@@ -249,20 +254,14 @@ module.exports = function(app, moduleConf, slot) {
                 classes = classString.split(/\s+/);
 
             classes.push(moduleClass);
+            classes = classes.concat(namer.stringifyMods(mods));
 
-            _.each(mods, function(val, key) {
-                var modClass = namer.modificatorClass(key, val);
-                classes.push(modClass);
-            });
-
-            attrs['class'] = _.uniq(classes).join(' ');
+            attrs['class'] = _.uniq(_.compact(classes)).join(' ');
 
             return renderTag(tag, attrs, compiledTemplateHTML);
         },
 
-        id: function() {
-            return moduleConf.uniqueId;
-        },
+        id: moduleConf.uniqueId,
 
         interface: moduleConf.interface,
 

@@ -105,7 +105,7 @@ module.exports = function() {
      */
     function getModificators(moduleWrapper) {
         var el = moduleWrapper.block()[0];
-        return el ? namer.getModificatorsFromClassName(el.className) : {};
+        return el ? namer.parseMods(el.className) : {};
     }
 
     /**
@@ -449,7 +449,7 @@ module.exports = function() {
                 }]);
 
             if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
-                throw new Error('Bad module: ' + moduleName);
+                throw new Error('Bad moduleJs: ' + moduleName);
             }
 
             var moduleConf = app.invoke(moduleJs, [slot], slot.requireComponent);
