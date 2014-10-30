@@ -1,9 +1,7 @@
-
 var fs = require('fs');
 var gulp = require('gulp');
-var async = require('async');
-var spawn = require('child_process').spawn;
 var rimraf = require('rimraf');
+var runSequence = require('run-sequence');
 
 var HOOKS = 'git-hooks/hooks.sh';
 var PRE_PUSH = '.git/hooks/pre-push';
@@ -33,40 +31,13 @@ function install(cb) {
         .on('finish', cb.bind(this, null));
 }
 
-gulp.task('hooks.install', install);
-gulp.task('hooks', install); // alias
+gulp.task('hooks', install);
 
 gulp.task('hooks.clear', function(cb) {
     rimraf(PRE_PUSH, cb);
 });
 
-// @TODO: refactor hooks - move verbosity logic to js land
 gulp.task('hooks.run', function(cb) {
-    var scripts = [
-        'run-10-tests.sh',
-        'run-20-code-style.sh'
-    ];
-
-    var tasks = scripts.map(function(script) {
-        return function(cb) {
-            var child = spawn('git-hooks/' + script, [], {
-                stdio: 'inherit'
-            });
-            process.on('exit', function() {
-                child.kill();
-            });
-            child.on('close', function(code) {
-                if (code == 130) {
-                    gulp.emit('exit', code);
-                } else if (code != 0) {
-                    gulp.emit('tl.fail', "Hooks failed");
-                }
-                cb();
-            });
-        };
-    });
-
-    async.series(tasks, cb);
+    runSequence('test', 'lint', cb);
 });
-
-gulp.task('t', ['hooks.run']); // dep. alias
+gulp.task('t', ['hooks.run']);
