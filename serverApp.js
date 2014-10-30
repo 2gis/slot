@@ -6,8 +6,5 @@ module.exports = function(params) {
         rootPath: params.rootPath + '/'
     });
 
-    var app = baseApp.instance;
-    app.wasRendered = false;
-
-    return app;
+    return baseApp.instance;
 };
