@@ -145,6 +145,18 @@ describe("ModulesQuering", function() {
         assert.equal(r.length, 0);
     });
 
+    it('без inclusive не ищет рутовый модуль', function() {
+        var r = query('1', 'root');
+        assert.equal(r.length, 0);
+    });
+
+    it('с inclusive ищет рутовый модуль', function() {
+        var r = query('1', 'root', true);
+        assert.equal(r.length, 1);
+
+        assert.deepEqual(r[0], byId('1'));
+    });
+
     it("все модули", function() {
         assert.equal(query('1', '*').length, 5);
     });
