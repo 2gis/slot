@@ -122,17 +122,34 @@ module.exports = function() {
         return parser.getResult();
     }
 
+    /**
+     * @namespace
+     * @property {Object} components - Все загруженные компоненты приложения
+     * @property {Object} config - Конфиг приложения
+     */
     var app = {
-        modules: {},
         components: {},
         config: config,
 
+        /**
+         * Были ли навешаны события на приложение
+         *
+         * @returns {boolean}
+         */
         isBound: function() {
             return app._stage == 'bind';
         },
 
         require: env.require,
 
+        /**
+         * Решает какой модуль считается точкой входа в приложения и возвращает инстанс модуля
+         *
+         * @param {Object} req
+         * @param {String} req.url - УРЛ, по которому открыто приложение
+         *
+         * @returns {Object} - инстанс модуля
+         */
         resolveEntryPoint: function(req) {
             req = req || {};
 
@@ -155,10 +172,16 @@ module.exports = function() {
         },
 
         /**
+         * @callback
+         * @param {Object} err - ошибка, возникшая при инициализации
+         * @param {Object} mainModule - модуль, являющийся точкой входа в приложение
+         */
+        /**
          * Инициализация приложения: запись необходимых данных, инициализация модулей.
          *
          * @param {Object} req - параметры запроса
-         * @param {Function} callback(err, mainModule) - коллбэк, вызываемый когда было проинициализировано приложение
+         * @callback {InitCallback} callback(err, mainModule) - вызывается после инициализации приложения
+         *      (после инициализации модуля, являющегося точкой входа в приложение)
          */
         init: function(req, callback) {
             app._stage = 'init';
@@ -311,8 +334,8 @@ module.exports = function() {
         /**
          * Посылает сообщение модулям-родителям (антоним broadcast).
          *
-         * @param {string} moduleId
-         * @param message
+         * @param {String} moduleId - идентификатор модуля, отправляющего сообщение
+         * @param {String} message - сообщение
          * @returns {*}
          */
         notify: function(moduleId, message) {
@@ -364,10 +387,23 @@ module.exports = function() {
             return retValue;
         },
 
+        /**
+         * Подключает код компонента с именем name (из /components/name/name.js)
+         *
+         * @param name - название компонента
+         * @returns {*}
+         */
         loadComponent: function(name) {
             return app.require('components/' + name + '/' + name);
         },
 
+        /**
+         * Создает и возвращает инстанс компонента
+         *
+         * @param {String} name - имя компонента
+         * @param {Array} [extraArgs] - дополнительные аргуметны для компонента
+         * @returns {*}
+         */
         newComponent: function(name, extraArgs) {
             extraArgs = extraArgs || [];
             var componentConstructor = app.loadComponent(name);
@@ -375,6 +411,13 @@ module.exports = function() {
             return app.invoke(componentConstructor, [app].concat(extraArgs));
         },
 
+        /**
+         * Возвращает инстанс компонента. Если он был создан ранее, то новый не создается.
+         *
+         * @param {String} name - имя компонента
+         * @param {Array} [extraArgs] - дополнительные аргуметны для компонента
+         * @returns {*}
+         */
         requireComponent: function(name, extraArgs) {
             var componentConstructor = app.loadComponent(name);
 
@@ -390,6 +433,14 @@ module.exports = function() {
 
         queryModules: queryModules,
 
+        /**
+         * Находит список модулей по критериям и передает их в функцию-обработчик
+         *
+         * @param {String} moduleId - идентификатор модуля, от которого начинается поиск вглубь
+         * @param {String} selector - критерии поиска, см.документацию к queryModules
+         * @param {Function} handler - функция обработчик
+         * @param {Boolean} [inclusive] - нужно включать в выборку модуль, с которого начинается поиск
+         */
         processModules: function(moduleId, selector, handler, inclusive) {
             var moduleDescriptors = queryModules(moduleId, selector, inclusive);
             _.each(moduleDescriptors, function(moduleDescriptor) {
@@ -438,6 +489,13 @@ module.exports = function() {
             return retValue;
         },
 
+        /**
+         * Подключает код модуля
+         *
+         * @param {String} moduleName - название модуля
+         * @param {String} [fileName=moduleName] - название подключаемого файла
+         * @returns {*}
+         */
         requireModuleJs: function(moduleName, fileName) {
             fileName = fileName || moduleName;
 
