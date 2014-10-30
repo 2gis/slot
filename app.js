@@ -127,17 +127,6 @@ module.exports = function() {
         modules: {},
         components: {},
         config: config,
-        stateNotRendered: false,
-        server: true,
-
-        /**
-         * Отвечает на вопрос нужно ли отрисовывать стэйт в случае инита приложения
-         * (когда приложение уже проиничино есс-но вернет true)
-         * @returns {boolean}
-         */
-        needRenderState: function() {
-            return app.isBound() || app.stateNotRendered;
-        },
 
         isBound: function() {
             return app._stage == 'bind';
