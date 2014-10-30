@@ -130,11 +130,9 @@ module.exports = function() {
             return app._stage == 'bind';
         },
 
-        require: function(path) {
-            return env.require(path);
-        },
+        require: env.require,
 
-        resolveEntryPoint: function(req, appState) {
+        resolveEntryPoint: function(req) {
             req = req || {};
 
             var url = req.url || '',
@@ -170,30 +168,16 @@ module.exports = function() {
 
             cookies = req.cookies;
 
-            var appState = app.requireComponent('appState'),
-                middleware = app.requireComponent('middleware');
-
-            middleware.setup();
-
             app.emit('init');
 
-            // Makeup mode
-            if (!DEBUG || !app.historyDisabled) {
-                appState.parse(req, initContinue);
-            } else {
-                initContinue();
-            }
+            try {
+                var mainModule = app.mainModule = app.resolveEntryPoint(req);
 
-            function initContinue() {
-                try {
-                    var mainModule = app.mainModule = app.resolveEntryPoint(req, appState);
-
-                    mainModule.init(req, function(err) {
-                        callback(err, mainModule);
-                    });
-                } catch (ex) {
-                    callback(ex);
-                }
+                mainModule.init(req, function(err) {
+                    callback(err, mainModule);
+                });
+            } catch (ex) {
+                callback(ex);
             }
         },
 
