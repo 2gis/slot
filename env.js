@@ -92,23 +92,6 @@ exports.requirePublic = function(path) {
     return requireFromBuild('public/' + path);
 };
 
-/**
- * @param {string} serverName
- * @param {string} clientName
- * @returns {*}
- */
-function envRequire(serverName, clientName) {
-    if (isServer) {
-        return require(serverName);
-    } else {
-        if (!clientName) {
-            clientName = serverName.charAt(0).toUpperCase() + serverName.slice(1);
-            clientName = window[clientName] ? clientName : serverName;
-        }
-        return window[clientName];
-    }
-}
-
 var vars = {},
     varsObserver = new events.EventEmitter();
 
@@ -176,4 +159,3 @@ exports.isGrym = typeof DGOfflineAPI != 'undefined' && !!DGOfflineAPI.systemCont
 
 global.req = exports.require;
 global.requirePrivate = requirePrivate;
-global.envRequire = envRequire;
