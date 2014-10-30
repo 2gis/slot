@@ -25,6 +25,7 @@
   "devDependencies": {
     "colors": "~1.0.3",
     "gulp": "~3.8.6",
+    "gulp-istanbul": "^0.3.1",
     "gulp-jscs": "git://github.com/anru/gulp-jscs.git",
     "gulp-jshint": "~1.6.3",
     "gulp-mocha": "~0.5.1",
