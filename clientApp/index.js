@@ -138,28 +138,8 @@ module.exports = function() {
         bind: function() {
             app._stage = 'bind';
 
-            var rootId = app.mainModule.id();
-
-            var stateTracker = app.requireComponent('stateTracker');
-            var appState = app.requireComponent('appState');
-
-            appState.on('statechange', function(diff) {
-                app.processModules(rootId, '*', function(instance) {
-                    if (instance.changeState) {
-                        instance.changeState.call(instance, diff, appState);
-                    }
-                }, true);
-
-                app.runTransitions(function() {
-                    transitionsEnded.resolve();
-                    transitionsEnded = defer();
-                });
-            });
-
-            stateTracker.bind();
-
             // Навешиваем события на все модули
-            app.bindEvents(rootId);
+            app.bindEvents(app.mainModule.id());
         },
 
         runInQueue: function(handler) {
@@ -188,7 +168,7 @@ module.exports = function() {
             transitions.push(handler);
         },
 
-        runTransitions: function(callback) {
+        runTransitions: function() {
             if (transitionsAreRunning) return;
             transitionsAreRunning = true;
 
@@ -201,7 +181,8 @@ module.exports = function() {
                     transition(transitionStep);
                 } else {
                     transitionsAreRunning = false;
-                    if (callback) callback();
+                    transitionsEnded.resolve();
+                    transitionsEnded = defer();
                 }
 
             }
