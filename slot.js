@@ -241,8 +241,6 @@ module.exports = function(app, params) {
             _.each(intervals, clearInterval);
         },
 
-        uniqueId: app.uniqueId,
-
         registry: app.registry,
 
         raise: app.raise,
