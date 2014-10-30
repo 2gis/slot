@@ -141,7 +141,7 @@ module.exports = function() {
             app.emit('bind');
 
             // Навешиваем события на все модули
-            app.bindEvents(app.mainModule.id());
+            app.bindEvents(app.mainModule.id);
         },
 
         runInQueue: function(handler) {
