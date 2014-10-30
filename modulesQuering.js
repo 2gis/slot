@@ -26,10 +26,11 @@ module.exports = function(moduleDescriptors) {
      * @param {String} fromId с какого модуля фильтруем
      * @param {String} name тип модулей который нужен, если равен * то любой тип подходит
      * @param {Object} predicate распарсенный объект предиката, см. метод parsePredicate
+     * @param {Boolean} [inclusive=false] включать ли начальный модуль в выборку
      *
      * @returns {String[]} список отфильтрованных айдишников
      */
-    function filterModules(fromId, name, predicate) {
+    function filterModules(fromId, name, predicate, inclusive) {
         var currModuleDesc = moduleDescriptors[fromId],
             result = [];
 
@@ -94,7 +95,11 @@ module.exports = function(moduleDescriptors) {
             _.each(moduleDesc.children, accumulate);
         }
 
-        _.each(currModuleDesc.children, accumulate);
+        if (inclusive) {
+            accumulate(fromId, 0, []);
+        } else {
+            _.each(currModuleDesc.children, accumulate);
+        }
 
         return result;
     }
@@ -104,9 +109,10 @@ module.exports = function(moduleDescriptors) {
      *
      * @param {String} fromId рутовый модуль откуда начинаем выборку
      * @param {String} selector селектор запроса
+     * @param {Boolean} [inclusive=false] начинать ли выборку с рутового модуля
      * @returns {Array}
      */
-    function queryModules(fromId, selector) {
+    function queryModules(fromId, selector, inclusive) {
         var sel = selector.split(/\s+/);
 
         // элемент каскада
@@ -184,8 +190,10 @@ module.exports = function(moduleDescriptors) {
 
             for (var k = 0, kLen = ids.length; k < kLen; k++) {
                 var id = ids[k];
-                newIds = newIds.concat(filterModules(id, name, predicate));
+                newIds = newIds.concat(filterModules(id, name, predicate, inclusive));
             }
+
+            inclusive = false; // далее inclusive должен быть равен false для корректной выборки в каскаде
 
             ids = newIds.slice();
             if (!ids.length) break;
