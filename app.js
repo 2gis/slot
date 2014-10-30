@@ -24,8 +24,6 @@ module.exports = function() {
         raised,
         cookies; // Куки, прилетевшие в инит приложения (используется на сервере)
 
-    var uniqueIdCounter = 0;
-
     function nextModuleId(parentId) {
         var key = parentId || 'root';
         if (!(key in internals.ids)) {
@@ -610,12 +608,6 @@ module.exports = function() {
 
         setInterval: function(func, delay) {
             return setInterval(func, delay);
-        },
-
-        uniqueId: function(prefix) {
-            uniqueIdCounter = uniqueIdCounter + 1;
-
-            return (prefix || '') + uniqueIdCounter;
         },
 
         registry: registry,
