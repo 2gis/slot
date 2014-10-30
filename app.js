@@ -9,7 +9,7 @@ var injector = require('./injector'),
     env = require('./env'),
     templateProvider = require('./templateProvider'),
     modulesQuering = require('./modulesQuering'),
-    smokesignals = envRequire('smokesignals'),
+    smokesignals = require('smokesignals'),
     namer = require('./namer'),
     config = require('./config');
 
