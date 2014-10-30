@@ -210,10 +210,28 @@ module.exports = function() {
             }
         },
 
-        mod: function(moduleId, modificators) {
+        /**
+         * Выставляет модификаторы для данного модуля
+         * @param  {Object} moduleId     id модуля, для которого будут выставляться модификаторы
+         * @param  {Object|String} modificators Объект модификаторов, либо ключ jQuery-like режиме
+         * * @param {} value значение выставляемого модификатора в jQuery-like режиме
+         * @return {Object|} объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме
+         */
+        mod: function(moduleId, modificators, value) {
             var descriptor = app.getModuleDescriptorById(moduleId);
 
-            if (modificators) { // Без аргумента работает как геттер
+            if (_.isString(modificators)) { // jQuery-like -> true way
+                var key = modificators;
+
+                if (typeof value != 'undefined') { // setter
+                    modificators = {};
+                    modificators[key] = value;
+                } else { // getter
+                    return descriptor.mods[key];
+                }
+            }
+
+            if (_.isObject(modificators)) {
                 var oldMods = _.clone(descriptor.mods),
                     newMods = _.clone(modificators),
                     block;
@@ -239,12 +257,9 @@ module.exports = function() {
 
                         var handlers = descriptor.moduleConf.modHandlers;
                         if (handlers && handlers[key]) { // Вызов обработчиков установки или удаления модификатора
-                            if (val != null) {
-                                if (handlers[key].set) handlers[key].set.call(descriptor.moduleConf, val);
-                            } else {
-                                if (handlers[key].remove) handlers[key].remove.call(descriptor.moduleConf);
+                            if (_.isFunction(handlers[key])) {
+                                handlers[key].call(descriptor.moduleConf, val);
                             }
-
                         }
 
                         if (DEBUG) {
@@ -261,7 +276,7 @@ module.exports = function() {
                              * }
                              */
                             if (handlers && handlers._any) {
-                                if (handlers._any.change) handlers._any.change.call(descriptor.moduleConf, key, val);
+                                handlers._any.call(descriptor.moduleConf, key, val);
                             }
                         }
                     }
@@ -436,6 +451,11 @@ module.exports = function() {
             return injector.invoke(fn, args, provider, self);
         },
 
+        /**
+         * Загружает js модуля, инстанцирует его и записывает в дерево иерархии модулей
+         * @param  {Object} data данные о том, какого типа и куда в дереве модулей должен быть записан новый модуль
+         * @return {Object}      инстанс нового модуля
+         */
         loadModule: function(data) {
             var parentId = data.parentId,
                 moduleId = data.id || nextModuleId(parentId),

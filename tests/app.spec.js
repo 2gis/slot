@@ -1,12 +1,16 @@
 var assert = require('assert');
+var sinon = require('sinon');
+var _ = require('lodash');
 
 DEBUG = true;
 
-describe('Core -> app', function() {
-    var app;
+describe('app', function() {
+    var app,
+        appConfig;
 
     beforeEach(function() {
-        app = require('../app.js');
+        app = require('../app.js')();
+        appConfig = app.appConfig;
     });
 
     it('blank', function() {
@@ -15,12 +19,10 @@ describe('Core -> app', function() {
 
     describe('-> resolveEntryPoint', function() {
         it('Не падает когда devPages нет в конфиге', function(done) {
-            var cfg = app().appConfig;
+            appConfig.config = {};
+            appConfig.loadModule = function() {};
 
-            cfg.config = {};
-            cfg.loadModule = function() {};
-
-            cfg.resolveEntryPoint();
+            appConfig.resolveEntryPoint();
             done();
         });
     });
@@ -80,6 +82,127 @@ describe('Core -> app', function() {
 
             app.removeCookie('key');
             assert(!app.cookie('key'), 'app.cookie не должен вернуть выставленное на клиенте значение, ведь его удалили выше');
+        });
+    });
+
+    describe('-> mod', function() {
+        it('Вызов без аргументов', function(done) {
+            try {
+                appConfig.mod();
+            } catch (e) {
+                done();
+            }
+        });
+
+        it('Вызов без объекта модификаторов', function() {
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {},
+                    mods: {}
+                }
+            };
+
+            var mods = appConfig.mod('1');
+
+            assert.deepEqual(mods, {});
+        });
+
+        it('jQuery-like', function() {
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {},
+                    mods: {}
+                }
+            };
+
+            var val = appConfig.mod('1', 'key');
+            assert.equal(val, undefined);
+
+            val = appConfig.mod('1', 'key', 999);
+            assert.deepEqual(val, {key: 999});
+
+            val = appConfig.mod('1', 'key');
+            assert.equal(val, 999);
+        });
+
+        it('Вызов с объектом модификаторов', function() {
+            var setMods = {
+                key: 'value',
+                logic: true,
+                'null': null,
+                num: Infinity,
+                nu: 999
+            };
+
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {},
+                    mods: {}
+                }
+            };
+
+            var mods = appConfig.mod('1', setMods);
+
+            assert.deepEqual(mods, setMods);
+
+            mods = appConfig.mod('1');
+
+            assert.deepEqual(mods, setMods);
+        });
+
+        it('Extend модификаторов', function() {
+            var mods1 = {
+                key: null
+            };
+            var mods2 = {
+                key2: undefined
+            };
+
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {},
+                    mods: {}
+                }
+            };
+
+            var mods = appConfig.mod('1', mods1);
+            assert.deepEqual(mods, mods1);
+
+            mods = appConfig.mod('1', mods2);
+            assert.deepEqual(mods, _.extend(mods1, mods2));
+        });
+
+        it('modHandlers', function() {
+            var setMods = {
+                key: 'value',
+                logic: true,
+                'null': null,
+                num: Infinity,
+                nu: 999,
+                u: undefined
+            };
+
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {
+                        modHandlers: {
+                            num: function(val) {
+                                settedVal = val;
+
+                                var mods = appConfig.mod('1');
+                                assert.deepEqual(mods, setMods, 'Модификатор уже должен быть выставлен, до вызова связанного modHandlers');
+                            }
+                        }
+                    },
+                    mods: {}
+                }
+            };
+
+            var spy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'num');
+
+            appConfig.mod('1', setMods);
+
+            assert(spy.withArgs(Infinity).calledOnce, 'Обработчик должен быть вызван 1 раз');
         });
     });
 });
