@@ -6,8 +6,7 @@
  * var winston = require('winston');
  */
 
-var winstonModule = 'winston', // move module name to separate value to avoid browserify include on client
-    winston = require(winstonModule),
+var winston = require('winston'),
     config = require('./config'),
     conf = config.group('logger'),
     confGraylog = conf.graylog;

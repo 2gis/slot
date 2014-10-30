@@ -26,11 +26,8 @@ module.exports = typeof window == 'undefined' ? serverRequest : clientRequest;
  * @returns {*}
  */
 function serverRequest(conf) {
-    // Browserify хак, специально имя пакето вынесено в переменную
-    var pkg = 'request';
-    var request = require(pkg),
-        loggerModule = './logger', // move module name to separate value to avoid browserify include on client
-        winston = require(loggerModule),
+    var request = require('request'),
+        winston = require('./logger'),
         config = require('./config');
 
     if (conf.method && conf.method.toLowerCase() == 'post') {

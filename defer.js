@@ -3,8 +3,7 @@ var _ = require('lodash'),
     env = require('./env');
 
 module.exports = (function() {
-    var serverPkg = 'jquery-deferred';
-    var $ = env.isClient ? jQuery : require(serverPkg); // browserify don't touch me!
+    var $ = env.isClient ? jQuery : require('jquery-deferred');
 
     function defer() {
         var d = $.Deferred();
