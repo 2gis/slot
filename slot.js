@@ -191,13 +191,6 @@ module.exports = function(app, params) {
 
         domBound: app.isBound,
 
-        /**
-         * Отвечает на вопрос нужно ли отрисовывать стэйт в случае инита приложения
-         * (когда приложение уже проиничино есс-но вернет true)
-         * @returns {boolean}
-         */
-        needRenderState: app.needRenderState,
-
         rerender: _.partial(ensureFunction(app.rerender), moduleId),
 
         rebind: function() {
