@@ -33,18 +33,29 @@ module.exports = function(app, moduleConf, slot, cte) {
             return new templateEngine.SafeString(tmpl(options.hash.context || this, getTmplOptions()));
         },
 
-        // Подключение модуля. Модуль должен быть проинициализирован.
-        module: function(module) {
-            var moduleName = module;
+        /**
+         * Подключение модуля. Модуль должен быть проинициализирован.
+         *
+         * Метод имеет два интерфейса
+         * Односложный: {{module 'fromTo'}} - на вход подаётся имя модуля, или инстанс модуля, а в это место будет вставлен результат его рендеригна
+         * Блоковый: {{#module 'fromTo'}} <div> {{{this}}} </div> {{/module}} - то же, но html модуля вставляется внутрь конструкции
+         *
+         * @param  {String|Object} name - имя существующего дочернего модуля, либо инстанс модуля
+         * @param  {Object} options - параметры хелпера. Считается, что если есть options.fn, то хелпер вызван в блоковом режиме
+         * @return {String} готовый html
+         */
+        module: function(name, options) {
+            var moduleInstance = _.isString(name) ? slot.modules[name] : name;
 
-            module = _.isString(module) ? slot.modules[module] : module;
+            if (_.isArray(moduleInstance)) throw new Error("Module helper: unable to render array of modules");
+            if (!moduleInstance) return '';
 
-            if (_.isArray(module)) throw new Error("Module helper: unable to render array of modules");
+            var html = moduleInstance.render();
+            if (options && options.fn) { // Значит вызван как if с блоком {{{this}}} внутри
+                html = options.fn(html);
+            }
 
-            // Из какого-то шаблона подключается несуществующий модуль
-            if (!module) return '';
-
-            return new templateEngine.SafeString(module.render());
+            return new templateEngine.SafeString(html);
         },
 
         // Подключение первого имеющегося (из списка) партиала
@@ -91,25 +102,6 @@ module.exports = function(app, moduleConf, slot, cte) {
             return _.map(mods, function(value, name) {
                 return namer.modificatorClass(name, value);
             }).join(' ');
-        },
-
-        /**
-         * Хелпер для проверки наличия заиниченного модуля
-         *
-         * {{#ifmodule 'searchBar'}}
-         *    {{module 'searchBar'}}
-         * {{/ifmodule}}
-         *
-         * @param {String} name имя модуля
-         * @param {Object} options
-         * @returns {String}
-         */
-        ifmodule: function(name, options) {
-            if (slot.modules[name]) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this);
-            }
         }
     };
 
