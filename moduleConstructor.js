@@ -207,11 +207,12 @@ module.exports = function(app, moduleConf, slot, cte) {
          *
          * @returns {string}
          */
-        render: function() {
+        render: function(cvc) {
             var blockName = moduleConf.block || moduleConf.type;
 
             // Вызов метода viewContext должен быть всегда.
-            var viewContext = (moduleConf.viewContext ? moduleConf.viewContext() : slot.viewContext) || {};
+            var viewContext = moduleConf.viewContext ? moduleConf.viewContext(cvc) : slot.viewContext;
+            viewContext = cvc || viewContext || {};
 
             if (!_.isObject(viewContext)) {
                 throw new TypeError('viewContext must be an object, but а ' + viewContext);
