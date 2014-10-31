@@ -50,12 +50,12 @@ module.exports = function(app, moduleConf, slot, cte) {
             if (_.isArray(moduleInstance)) throw new Error("Module helper: unable to render array of modules");
             if (!moduleInstance) return '';
 
-            var html = moduleInstance.render();
+            var html = new templateEngine.SafeString(moduleInstance.render());
             if (options && options.fn) { // Значит вызван как if с блоком {{{this}}} внутри
                 html = options.fn(html);
             }
 
-            return new templateEngine.SafeString(html);
+            return html;
         },
 
         // Подключение первого имеющегося (из списка) партиала
