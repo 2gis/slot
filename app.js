@@ -4,6 +4,7 @@
  */
 
 var _ = require('lodash');
+var async = require('async');
 
 var injector = require('./injector'),
     env = require('./env'),
@@ -146,6 +147,12 @@ module.exports = function() {
             return app.loadModule({ type: name });
         },
 
+        /**
+         * Инициализация приложения: запись необходимых данных, инициализация модулей.
+         *
+         * @param {Object} req - параметры запроса
+         * @param {Function} callback(err, mainModule) - коллбэк, вызываемый когда было проинициализировано приложение
+         */
         init: function(req, callback) {
             app._stage = 'init';
 
@@ -161,17 +168,40 @@ module.exports = function() {
 
             cookies = req.cookies;
 
-            app.emit('init');
-
-            try {
-                var mainModule = app.mainModule = app.resolveEntryPoint(req);
-
-                mainModule.init(req, function(err) {
-                    callback(err, mainModule);
-                });
-            } catch (ex) {
-                callback(ex);
+            var beforeInitTasks = [];
+            /**
+             * Добавляет функции, которые должны выполниться до инициализации модулей
+             *
+             * @param {Function} fn(callback)
+             */
+            function addBeforeInitTask(fn) {
+                if (_.isFunction(fn)) {
+                    if (fn.length == 0) {
+                        beforeInitTasks.push(function(callback) {
+                            fn();
+                            callback();
+                        });
+                    } else {
+                        beforeInitTasks.push(fn);
+                    }
+                }
             }
+
+            app.emit('beforeInit', {
+                waitFor: addBeforeInitTask
+            });
+
+            async.parallel(beforeInitTasks, function() {
+                try {
+                    var mainModule = app.mainModule = app.resolveEntryPoint(req);
+
+                    mainModule.init(req, function(err) {
+                        callback(err, mainModule);
+                    });
+                } catch (ex) {
+                    callback(ex);
+                }
+            });
         },
 
         /**
