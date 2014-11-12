@@ -357,8 +357,22 @@ module.exports = function() {
             return retValue;
         },
 
+        /**
+         * Загрузка компонента. Сначала пытается найти компонент в приложении, затем в слоте
+         * @param  {String} name имя подключаемого компонента
+         * @return {Object} module.exports подключаемого файла модуля
+         */
         loadComponent: function(name) {
-            return app.require('components/' + name + '/' + name);
+            var component;
+
+            // Сначала пытаемся загрузить из приложения, если там нет - из слота
+            try {
+                component = app.require('components/' + name + '/' + name);
+            } catch (e) {
+                component = require('./components/' + name);
+            }
+
+            return component;
         },
 
         newComponent: function(name, extraArgs) {
