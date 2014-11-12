@@ -136,19 +136,12 @@ module.exports = function() {
         resolveEntryPoint: function(req) {
             req = req || {};
 
-            var url = req.url || '',
-                name = app.config.mainModule,
-                slug = url.split('/')[0];
+            var name;
 
-            // То самое место, где вместо online подставляется makeup
-            var devPageConfig = app.config.devPages && app.config.devPages[slug];
-            if (DEBUG && devPageConfig) {
-                name = devPageConfig.module;
-                historyDisabled = !devPageConfig.history; // Чтоб запретить модификацию урла в мейкапе
-            }
-
-            if (app.config.isLandingPage && app.config.isLandingPage(req)) { // @TODO выпилить зависимость четвёрки
-                name = 'landingPage';
+            if (_.isFunction(app.config.mainModule == 'function')) {
+                name = app.config.mainModule(req);
+            } else {
+                name = app.config.mainModule;
             }
 
             return app.loadModule({type: name});
