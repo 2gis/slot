@@ -1,3 +1,7 @@
+/**
+ * @module env
+ */
+
 require('./lib/shim.js');
 
 var rootPath = './',
@@ -33,6 +37,8 @@ exports.setRootPath = function(path) {
 };
 
 /**
+ * @memberOf module:env
+ *
  * @returns {string}
  */
 function getBuildPath() {
@@ -62,7 +68,9 @@ exports.require = function(name) {
 };
 
 /**
- * Запрашивает модуль относительно папки куда складываются собираемые файлы
+ * Запрашивает модуль относительно папки куда складываются собираемые файлы.
+ *
+ * @private
  *
  * @param {string} path
  */
@@ -72,6 +80,8 @@ function requireFromBuild(path) {
 
 /**
  * Запрашивает модуль относительно папки, куда складываются собираемые приватные файлы.
+ *
+ * @memberOf module:env
  *
  * @param {string} path
  * @returns {*}
@@ -98,6 +108,8 @@ var vars = {},
 /**
  * Читает переменную окружения. Если переменная не определена - бросает ошибку.
  *
+ * @private
+ *
  * @param {string} name
  * @returns {*}
  */
@@ -105,6 +117,7 @@ function _get(name) {
     if (!(name in vars)) {
         throw new Error('Environment variable "' + name + '" not defined');
     }
+
     return vars[name];
 }
 
@@ -112,6 +125,8 @@ exports.get = _get;
 
 /**
  * Устанавливает переменную окружения.
+ *
+ * @private
  *
  * @param {string} name
  * @param {*} value
@@ -128,6 +143,7 @@ exports.set = _set;
 
 /**
  * Настройка окружения.
+ *
  * @param {Object} conf
  */
 exports.setup = function(conf) {
@@ -152,7 +168,14 @@ exports.whenSet = function(name, callback) {
     }
 };
 
+/**
+ * @type {boolean}
+ */
 exports.isServer = isServer;
+
+/**
+ * @type {boolean}
+ */
 exports.isClient = !isServer;
 
 global.req = exports.require;

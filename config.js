@@ -1,3 +1,7 @@
+/**
+ * @module config
+ */
+
 var env = require('./env'),
     _ = require('lodash');
 

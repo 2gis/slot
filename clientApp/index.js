@@ -1,3 +1,4 @@
+
 var _ = require('lodash');
 var baseAppConstructor = require('../app');
 var namer = require('../lib/namer');
@@ -87,9 +88,10 @@ module.exports = function() {
         };
 
         /**
-         * jQuery плагин, который ставит или убирает модификатор элементу или элементам
+         * jQuery плагин, который ставит или убирает модификатор элементу или элементам.
+         *
          * @param {string} modificator
-         * возвращает JQuery-коллекцию
+         * @returns {Array} JQuery-коллекция.
          */
         $.fn.toggleMod = function(modificator) {
             if (modificator) {
@@ -132,7 +134,17 @@ module.exports = function() {
     var queue = [],
         queueAreRunning = false;
 
+    /**
+     * @class slot.ClientApp
+     * @extends {slot.App}
+     */
+    /**
+     * @lends slot.ClientApp
+     */
     _.extend(app, {
+        /**
+         * @type {boolean}
+         */
         server: false,
 
         bind: function() {
@@ -162,8 +174,8 @@ module.exports = function() {
         /**
          * Если транзишены не запущены, то при добавлении нового запускаем. Если запущены, просто добавляем в очередь.
          *
-         * @param {function} handler
-         * @param {string} purpose к какому модулю/сущности относится транзишен
+         * @param {Function} handler
+         * @param {string} purpose - К какому модулю/сущности относится транзишен.
          */
         addTransition: function(handler, purpose) {
             handler.purpose = purpose;
@@ -223,7 +235,7 @@ module.exports = function() {
         },
 
         /**
-         * Возвращает jQuery-объект по заданному элементу для текущего модуля
+         * Возвращает jQuery-объект по заданному элементу для текущего модуля.
          *
          * @param {string} moduleId
          * @param {string} elementName
