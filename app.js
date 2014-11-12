@@ -6,15 +6,15 @@
 var _ = require('lodash');
 var async = require('async');
 
-var injector = require('./injector'),
+var injector = require('./lib/injector'),
     env = require('./env'),
-    templateProvider = require('./templateProvider'),
-    modulesQuering = require('./modulesQuering'),
+    templateProvider = require('./lib/templateProvider'),
+    modulesQuering = require('./lib/modulesQuering'),
     smokesignals = require('smokesignals'),
-    namer = require('./namer'),
+    namer = require('./lib/namer'),
     config = require('./config');
 
-require('./templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
+require('./lib/templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
 
 module.exports = function() {
     var internals = {

@@ -4,7 +4,7 @@ var async = require('async');
 
 describe('Namer', function() {
 
-    var namer = require('../namer');
+    var namer = require('../lib/namer');
 
     describe('.moduleClass', function() {
         it('Простой модуль', function() {

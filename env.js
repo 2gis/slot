@@ -1,4 +1,4 @@
-require('./shim.js');
+require('./lib/shim.js');
 
 var rootPath = './',
     buildPath,

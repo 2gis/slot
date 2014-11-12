@@ -3,7 +3,7 @@ var sinon = require('sinon'),
 
 describe("компонент defer", function() {
 
-    var defer = require('../defer');
+    var defer = require('../lib/defer');
 
     it("работает nodeify", function() {
         var callback = sinon.spy();
