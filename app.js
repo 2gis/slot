@@ -138,7 +138,7 @@ module.exports = function() {
 
             var name;
 
-            if (_.isFunction(app.config.mainModule == 'function')) {
+            if (_.isFunction(app.config.mainModule)) {
                 name = app.config.mainModule(req);
             } else {
                 name = app.config.mainModule;
