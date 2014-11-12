@@ -136,19 +136,12 @@ module.exports = function() {
         resolveEntryPoint: function(req) {
             req = req || {};
 
-            var url = req.url || '',
-                name = app.config.mainModule,
-                slug = url.split('/')[0];
+            var name;
 
-            // То самое место, где вместо online подставляется makeup
-            var devPageConfig = app.config.devPages && app.config.devPages[slug];
-            if (DEBUG && devPageConfig) {
-                name = devPageConfig.module;
-                historyDisabled = !devPageConfig.history; // Чтоб запретить модификацию урла в мейкапе
-            }
-
-            if (app.config.isLandingPage && app.config.isLandingPage(req)) { // @TODO выпилить зависимость четвёрки
-                name = 'landingPage';
+            if (_.isFunction(app.config.mainModule)) {
+                name = app.config.mainModule(req);
+            } else {
+                name = app.config.mainModule;
             }
 
             return app.loadModule({type: name});
@@ -213,10 +206,10 @@ module.exports = function() {
 
         /**
          * Выставляет модификаторы для данного модуля
-         * @param  {Object} moduleId     id модуля, для которого будут выставляться модификаторы
-         * @param  {Object|String} modificators Объект модификаторов, либо ключ jQuery-like режиме
-         * * @param {} value значение выставляемого модификатора в jQuery-like режиме
-         * @return {Object|} объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме
+         * @param {Object} moduleId id модуля, для которого будут выставляться модификаторы
+         * @param {Object|String} modificators Объект модификаторов, либо ключ jQuery-like режиме
+         * @param {String} [value] значение выставляемого модификатора в jQuery-like режиме
+         * @return {Object|String} объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме
          */
         mod: function(moduleId, modificators, value) {
             var descriptor = app.getModuleDescriptorById(moduleId);
@@ -616,7 +609,6 @@ module.exports = function() {
             }
         },
 
-        isGrym: env.isGrym,
         isServer: env.isServer,
         isClient: env.isClient,
 

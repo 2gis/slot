@@ -154,8 +154,6 @@ exports.whenSet = function(name, callback) {
 
 exports.isServer = isServer;
 exports.isClient = !isServer;
-// Определяем, Грым ли это (Грым - это десктопная версия 2gis).
-exports.isGrym = typeof DGOfflineAPI != 'undefined' && !!DGOfflineAPI.systemContext;
 
 global.req = exports.require;
 global.requirePrivate = requirePrivate;

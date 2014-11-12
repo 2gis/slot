@@ -187,8 +187,6 @@ module.exports = function(app, params) {
 
         isClient: app.isClient,
 
-        isGrym: app.isGrym,
-
         domBound: app.isBound,
 
         rerender: _.partial(ensureFunction(app.rerender), moduleId),
