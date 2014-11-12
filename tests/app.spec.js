@@ -6,15 +6,90 @@ DEBUG = true;
 
 describe('app', function() {
     var app,
+        appIntance,
         appConfig;
 
     beforeEach(function() {
         app = require('../app.js')();
+        appIntance = app.instance;
         appConfig = app.appConfig;
     });
 
     it('blank', function() {
         assert(app);
+    });
+
+    describe('-> init', function() {
+        it('Правильное значение поля _stage', function() {
+            appIntance.init({}, _.noop);
+            assert(appIntance._stage == 'init', 'Поле _stage должно иметь значение "init"');
+        });
+
+        it('Данные записались в registry', function() {
+            var data = {
+                host: '1',
+                protocol: '2',
+                port: '3'
+            };
+            appIntance.init(data, _.noop);
+            assert(appIntance.registry.get('host') == '1' && appIntance.registry.get('protocol') == '2' && appIntance.registry.get('port') == '3',
+                'Переданные данные должны были записаться в registry');
+        });
+
+        it('Данные записались в cookie', function() {
+            var data = {
+                cookies: {
+                    a: '1'
+                }
+            };
+            appIntance.init(data, _.noop);
+            assert(appIntance.cookie('a') == '1', 'Переданные cookie должны были записаться');
+        });
+
+        it('Вызывается callback после инициализации', function() {
+            var callback = sinon.spy();
+            appIntance.init({}, callback);
+            assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
+        });
+
+        it('Функции beforeInit выполняются, инициализация продолжается', function() {
+            var beforeInit = sinon.spy(function(cb) {
+                cb();
+            });
+            var callback = sinon.spy();
+
+            appIntance.on('beforeInit', function(params) {
+                params.waitFor(beforeInit);
+            });
+
+            appIntance.init({}, callback);
+            assert(beforeInit.calledOnce, 'Функция beforeInit должны быть вызвана единажды');
+            assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
+        });
+
+        it('Функции beforeInit без коллбэка выполняются, инициализация продолжается', function() {
+            var beforeInit = sinon.spy();
+            var callback = sinon.spy();
+
+            appIntance.on('beforeInit', function(params) {
+                params.waitFor(beforeInit);
+            });
+
+            appIntance.init({}, callback);
+            assert(beforeInit.calledOnce, 'Функция beforeInit должны быть вызвана единажды');
+            assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
+        });
+
+        it('Функции, переданные в beforeInit не являются функциями', function() {
+            var callback = sinon.spy();
+
+            appIntance.on('beforeInit', function(params) {
+                params.waitFor();
+            });
+
+            appIntance.init({}, callback);
+            assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды, инициализация не сломалась');
+        });
     });
 
     describe('-> resolveEntryPoint', function() {
