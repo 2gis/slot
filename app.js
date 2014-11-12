@@ -144,7 +144,7 @@ module.exports = function() {
                 name = app.config.mainModule;
             }
 
-            return app.loadModule({ type: name });
+            return app.loadModule({type: name});
         },
 
         /**
@@ -208,7 +208,7 @@ module.exports = function() {
          * Выставляет модификаторы для данного модуля
          * @param  {Object} moduleId     id модуля, для которого будут выставляться модификаторы
          * @param  {Object|String} modificators Объект модификаторов, либо ключ jQuery-like режиме
-         * * @param {} value значение выставляемого модификатора в jQuery-like режиме
+         * @param {} value значение выставляемого модификатора в jQuery-like режиме
          * @return {Object|} объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме
          */
         mod: function(moduleId, modificators, value) {
