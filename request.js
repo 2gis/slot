@@ -90,16 +90,34 @@ function clientRequest(conf) {
         conf.crossOrigin = true;
     }
 
+    var timeoutId;
+    // эмулируем таймаут, чтобы создать 2 различных поведения: аборт по таймауту и аборт в коде
+    if (conf.timeout) {
+        var complete = conf.complete;
+
+        conf.complete = function(result) {
+            clearTimeout(timeoutId);
+            complete(result);
+        };
+
+        timeoutId = setTimeout(function () {
+            xhr.request.abort();
+        }, conf.timeout);
+
+        delete conf.timeout;
+    }
+
     var xhr = reqwest(conf).always(function() {
         window.TestHandles.XHRActiveCount--;
     });
     window.TestHandles.XHRActiveCount++;
 
     // во время аборта запроса не логируем его как ошибку
-    var abort = xhr.abort;
     xhr.abort = function() {
-        conf.error = _.noop;
-        abort.call(xhr);
+        clearTimeout(timeoutId);
+        conf.error = noop;
+        conf.complete = noop;
+        xhr.request.abort();
     };
 
     return xhr;
