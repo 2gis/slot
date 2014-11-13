@@ -15,8 +15,8 @@ var _ = require('lodash');
  */
 function moveCalloutToEnd(a, b) {
     if (a.purpose != b.purpose) {
-        if (a.purpose == 'callout') { return 1; }
-        if (b.purpose == 'callout') { return -1; }
+        if (a.purpose == 'callout') return 1;
+        if (b.purpose == 'callout') return -1;
     }
     return 0;
 }
