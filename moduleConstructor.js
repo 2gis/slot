@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    namer = require('./namer'),
+    namer = require('./lib/namer'),
     env = require('./env');
 
 /**

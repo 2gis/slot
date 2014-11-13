@@ -6,15 +6,15 @@
 var _ = require('lodash');
 var async = require('async');
 
-var injector = require('./injector'),
+var injector = require('./lib/injector'),
     env = require('./env'),
-    templateProvider = require('./templateProvider'),
-    modulesQuering = require('./modulesQuering'),
+    templateProvider = require('./lib/templateProvider'),
+    modulesQuering = require('./lib/modulesQuering'),
     smokesignals = require('smokesignals'),
-    namer = require('./namer'),
+    namer = require('./lib/namer'),
     config = require('./config');
 
-require('./templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
+require('./lib/templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
 
 module.exports = function() {
     var internals = {
@@ -154,6 +154,10 @@ module.exports = function() {
          * @param {Function} callback(err, mainModule) - коллбэк, вызываемый когда было проинициализировано приложение
          */
         init: function(req, callback) {
+            callback = callback || _.noop;
+
+            if (!req) throw new Error('[app.init]: param req must not be undefined');
+
             app._stage = 'init';
 
             var data = {
@@ -165,7 +169,6 @@ module.exports = function() {
             };
 
             registry.setup(data);
-
             cookies = req.cookies;
 
             var beforeInitTasks = [];
@@ -187,15 +190,26 @@ module.exports = function() {
                 }
             }
 
-            app.emit('beforeInit', {
+            app.emit('initStart', {
                 waitFor: addBeforeInitTask
             });
 
             async.parallel(beforeInitTasks, function() {
+                var plugins = app.config['plugins'] || [];
+                _.each(plugins, function(name) {
+                    // Сначала ищем плагин у пользователя, затем внутри слота
+                    try {
+                        app.require('plugins/' + name)(app);
+                    } catch (e) {
+                        require('./plugins/' + name)(app);
+                    }
+                });
+
                 try {
                     var mainModule = app.mainModule = app.resolveEntryPoint(req);
 
                     mainModule.init(req, function(err) {
+                        app.emit('initEnd');
                         callback(err, mainModule);
                     });
                 } catch (ex) {
@@ -357,8 +371,22 @@ module.exports = function() {
             return retValue;
         },
 
+        /**
+         * Загрузка компонента. Сначала пытается найти компонент в приложении, затем в слоте
+         * @param  {String} name имя подключаемого компонента
+         * @return {Object} module.exports подключаемого файла модуля
+         */
         loadComponent: function(name) {
-            return app.require('components/' + name + '/' + name);
+            var component;
+
+            // Сначала пытаемся загрузить из приложения, если там нет - из слота
+            try {
+                component = app.require('components/' + name + '/' + name);
+            } catch (e) {
+                component = require('./components/' + name);
+            }
+
+            return component;
         },
 
         newComponent: function(name, extraArgs) {
@@ -461,6 +489,8 @@ module.exports = function() {
                     moduleId: moduleId,
                     templates: templateProvider.forModule(moduleName)
                 }]);
+
+            app.emit('slotInit', slot);
 
             if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
                 throw new Error('Bad moduleJs: ' + moduleName);

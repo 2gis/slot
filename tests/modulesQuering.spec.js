@@ -1,5 +1,5 @@
 
-var Quering = require('../modulesQuering'),
+var Quering = require('../lib/modulesQuering'),
     _ = require('lodash'),
     assert = require('assert');
 

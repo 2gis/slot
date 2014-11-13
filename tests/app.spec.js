@@ -20,6 +20,14 @@ describe('app', function() {
     });
 
     describe('-> init', function() {
+        it('Ругается если нет поля req', function(done) {
+            try {
+                appIntance.init();
+            } catch (e) {
+                done();
+            }
+        });
+
         it('Правильное значение поля _stage', function() {
             appIntance.init({}, _.noop);
             assert(appIntance._stage == 'init', 'Поле _stage должно иметь значение "init"');
@@ -52,43 +60,99 @@ describe('app', function() {
             assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
         });
 
-        it('Функции beforeInit выполняются, инициализация продолжается', function() {
-            var beforeInit = sinon.spy(function(cb) {
+        it('Функции initStart выполняются, инициализация продолжается', function() {
+            var initStart = sinon.spy(function(cb) {
                 cb();
             });
             var callback = sinon.spy();
 
-            appIntance.on('beforeInit', function(params) {
-                params.waitFor(beforeInit);
+            appIntance.on('initStart', function(params) {
+                params.waitFor(initStart);
             });
 
             appIntance.init({}, callback);
-            assert(beforeInit.calledOnce, 'Функция beforeInit должны быть вызвана единажды');
+            assert(initStart.calledOnce, 'Функция initStart должны быть вызвана единажды');
             assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
         });
 
-        it('Функции beforeInit без коллбэка выполняются, инициализация продолжается', function() {
-            var beforeInit = sinon.spy();
+        it('Функции initStart без коллбэка выполняются, инициализация продолжается', function() {
+            var initStart = sinon.spy();
             var callback = sinon.spy();
 
-            appIntance.on('beforeInit', function(params) {
-                params.waitFor(beforeInit);
+            appIntance.on('initStart', function(params) {
+                params.waitFor(initStart);
             });
 
             appIntance.init({}, callback);
-            assert(beforeInit.calledOnce, 'Функция beforeInit должны быть вызвана единажды');
+            assert(initStart.calledOnce, 'Функция initStart должны быть вызвана единажды');
             assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды');
         });
 
-        it('Функции, переданные в beforeInit не являются функциями', function() {
+        it('Функции, переданные в initStart не являются функциями', function() {
             var callback = sinon.spy();
 
-            appIntance.on('beforeInit', function(params) {
+            appIntance.on('initStart', function(params) {
                 params.waitFor();
             });
 
             appIntance.init({}, callback);
             assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды, инициализация не сломалась');
+        });
+
+        it('Передаём в waitFor синхронную функцию', function() {
+            var callback = sinon.spy();
+            var delayer = sinon.spy();
+
+            appIntance.on('initStart', function(params) {
+                params.waitFor(delayer);
+            });
+
+            appIntance.init({}, callback);
+            assert(delayer.calledOnce, 'Функция delayer должны быть вызвана единажды, инициализация не сломалась');
+            assert(callback.calledOnce, 'Функция callback должны быть вызвана единажды, инициализация не сломалась');
+        });
+
+        it('Передаём в waitFor две асинхронные функции', function(done) {
+            var callback = sinon.spy();
+            var delayers = {
+                one: function(cb) {
+                    setTimeout(cb, 1);
+                },
+                two: function(cb) {
+                    setTimeout(cb, 30);
+                },
+                callback: function() {
+                    done();
+                }
+            };
+
+            sinon.spy(delayers, 'one');
+            sinon.spy(delayers, 'two');
+            sinon.spy(delayers, 'callback');
+
+            appIntance.on('initStart', function(params) {
+                params.waitFor(delayers.one);
+                params.waitFor(delayers.two);
+            });
+
+            appIntance.init({}, function() {
+                assert(delayers.one.calledOnce, 'Функция delayer 1 должны быть вызвана единажды, инициализация не сломалась');
+                assert(delayers.one.calledOnce, 'Функция delayer 2 должны быть вызвана единажды, инициализация не сломалась');
+                delayers.callback();
+                assert(delayers.callback.calledOnce, 'Функция callback должны быть вызвана единажды, инициализация не сломалась');
+            });
+        });
+
+        it('Подключает только те плагины, которые указаны в конфиге', function() {
+            appIntance.config.plugins = ['ua'];
+
+            assert(!appIntance.ua, 'До инициализации приложения плагинов быть не должно в любом случае');
+            assert(!appIntance.fpsMeter, 'До инициализации приложения плагинов быть не должно в любом случае');
+
+            appIntance.init({});
+
+            assert(_.isFunction(appIntance.ua), 'После инициализации плагин ua должен подключиться, ведь он в конфиге');
+            assert(!appIntance.fpsMeter, 'После инициализации плагин fpsMeter не должен подключиться, ведь его нет в конфиге');
         });
     });
 

@@ -19,6 +19,7 @@ gulp.task('test', ['cover'], function() {
 gulp.task('cover', function(){
     return gulp.src([
         '*.js',
+        'lib/*.js',
         'clientApp/*.js',
         '!clientApp/*.spec.js'
     ]).pipe(istanbul());
