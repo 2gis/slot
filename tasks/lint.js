@@ -1,10 +1,11 @@
+var _ = require('lodash');
 var gulp = require('gulp');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
-var through = require('through2'); // 0.6.3
-var _ = require('lodash');
+var through = require('through2');
+var verbose = require('./utils/verbose');
+var runSequence = require('run-sequence');
 
-var errors = {};
 /**
  * Проверяет не произошла ли ошибка при проверка файла
  * Если найдена ошибка, то бросается событие 'tl.fail'
@@ -14,50 +15,42 @@ var errors = {};
  */
 function check(type) {
     return through.obj(function(file, enc, cb) {
-        if(!file[type].success) {
-            errors[type] = true;
-            gulp.emit('tl.fail', type + ' failed');
+        if (!file[type].success) {
+            gulp.emit('task_err', {task: 'lint.' + type});
         }
         cb(null, file);
     });
 }
 
-/**
- * Завершает проверку, если ошибок не обнаружено, то выводит сообщение об этом
- *
- * @param type
- * @returns {Function}
- */
-function end(type) {
-    return function() {
-        if (!errors[type]) {
-            console.log(type + ' passed'.green);
-        }
-    }
-}
+var files = [
+    '**/*.js',
+    '!docs/**/*.js',
+    '!node_modules/**/*.js',
+    '!coverage/**/*.js'
+];
 
+verbose.setMessages('lint.jscs', {
+    error: 'jscs failed',
+    success: 'jscs passed'
+});
 gulp.task('lint.jscs', function() {
-    var result = gulp.src([
-        '*.js'
-    ])
-    .pipe(jscs())
-    .pipe(jscs.reporter('console'))
-    .pipe(check('jscs'))
-    .on('end', end('jscs'));
-
-    return result;
+    return gulp.src(files)
+        .pipe(jscs())
+        .pipe(jscs.reporter('console'))
+        .pipe(check('jscs'));
 });
 
+verbose.setMessages('lint.jshint', {
+    error: 'jshint failed',
+    success: 'jshint passed'
+});
 gulp.task('lint.jshint', function() {
-    var result = gulp.src([
-            '*.js'
-        ])
+    return gulp.src(files)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(check('jshint'))
-        .on('end', end('jshint'));
-
-    return result;
+        .pipe(check('jshint'));
 });
 
-gulp.task('lint', ['lint.jscs', 'lint.jshint']);
+gulp.task('lint', function(cb) {
+    runSequence('lint.jscs', 'lint.jshint', cb);
+});

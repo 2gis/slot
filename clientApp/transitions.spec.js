@@ -10,7 +10,7 @@ describe('transitions helpers', function() {
             {purpose: 'map', id: 1},
             {purpose: 'panels'},
             {purpose: 'panels'},
-            {purpose: 'map', id: 2},
+            {purpose: 'map', id: 2}
         ];
 
         helper.sort(transitions);

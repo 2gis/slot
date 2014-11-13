@@ -23,7 +23,7 @@ describe("moduleConstructor", function() {
 
             var html = Constructor(appMock, moduleConf, slotMock, handlebarsMock).render();
 
-            assert.equal(html, expected, 'Должен быть вот такой html')
+            assert.equal(html, expected, 'Должен быть вот такой html');
         });
     });
 });

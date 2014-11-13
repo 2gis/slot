@@ -1,7 +1,6 @@
 {
     "indent": 4,
     "node": true,
-    "predef": [ "DEBUG" ],
     "browser": true,
     "jquery": true,
     "eqnull": true,

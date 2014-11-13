@@ -33,6 +33,7 @@
     "gulp-mocha": "~0.5.1",
     "jshint-stylish": "~0.2.0",
     "require-dir": "~0.1.0",
+    "run-sequence": "1.0.1",
     "sinon": "~1.10.3",
     "rimraf": "~2.2.8",
     "through2": "~0.6.3"
