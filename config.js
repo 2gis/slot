@@ -5,39 +5,62 @@
 var env = require('./env'),
     _ = require('lodash');
 
-var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : {};
+var config = typeof window == 'undefined' ? env.requirePrivate('config') : {};
 
-module.exports = cfg;
+env.global.DEBUG = config.debug;
 
-env.global.DEBUG = cfg.debug;
 
-module.exports.group = function(name) {
-    var ret = {};
-    for (var key in cfg) {
-        if (cfg.hasOwnProperty(key) && key.startsWith(name + '.')) {
-            var newKey = key.substr(name.length + 1);
-            ret[newKey] = cfg[key];
+module.exports = config;
+
+/**
+ * Пробегает по объекту конфига, выбирая свойства,
+ * которые соответствуют неймспейсу `namespace`
+ *
+ * @param {string} namespace Неймспейс
+ * @returns {Object} Конфиг от неймспейса
+ */
+module.exports.group = function(namespace) {
+    var groupConfig = {};
+
+    for (var key in config) {
+        if (config.hasOwnProperty(key) && key.startsWith(namespace + '.')) {
+            var groupKey = key.substr(namespace.length + 1);
+            groupConfig[groupKey] = config[key];
         }
     }
-    return ret;
+
+    return groupConfig;
 };
 
-module.exports.merge = function(upstream) {
-    for (var key in upstream) {
-        if (upstream.hasOwnProperty(key)) {
-            var value = upstream[key];
-            var doPush = false;
-            if (key.charAt(0) == '+') {
-                doPush = true;
+/**
+ * Мержит конфиг с `otherConfig`,
+ * при этом, если ключ в `otherConfig` начинается c '+',
+ * и значение в конфиге, соответствующее этому ключу, является массивом,
+ * тогда в этот массив добавляется это значение
+ *
+ * @param {Object} otherConfig Объект-конфиг, который мержится с оригинальным конфигом
+ * @returns {Object} Оригинальный конфиг
+ */
+module.exports.merge = function(otherConfig) {
+    for (var key in otherConfig) {
+        if (otherConfig.hasOwnProperty(key)) {
+            var value = otherConfig[key];
+            var shouldBePushed = false;
+
+            if (key.startsWith('+')) {
+                shouldBePushed = true;
                 key = key.substr(1);
             }
 
-            var origin = cfg[key];
-            if (doPush && key in cfg && _.isArray(origin)) {
-                origin.push.apply(origin, value);
+            var originalValue = config[key];
+
+            if (shouldBePushed && _.isArray(originalValue)) {
+                originalValue.push.apply(originalValue, value);
             } else {
-                cfg[key] = value;
+                config[key] = value;
             }
         }
     }
+
+    return config;
 };
