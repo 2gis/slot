@@ -62,8 +62,8 @@
     "disallowTrailingWhitespace": true,
     "disallowKeywordsOnNewLine": ["else"],
     "validateJSDoc": {
-        "checkParamNames": true,
-        "checkRedundantParams": true,
+        //"checkParamNames": true,
+        //"checkRedundantParams": true,
         "requireParamTypes": false
     },
     "requireSpaceAfterLineComment": true

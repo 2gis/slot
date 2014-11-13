@@ -1,3 +1,4 @@
+
 var async = require('async'),
     _ = require('lodash');
 
@@ -9,8 +10,8 @@ module.exports = function(app, params) {
 
     function loadModule(conf) {
         // новый объект необязательно создавать
-        // сейчас нет и скорее всего не будет ситуации когда один и тот же конфиг передается на инициализацию разным слотам
-        // даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
+        // сейчас нет и скорее всего не будет ситуации когда один и тот же конфиг передается на инициализацию разным
+        // слотам даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
         conf.parentId = moduleId;
         return app.loadModule(conf);
     }
@@ -19,6 +20,12 @@ module.exports = function(app, params) {
         return _.isFunction(f) ? f : _.noop;
     }
 
+    /**
+     * @class slot.Slot
+     */
+    /**
+     * @lends slot.Slot#
+     */
     var slot = {
         STAGE_INITING: 1,
         STAGE_INITED: 2,
@@ -27,6 +34,9 @@ module.exports = function(app, params) {
         STAGE_ALIVE: 3, // = STAGE_INITING | STAGE_INITED
         STAGE_NOT_ALIVE: 12, // = STAGE_DISPOSED | STAGE_KILLED
 
+        /**
+         * @type {int}
+         */
         stage: 1,
 
         templates: params.templates,
@@ -37,11 +47,12 @@ module.exports = function(app, params) {
         runInQueue: app.runInQueue,
 
         /**
-         * Инициализирует модуль
+         * Инициализирует модуль.
          *
-         * Метод имеет два интерфейса
-         * Простой: на вход принимает 3 аргумента (название модуля, данные для инициализации, колбэк)
-         * Расширенный: на взод принмает 2 аргумента (объект в формате {type: "название_модуля", data: {}} и колбэк)
+         * Метод имеет два интерфейса:
+         * - Простой: на вход принимает 3 аргумента (название модуля, данные для инициализации, колбэк);
+         * - Расширенный: на взод принмает 2 аргумента (объект в формате {type: "название_модуля", data: {}} и колбэк).
+         *
          * См. примеры.
          *
          * @example
@@ -84,13 +95,16 @@ module.exports = function(app, params) {
          *     // Some code here
          * );
          *
-         * @param {string} name - тип модуля, например firmCard
-         * @param {object} [data] - данные для инициализации модуля, которые прилетят в инит модуля первым аргументом. Опционально
-         * @param {Function} [callback] - колбек, вызываемый инитом модуля асинхронно, или враппером синхронно, если модуль синхронный и не имеет колбека в ините. Опционально
+         * @param {string} name - Тип модуля, например firmCard.
+         * @param {Object} [data] - Данные для инициализации модуля, которые прилетят в инит модуля первым аргументом.
+         * @param {Function} [callback] - Колбек, вызываемый инитом модуля асинхронно, или враппером синхронно,
+         *                                если модуль синхронный и не имеет колбека в ините.
          */
         init: function(name, data, callback) {
             // Если слот умер - ничего инитить нет смысла, потому что слот умирает вместе с родительским модулем
-            if (slot.stage & slot.STAGE_NOT_ALIVE) return;
+            if (slot.stage & slot.STAGE_NOT_ALIVE) {
+                return;
+            }
 
             if (_.isObject(name)) { // Обработка расширенного интерфейса метода
                 callback = data;
@@ -105,6 +119,7 @@ module.exports = function(app, params) {
             }
 
             var module = loadModule({ type: name, data: data });
+
             module.init(data, function(err) {
                 var moduleName = name;
 
@@ -136,10 +151,10 @@ module.exports = function(app, params) {
         },
 
         /**
-         * Палаллельная нициализация массива модулей
-         * @param  {Array}    modules  Массив описаний инициализируемых модулей
-         * @param  {Function} callback Опциональный колбек, вызываемый после инициализации всех модулей
-         * @return {undefined}         Ничего не возвращает
+         * Палаллельная нициализация массива модулей.
+         *
+         * @param {Array} modules - Массив описаний инициализируемых модулей.
+         * @param {Function} callback - Опциональный колбек, вызываемый после инициализации всех модулей.
          */
         initModules: function(modules, callback) {
             async.map(modules, slot.init, callback || _.noop);
@@ -176,15 +191,23 @@ module.exports = function(app, params) {
 
         notify: _.partial(ensureFunction(app.notify), moduleId),
 
-        // Рассылаем сообщения всем дочерним, и внучатым модулям :)
+        /**
+         * Рассылает сообщения всем потомкам.
+         */
         broadcast: _.partial(ensureFunction(app.broadcast), moduleId),
 
         queryModules: _.partial(ensureFunction(app.queryModules), moduleId),
 
         block: _.partial(ensureFunction(app.block), moduleId),
 
+        /**
+         * @type {boolean}
+         */
         isServer: app.isServer,
 
+        /**
+         * @type {boolean}
+         */
         isClient: app.isClient,
 
         domBound: app.isBound,
@@ -204,37 +227,64 @@ module.exports = function(app, params) {
 
         mod: _.partial(ensureFunction(app.mod), moduleId),
 
-        // Возвращает дочерний модуль по айдишнику
+        /**
+         * Возвращает дочерний модуль по айдишнику.
+         */
         moduleById: _.partial(ensureFunction(app.getChildModuleWrapperById), moduleId),
 
+        /**
+         * @returns {string} Айдишник модуля.
+         */
         moduleId: function() {
             return moduleId;
         },
 
-        // Выставить таймаут для возможности его автоматической отмены при диспозе.
+        /**
+         * Устанавливает таймаут привязанный к модулю.
+         *
+         * @param {Function} func
+         * @param {int} delay
+         */
         setTimeout: function(func, delay) {
-            if (slot.stage & slot.STAGE_NOT_ALIVE) return;
+            if (slot.stage & slot.STAGE_NOT_ALIVE) {
+                return;
+            }
 
             var timer = app.setTimeout(func, delay);
 
-            if (timer) timeouts.push(timer);
+            if (timer) {
+                timeouts.push(timer);
+            }
 
             return timer;
         },
 
-        // Отменить все таймауты для данного модуля. Вызывается при диспозе.
+        /**
+         * Отменяет ранее установленные для данного модуля таймауты.
+         */
         clearTimeouts: function() {
             _.each(timeouts, clearTimeout);
         },
 
+        /**
+         * Устанавливает интервал привязанный к модулю.
+         *
+         * @param {Function} func
+         * @param {int} delay
+         */
         setInterval: function(func, delay) {
             var interval = app.setInterval(func, delay);
 
-            if (interval) intervals.push(interval);
+            if (interval) {
+                intervals.push(interval);
+            }
 
             return interval;
         },
 
+        /**
+         * Отменяет ранее установленные для данного модуля интервалы.
+         */
         clearIntervals: function() {
             _.each(intervals, clearInterval);
         },
@@ -247,11 +297,15 @@ module.exports = function(app, params) {
 
         self: function() {
             var descriptor = app.getModuleDescriptorById(moduleId);
-
             return descriptor && descriptor.instance;
         },
 
-        // Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит
+        /**
+         * Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит.
+         *
+         * @param {Function} fn
+         * @returns {Function}
+         */
         ifAlive: function(fn) {
             return function() {
                 if (!(slot.stage & slot.STAGE_NOT_ALIVE)) {

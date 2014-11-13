@@ -1,4 +1,5 @@
-/**
+
+/*!
  * Оставлю этот камент здесь! Потом покажу сыну если что :)
  * Мы поехали в роддом! Кажется началось. надеюсь не в холостую
  */
@@ -122,11 +123,20 @@ module.exports = function() {
         return parser.getResult();
     }
 
+    /**
+     * @class slot.App
+     */
+    /**
+     * @lends slot.App#
+     */
     var app = {
         modules: {},
         components: {},
         config: config,
 
+        /**
+         * @returns {boolean}
+         */
         isBound: function() {
             return app._stage == 'bind';
         },
@@ -219,11 +229,12 @@ module.exports = function() {
         },
 
         /**
-         * Выставляет модификаторы для данного модуля
-         * @param {Object} moduleId id модуля, для которого будут выставляться модификаторы
-         * @param {Object|String} modificators Объект модификаторов, либо ключ jQuery-like режиме
-         * @param {String} [value] значение выставляемого модификатора в jQuery-like режиме
-         * @return {Object|String} объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме
+         * Выставляет модификаторы для данного модуля.
+         *
+         * @param {Object} moduleId - `id` модуля, для которого будут выставляться модификаторы.
+         * @param {Object|string} modificators - Объект модификаторов, либо ключ в jQuery-like режиме.
+         * @param {*} [value] - Значение выставляемого модификатора в jQuery-like режиме.
+         * @returns {Object|string} Объект всех модификаторов, либо значение модификатора по ключу в jQuery-like режиме.
          */
         mod: function(moduleId, modificators, value) {
             var descriptor = app.getModuleDescriptorById(moduleId);
@@ -295,11 +306,12 @@ module.exports = function() {
         },
 
         /**
-         * Возвращает на сервере объект с методом mod для простановки модификаторов элементу.
+         * Возвращает на сервере объект с методом `mod` для простановки модификаторов элементу.
          * Чтобы модификаторы выставились не забудьте воспользоваться хелпером mods.
-         * @param {String} moduleId
-         * @param {String} elementName
-         * @returns {{mod: Function}}
+         *
+         * @param {string} moduleId
+         * @param {string} elementName
+         * @returns {{ mod: Function }}
          */
         element: function(moduleId, elementName) {
             var descriptor = app.getModuleDescriptorById(moduleId);
@@ -316,10 +328,10 @@ module.exports = function() {
         },
 
         /**
-         * Посылает сообщение модулям-родителям (антоним broadcast).
+         * Посылает сообщение модулям-родителям (антоним `broadcast`).
          *
          * @param {string} moduleId
-         * @param message
+         * @param {string} message
          * @returns {*}
          */
         notify: function(moduleId, message) {
@@ -413,6 +425,7 @@ module.exports = function() {
 
         processModules: function(moduleId, selector, handler, inclusive) {
             var moduleDescriptors = queryModules(moduleId, selector, inclusive);
+
             _.each(moduleDescriptors, function(moduleDescriptor) {
                 handler(moduleDescriptor.instance, moduleDescriptor);
             });
@@ -428,16 +441,16 @@ module.exports = function() {
          * `slot.broadcast('frame[:active=true] searchResults[isActive] miniCard:unselect');`
          *
          * Предикаты начинающиеся c `:` относятся к модификаторам,
-         * остальные предикаты относятся к интерфейсным методам, т.е:
+         * остальные предикаты относятся к интерфейсным методам, т. е.:
          *
          * `frame[:active=true]` - берет только фреймы с модификатором active равным true
-         * `searchResults[isActive]` - берет только те модули searchResults у которых интерфейсный метод isActive вернет true
+         * `searchResults[isActive]` - берет только те модули searchResults у которых интерфейсный метод isActive вернет `true`.
          *
          * К интерфейсным методам можно применять параметры
          *
-         * `filters[hasContext=5]` - берет только те модули filters у которых интерфейсный метод hasContext(5) вернет true
+         * `filters[hasContext=5]` - берет только те модули filters у которых интерфейсный метод hasContext(5) вернет `true`.
          *
-         * Если модулей несколько, то возвращается значение последнего модуля. Если модулей нет undefined
+         * Если модулей несколько, то возвращается значение последнего модуля. Если модулей нет - undefined.
          *
          * @returns {*}
          */
@@ -469,14 +482,14 @@ module.exports = function() {
 
         invoke: function(fn, args, provider, self) {
             provider = provider || app.requireComponent;
-
             return injector.invoke(fn, args, provider, self);
         },
 
         /**
-         * Загружает js модуля, инстанцирует его и записывает в дерево иерархии модулей
-         * @param  {Object} data данные о том, какого типа и куда в дереве модулей должен быть записан новый модуль
-         * @return {Object}      инстанс нового модуля
+         * Загружает js модуль, инстанцирует его и записывает в дерево иерархии модулей.
+         *
+         * @param {Object} data - Данные о том, какого типа и куда в дереве модулей должен быть записан новый модуль.
+         * @returns {slot.Slot} Инстанс нового модуля.
          */
         loadModule: function(data) {
             var parentId = data.parentId,
@@ -484,11 +497,12 @@ module.exports = function() {
                 moduleName = data.type;
 
             var slotConstructor = require('./slot'),
-                moduleJs = app.requireModuleJs(moduleName),
-                slot = app.invoke(slotConstructor, [app, {
-                    moduleId: moduleId,
-                    templates: templateProvider.forModule(moduleName)
-                }]);
+                moduleJs = app.requireModuleJs(moduleName);
+
+            var slot = app.invoke(slotConstructor, [app, {
+                moduleId: moduleId,
+                templates: templateProvider.forModule(moduleName)
+            }]);
 
             app.emit('slotInit', slot);
 
@@ -618,9 +632,10 @@ module.exports = function() {
         },
 
         /**
-         * Возвращает дескриптор модуля по его id
-         * @param  {String} moduleId - id модуля, который будет искаться в moduleDescriptors
-         * @return {Object} - дескриптор найденного объекта
+         * Возвращает дескриптор модуля по его id.
+         *
+         * @param {string} moduleId - `id` модуля, который будет искаться в moduleDescriptors.
+         * @returns {Object} Дескриптор найденного объекта.
          */
         getModuleDescriptorById: function(moduleId) {
             var descriptor = internals.moduleDescriptors[moduleId];
@@ -642,6 +657,10 @@ module.exports = function() {
         isServer: env.isServer,
         isClient: env.isClient,
 
+        /**
+         * @param {Function} func
+         * @param {int} delay
+         */
         setTimeout: function(func, delay) {
             if (app.isServer) {
                 func();
@@ -650,6 +669,10 @@ module.exports = function() {
             }
         },
 
+        /**
+         * @param {Function} func
+         * @param {int} delay
+         */
         setInterval: function(func, delay) {
             return setInterval(func, delay);
         },
@@ -657,52 +680,50 @@ module.exports = function() {
         registry: registry,
 
         /**
-         * Вызывается на каждом новом слоте
+         * Вызывается на каждом новом слоте.
+         * Для переопределения в конечных продуктах.
          *
-         * @param {Object} slot
-         *
-         * # Для переопределения в конечных продуктах
+         * @param {slot.Slot} slot
          */
         setupSlot: function(slot) {
-
+            //
         },
 
         /**
-         * Собирает кастомные template helpers
-         * Вызывается после создания каждого нового moduleWrapper
+         * Собирает кастомные template helpers.
+         * Вызывается после создания каждого нового moduleWrapper.
+         * Для переопределения в конечных продуктах.
          *
-         * @param {Object} slot
-         *
-         * # Для переопределения в конечных продуктах
+         * @param {slot.Slot} slot
          */
         fetchTmplHelpers: function(slot) {
-
+            //
         },
 
         /**
-         * Кинуть некоторое исключение которое должно обработаться управляющим кодом аппликейшена
+         * Кинуть некоторое исключение которое должно обработаться управляющим кодом аппликейшена.
          *
          * Например raise(404) на сервере показывает глобальную 404 страницу, т.е. данная функция некоторый
          * аналог конструкции throw, но она не подходит в силу обрыва контекста исполнения при вызове асинхронных
-         * функций в javascript'e
-         * А как работает? Тупо смотрится значение raised в server.js
-         * @param value объект исключения
+         * функций в javascript'e.
+         * А как работает? Тупо смотрится значение raised в `server.js`.
+         * @param value - Объект исключения.
          */
         raise: function(value) {
             raised = value;
         },
 
         /**
-         * Получить значение исключения
+         * Получить значение исключения.
          */
         raised: function() {
             return raised;
         },
 
         /**
-         * Чтение или запись кук. Работает как на сервере, так и на клиенте
-         * Интерфейс как у jQuery
-         * Подразумевается, что на клиенте есть jQuery
+         * Чтение или запись кук. Работает как на сервере, так и на клиенте.
+         * Интерфейс как у jQuery.
+         * Подразумевается, что на клиенте есть jQuery.
          */
         cookie: function(key, value, params) {
             params = params || {};
@@ -717,7 +738,8 @@ module.exports = function() {
             } else {
                 if (typeof value != 'undefined') {
                     if (params.expires) {
-                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000); // jquery days to express ms
+                        // jquery days to express ms
+                        params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000);
                     }
 
                     app.emit('cookie', key, value, params);

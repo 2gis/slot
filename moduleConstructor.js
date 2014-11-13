@@ -1,14 +1,18 @@
+
 var _ = require('lodash'),
     namer = require('./lib/namer'),
     env = require('./env');
 
 /**
- * Конструктор модулей. Создаёт инстанс модуля, обвешивая его конфиг всякими методами
- * @param  {Object} app
- * @param  {Object} moduleConf конфиг модуля - тот самый js-объект из файла модуля
- * @param  {Object} slot       инстанс слота для этого модуля
- * @param  {Object} cte        кастомный шаблонизатор, по-умолчанию handlebars
- * @return {Object}            инстанс модуля
+ * Конструктор модулей. Создаёт инстанс модуля, обвешивая его конфиг всякими методами.
+ *
+ * @constructs slot.Module
+ * @extends {slot.Slot}
+ *
+ * @param {slot.App} app - Инстанс приложения.
+ * @param {Object} moduleConf - Конфиг модуля, тот самый js-объект из файла модуля.
+ * @param {slot.Slot} slot - Инстанс слота для этого модуля.
+ * @param {Object} cte - Кастомный шаблонизатор, по-умолчанию handlebars.
  */
 module.exports = function(app, moduleConf, slot, cte) {
     // register default partials and helpers for current module
@@ -40,9 +44,9 @@ module.exports = function(app, moduleConf, slot, cte) {
          * Односложный: {{module 'fromTo'}} - на вход подаётся имя модуля, или инстанс модуля, а в это место будет вставлен результат его рендеригна
          * Блоковый: {{#module 'fromTo'}} <div> {{{this}}} </div> {{/module}} - то же, но html модуля вставляется внутрь конструкции
          *
-         * @param  {String|Object} name - имя существующего дочернего модуля, либо инстанс модуля
-         * @param  {Object} options - параметры хелпера. Считается, что если есть options.fn, то хелпер вызван в блоковом режиме
-         * @return {String} готовый html
+         * @param {string|Object} name - Имя существующего дочернего модуля, либо инстанс модуля.
+         * @param {Object} options - Параметры хелпера. Считается, что если есть options.fn, то хелпер вызван в блоковом режиме.
+         * @returns {string} Готовый html.
          */
         module: function(name, options) {
             var moduleInstance = _.isString(name) ? slot.modules[name] : name;
@@ -71,8 +75,9 @@ module.exports = function(app, moduleConf, slot, cte) {
             }
 
             if (!tmpl) {
-                throw new Error(
-                    "Unable to render first partial of this: " + _.toArray(arguments).slice(0, arguments.length - 1).join(', ')
+                throw new TypeError(
+                    'Unable to render first partial of this: ' +
+                        _.toArray(arguments).slice(0, arguments.length - 1).join(', ')
                 );
             }
 
@@ -80,13 +85,13 @@ module.exports = function(app, moduleConf, slot, cte) {
         },
 
         /**
-         * Модификаторы для элементов
+         * Модификаторы для элементов.
          *
-         * Пример использования:
+         * На сервере проставляются через ```slot.element('name').mod({...})```.
+         *
+         * @example
          * <div class="dashboard__title {{mods 'elemBase elem'}}"></div>
-         * При этом модификаторы из последних элементов будут приоритетнее.
-         *
-         * На сервере проставляются через slot.element('name').mod({...})
+         * // При этом модификаторы из последних элементов будут приоритетнее.
          *
          * @returns {string}
          */
@@ -148,7 +153,9 @@ module.exports = function(app, moduleConf, slot, cte) {
     }
 
     moduleWrapper = {
-        // Initializes the module with the given params. Invokes callback when init process is ready.
+        /**
+         * Initializes the module with the given params. Invokes callback when init process is ready.
+         */
         init: function(state, callback) {
             slot.stage = slot.STAGE_INITING;
 
@@ -262,8 +269,14 @@ module.exports = function(app, moduleConf, slot, cte) {
 
         elements: moduleConf.elements,
 
+        /**
+         * @type {slot.Slot}
+         */
         slot: slot,
 
+        /**
+         * @type {boolean}
+         */
         isEventsBound: false,
 
         type: moduleConf.type

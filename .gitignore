@@ -3,5 +3,6 @@ node_modules
 /nbproject/*
 /nbproject/private/
 /coverage/*
+/docs/api
 .DS_Store
 npm-debug.log
