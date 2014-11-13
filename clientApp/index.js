@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var baseAppConstructor = require('../app');
-var namer = require('../namer');
-var defer = require('../defer');
+var namer = require('../lib/namer');
+var defer = require('../lib/defer');
 var transitionsHelper = require('./transitions');
 
 module.exports = function() {
