@@ -154,6 +154,10 @@ module.exports = function() {
          * @param {Function} callback(err, mainModule) - коллбэк, вызываемый когда было проинициализировано приложение
          */
         init: function(req, callback) {
+            callback = callback || _.noop;
+
+            if (!req) throw new Error('[app.init]: param req must not be undefined');
+
             app._stage = 'init';
 
             var data = {
@@ -165,7 +169,6 @@ module.exports = function() {
             };
 
             registry.setup(data);
-
             cookies = req.cookies;
 
             var beforeInitTasks = [];
@@ -187,15 +190,26 @@ module.exports = function() {
                 }
             }
 
-            app.emit('beforeInit', {
+            app.emit('initStart', {
                 waitFor: addBeforeInitTask
             });
 
             async.parallel(beforeInitTasks, function() {
+                var plugins = app.config['plugins'] || [];
+                _.each(plugins, function(name) {
+                    // Сначала ищем плагин у пользователя, затем внутри слота
+                    try {
+                        app.require('plugins/' + name)(app);
+                    } catch (e) {
+                        require('./plugins/' + name)(app);
+                    }
+                });
+
                 try {
                     var mainModule = app.mainModule = app.resolveEntryPoint(req);
 
                     mainModule.init(req, function(err) {
+                        app.emit('initEnd');
                         callback(err, mainModule);
                     });
                 } catch (ex) {
@@ -475,6 +489,8 @@ module.exports = function() {
                     moduleId: moduleId,
                     templates: templateProvider.forModule(moduleName)
                 }]);
+
+            app.emit('slotInit', slot);
 
             if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
                 throw new Error('Bad moduleJs: ' + moduleName);
