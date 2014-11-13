@@ -5,7 +5,7 @@
 var env = require('./env'),
     _ = require('lodash');
 
-var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : dg.config;
+var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : {};
 
 module.exports = cfg;
 
