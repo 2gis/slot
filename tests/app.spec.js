@@ -379,7 +379,7 @@ describe('app', function() {
             appConfig.isClient = true;
             appConfig.block = function() {
                 return jQueryFake;
-            }
+            };
 
             var numSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'num');
             var activeSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'active');

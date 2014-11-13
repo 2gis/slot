@@ -29,6 +29,8 @@ gulp.task('cover', function() {
     return gulp.src([
         '*.js',
         'lib/*.js',
+        'plugins/*.js',
+        'components/*.js',
         'clientApp/*.js',
         '!clientApp/*.spec.js'
     ]).pipe(istanbul());
