@@ -343,5 +343,51 @@ describe('app', function() {
 
             assert(spy.withArgs(Infinity).calledOnce, 'Обработчик должен быть вызван 1 раз');
         });
+
+        it('modHandlers вызывается после навешивания всех классов', function() {
+            var setMods = {
+                num: 1,
+                active: true
+            };
+
+            var jQueryFake = {
+                addClass: function() {},
+                removeClass: function() {}
+            };
+
+            sinon.spy(jQueryFake, 'addClass');
+            sinon.spy(jQueryFake, 'removeClass');
+
+            app.internals.moduleDescriptors = {
+                '1': {
+                    moduleConf: {
+                        modHandlers: {
+                            num: function(val) {
+                                assert(jQueryFake.addClass.withArgs('_active').calledOnce, 'numHandler: Класс модификатора _active должен быть уже навешан');
+                                assert(jQueryFake.addClass.withArgs('_num_1').calledOnce, 'numHandler: Класс модификатора _num_1 должен быть уже навешан');
+                            },
+                            active: function(val) {
+                                assert(jQueryFake.addClass.withArgs('_active').calledOnce, 'activeHandler: Класс модификатора _active должен быть уже навешан');
+                                assert(jQueryFake.addClass.withArgs('_num_1').calledOnce, 'activeHandler: Класс модификатора _num_1 должен быть уже навешан');
+                            }
+                        }
+                    },
+                    mods: {}
+                }
+            };
+
+            appConfig.isClient = true;
+            appConfig.block = function() {
+                return jQueryFake;
+            }
+
+            var numSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'num');
+            var activeSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'active');
+
+            appConfig.mod('1', setMods);
+
+            assert(numSpy.withArgs(1).calledOnce, 'Обработчик должен быть вызван 1 раз');
+            assert(activeSpy.withArgs(true).calledOnce, 'Обработчик должен быть вызван 1 раз');
+        });
     });
 });
