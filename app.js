@@ -257,12 +257,12 @@ module.exports = function() {
 
                 _.extend(descriptor.mods, newMods);
 
-                _.each(newMods, function(val, key) {
-                    var oldModVal = oldMods[key];
+                // Навешиваем классы
+                if (app.isClient) { // или == 'bind' ?
+                    _.each(newMods, function(val, key) {
+                        var oldModVal = oldMods[key];
 
-                    if (oldModVal !== val) {
-
-                        if (app.isClient) { // или == 'bind' ?
+                        if (oldModVal !== val) {
                             block = app.block(moduleId);
 
                             var oldModClass = namer.modificatorClass(key, oldModVal);
@@ -273,7 +273,14 @@ module.exports = function() {
 
                             if (newModClass) block.addClass(newModClass);
                         }
+                    });
+                }
 
+                // Запускаем хендлеры
+                _.each(newMods, function(val, key) {
+                    var oldModVal = oldMods[key];
+
+                    if (oldModVal !== val) {
                         var handlers = descriptor.moduleConf.modHandlers;
                         if (handlers && handlers[key]) { // Вызов обработчиков установки или удаления модификатора
                             if (_.isFunction(handlers[key])) {
