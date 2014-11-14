@@ -9,6 +9,8 @@ var cfg = typeof window == 'undefined' ? env.requirePrivate('config') : dg.confi
 
 module.exports = cfg;
 
+env.global.DEBUG = cfg.debug;
+
 module.exports.group = function(name) {
     var ret = {};
     for (var key in cfg) {
