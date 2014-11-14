@@ -15,14 +15,12 @@ module.exports = function(app) {
 
     /**
      * Возвращает значение. Если значение не было задано, возвращает пустой объект
-     * @param  {String} key   ключ по которому будет возвращено значение
-     * @param  {*}      def   дефолтное значение, которое будет возвращено, если по ключу ничего нет. @TODO выяснить, действительно ли он нужен
-     * @return {*}            значение, сохранённое по этому ключу, либо undefined
+     * @param  {String} key         ключ по которому будет возвращено значение
+     * @param  {*}      syncValue   дефолтное значение, которое будет возвращено, если по ключу ничего нет. @TODO выяснить, действительно ли он нужен
+     * @return {*}                  значение, сохранённое по этому ключу, либо undefined
      */
-    function get(key, def) {
-        def = def === undefined ? {} : def;
-
-        return key in registry ? registry[key] : def;
+    function get(key, syncValue) {
+        return registry[key];
     }
 
     /**
@@ -40,6 +38,14 @@ module.exports = function(app) {
         save: save,
 
         /**
+         * Возвращает весь реестр, например на сервере для записи его в шаблон и передачи на клиент
+         * @return {Object} registry объект реестра со всеми ключами и значениями
+         */
+        read: function() {
+            return registry;
+        },
+
+        /**
          * Загружает реестр, например, переданный с сервера на клиент
          * @param  {Object} reg объект реестра со всеми ключами и значениями
          */
@@ -48,10 +54,27 @@ module.exports = function(app) {
         },
 
         /**
-         * На сервере работает как сеттер, на клиенте как геттер
-         * @type {[type]}
+         * На сервере работает как сеттер, на клиенте как геттер. На клиенте возвращает значение, выставленное на сервере.
+         * @param  {String} key             ключ по которому синхронизируется значение
+         * @param  {*} [serverSideValue={}] значение, выставляемое на сервере, на клиенте оно игнорируется
+         * @return {*}                      значение по ключу
          */
-        sync: env.isServer ? save : get
+        sync: function(key, serverSideValue) {
+            if (env.isServer) {
+                serverSideValue = serverSideValue === undefined ? {} : serverSideValue;
+
+                return syncRegistry.save(key, serverSideValue);
+            } else {
+                var value = syncRegistry.get(key);
+
+                if (value === undefined && serverSideValue !== undefined) { // Ситуация, когда sync дёргается на клиенте, но не был дёрнут на сервере
+                    throw new Error('[slot syncRegistry.sync] you are trying to get the value of registry[' + key +
+                        '] on the client via sync(), but that value wasnt setted on the server!');
+                }
+
+                return value;
+            }
+        }
     };
 
     return syncRegistry;
