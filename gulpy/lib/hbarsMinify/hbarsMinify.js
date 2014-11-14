@@ -47,7 +47,7 @@ function dumpAst(ast, visitor) {
             return node.name;
         },
         'comment': function() {
-            return ''; //strip comments
+            return ''; // strip comments
         },
         'partial': function(node) {
             var out = '{{> ' + accept(node.partialName);

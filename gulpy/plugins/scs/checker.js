@@ -70,9 +70,9 @@ module.exports = function(filename, contents, options) {
                 start2 = line.indexOf('//'),
                 start3 = line.indexOf('*/');
 
-            if (start1 == -1) start1 = 1/0;
-            if (start2 == -1) start2 = 1/0;
-            if (start3 == -1) start3 = 1/0;
+            if (start1 == -1) start1 = 1 / 0;
+            if (start2 == -1) start2 = 1 / 0;
+            if (start3 == -1) start3 = 1 / 0;
 
             start = Math.min(start1, start2, start3);
 

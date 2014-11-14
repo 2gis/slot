@@ -42,7 +42,7 @@ module.exports = function(glob, opt, fn) {
 
     // array of tasks given
     if (Array.isArray(fn)) {
-        return watch(glob, opt, function () {
+        return watch(glob, opt, function() {
             gulp.start.apply(gulp, fn);
         });
     }

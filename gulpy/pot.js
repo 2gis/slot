@@ -12,14 +12,6 @@ var fs = require('fs');
 module.exports = function(args) {
     var pot;
 
-    function onlyWeb(path) {
-        return args.grym ? null : path;
-    }
-
-    function onlyGrym(path) {
-        return args.grym ? path : null;
-    }
-
     /**
      * Возвращает dirname - название каталога в котором лежит данный файл, basename - название самого файла без расширения
      * @param {string} filepath
@@ -49,19 +41,13 @@ module.exports = function(args) {
 
     /**
      * Фильтр для сборки модулей
-     * @param filepath
+     * @param {string} filepath - путь до файла
+     * @param {Array <string>} blackList - модули, которые нужно исключить
      * @returns {boolean}
      */
-    function modulesFilter(filepath) {
+    function modulesFilter(filepath, blackList) {
         if (!pot.flags) throw new Error("You must define flags to run modulesFilter");
-        var bases = getPathBases(filepath),
-            conf = pot.config;
-
-        if (!pot.flags.makeup && bases.basename == 'makeup') return false;
-
-        var blackList = args.grym ?      // черный список модулей и компонент (которых нет в ..)
-            conf.grymBlackList :         // для грыма
-            conf.onlineBlackList;        // для онлайна
+        var bases = getPathBases(filepath);
 
         if (_.contains(blackList, bases.basename)) {
             return false;
@@ -177,14 +163,14 @@ module.exports = function(args) {
         projectRequire: projectRequire,
         isSameFolder: isSameFolder,
         modulesFilter: modulesFilter,
-        onlyWeb: onlyWeb,
-        onlyGrym: onlyGrym,
         lib: lib,
         plugin: plugin,
         snippet: snippet,
         loadDir: loadDir,
         loadTasks: loadDir, // alias
         t: _.template,
+
+        // @TODO: будем ли менять место положение конфигов для сборки в приложении?
         get config() {
             var baseCfg = projectRequire('config/build');
             var glob = require('flat-glob').sync;
