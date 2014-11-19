@@ -570,7 +570,7 @@ module.exports = function() {
         isClient: env.isClient,
 
         setTimeout: function(func, delay) {
-            if (app.isServer) {
+            if (app._stage == 'init') {
                 func();
             } else {
                 return setTimeout(func, delay);
