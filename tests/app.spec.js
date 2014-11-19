@@ -2,8 +2,6 @@ var assert = require('assert');
 var sinon = require('sinon');
 var _ = require('lodash');
 
-DEBUG = true;
-
 describe('app', function() {
     var app,
         appIntance,
@@ -11,6 +9,7 @@ describe('app', function() {
 
     beforeEach(function() {
         app = require('../app.js')();
+        DEBUG = true;
         appIntance = app.instance;
         appConfig = app.appConfig;
     });
