@@ -205,16 +205,6 @@ module.exports = function() {
             });
 
             async.parallel(beforeInitTasks, function() {
-                var plugins = app.config['plugins'] || [];
-                _.each(plugins, function(name) {
-                    // Сначала ищем плагин у пользователя, затем внутри слота
-                    try {
-                        app.require('plugins/' + name)(app);
-                    } catch (e) {
-                        require('./plugins/' + name)(app);
-                    }
-                });
-
                 try {
                     var mainModule = app.mainModule = app.resolveEntryPoint(req);
 
@@ -402,7 +392,7 @@ module.exports = function() {
             try {
                 component = app.require('components/' + name + '/' + name);
             } catch (e) {
-                component = require('./components/' + name);
+                component = require('slot/components/' + name);
             }
 
             return component;
@@ -769,6 +759,18 @@ module.exports = function() {
         // публикуем функцию для тестов
         getModificators: getModificators
     };
+
+
+    var plugins = app.config['plugins'] || [];
+    _.each(plugins, function(name) {
+        // Сначала ищем плагин у пользователя, затем внутри слота
+        try {
+            app[name] = app.require('plugins/' + name)(app);
+        } catch (e) {
+            app[name] = require('slot/plugins/' + name)(app);
+        }
+    });
+
 
     var out = {
         instance: smokesignals.convert(app),
