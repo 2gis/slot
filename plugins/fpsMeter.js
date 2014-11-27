@@ -113,7 +113,5 @@ module.exports = function(app) {
         }
     };
 
-    app.on('slotInit', function(slot) {
-        slot.fpsMeter = fpsMeter;
-    });
+    return fpsMeter;
 };

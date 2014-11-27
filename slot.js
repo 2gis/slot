@@ -317,6 +317,10 @@ module.exports = function(app, params) {
         cookie: app.cookie
     };
 
+    _.each(app.config['plugins'], function(name) {
+        slot[name] = app[name];
+    });
+
     app.setupSlot(slot);
 
     return slot;

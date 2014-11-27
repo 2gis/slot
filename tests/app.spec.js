@@ -18,6 +18,17 @@ describe('app', function() {
         assert(app);
     });
 
+    describe(' plugins', function() {
+        it('Подключает только те плагины, которые указаны в конфиге', function() {
+            appIntance.config.plugins = ['ua'];
+            app = require('../app.js')();
+            appIntance = app.instance;
+
+            assert(_.isFunction(appIntance.ua), 'После инициализации плагин ua должен подключиться, ведь он в конфиге');
+            assert(!appIntance.fpsMeter, 'После инициализации плагин fpsMeter не должен подключиться, ведь его нет в конфиге');
+        });
+    });
+
     describe('-> init', function() {
         it('Ругается если нет поля req', function(done) {
             try {
@@ -140,18 +151,6 @@ describe('app', function() {
                 delayers.callback();
                 assert(delayers.callback.calledOnce, 'Функция callback должны быть вызвана единажды, инициализация не сломалась');
             });
-        });
-
-        it('Подключает только те плагины, которые указаны в конфиге', function() {
-            appIntance.config.plugins = ['ua'];
-
-            assert(!appIntance.ua, 'До инициализации приложения плагинов быть не должно в любом случае');
-            assert(!appIntance.fpsMeter, 'До инициализации приложения плагинов быть не должно в любом случае');
-
-            appIntance.init({});
-
-            assert(_.isFunction(appIntance.ua), 'После инициализации плагин ua должен подключиться, ведь он в конфиге');
-            assert(!appIntance.fpsMeter, 'После инициализации плагин fpsMeter не должен подключиться, ведь его нет в конфиге');
         });
     });
 

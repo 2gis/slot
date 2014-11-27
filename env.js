@@ -15,8 +15,6 @@ if (!isServer) {
     window.global = window;
 }
 
-var rootPath = './';
-
 /**
  * @type {global}
  */

@@ -72,7 +72,7 @@ module.exports = function(app) {
     /**
      * @returns {Object} Объект, по которому можно определить браузер и операционку.
      */
-    app.ua = function(userAgentString) {
+    return function(userAgentString) {
         // Выставляем версию браузера.
         var parser = new UAParser();
 
@@ -105,8 +105,4 @@ module.exports = function(app) {
 
         return result;
     };
-
-    app.on('slotInit', function(slot) {
-        slot.ua = app.ua;
-    });
 };
