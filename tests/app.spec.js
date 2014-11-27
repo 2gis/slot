@@ -389,4 +389,15 @@ describe('app', function() {
             assert(activeSpy.withArgs(true).calledOnce, 'Обработчик должен быть вызван 1 раз');
         });
     });
+
+    describe('-> getModuleDescriptorById', function() {
+        it('Бросает исключение, если модуль не найден', function() {
+            assert.throws(
+                function() {
+                    appConfig.getModuleDescriptorById('notExistingModule-id');
+                },
+                Error
+            );
+        });
+    });
 });
