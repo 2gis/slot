@@ -236,27 +236,20 @@ module.exports = function() {
 
         /**
          * Возвращает jQuery-объект по заданному элементу для текущего модуля.
+         * Ищет либо по БЭМ, либо по полю selector, но всегда внутри модуля
          *
-         * @param {string} moduleId
-         * @param {string} elementName
+         * @param {string} moduleId - id текущего модуля, внутри которого будет искаться элемент
+         * @param {string} elementName - имя искомого элемента
          */
         element: function(moduleId, elementName) {
             var descriptor = app.getModuleDescriptorById(moduleId),
-                moduleElements = descriptor.moduleConf.elements,
+                elementDeclaration = descriptor.moduleConf.elements && descriptor.moduleConf.elements[elementName],
                 blockName = descriptor.moduleConf.block || descriptor.type;
 
-            if (moduleElements && moduleElements[elementName]) {
-                var selector = moduleElements[elementName].selector || '.' + namer.elementClass(blockName, elementName),
-                    elements = $(selector, moduleBlockId(moduleId)); // Возвращаемые элементы (jQuery объект)
+            // Кастомный селектор для элемента, относительно корневого элемента модуля
+            var selector = elementDeclaration && elementDeclaration.selector || '.' + namer.elementClass(blockName, elementName);
 
-                // Фолбек на dashed-case на переходной период
-                if (!elements.length) {
-                    selector = '.' + namer.elementClass(blockName, elementName, true);
-                    elements = $(selector, moduleBlockId(moduleId));
-                }
-
-                return elements;
-            }
+            return $(selector, moduleBlockId(moduleId)); // Возвращаемые элементы (jQuery объект)
         },
 
         /**
