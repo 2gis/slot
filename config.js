@@ -22,12 +22,12 @@ module.exports = config;
 module.exports.group = function(namespace) {
     var groupConfig = {};
 
-    for (var key in config) {
-        if (config.hasOwnProperty(key) && key.startsWith(namespace + '.')) {
-            var groupKey = key.substr(namespace.length + 1);
-            groupConfig[groupKey] = config[key];
+    _.forOwn(config, function(value, key) {
+        if (key.startsWith(namespace + '.')) {
+            key = key.substr(namespace.length + 1);
+            groupConfig[key] = value;
         }
-    }
+    });
 
     return groupConfig;
 };
@@ -42,25 +42,22 @@ module.exports.group = function(namespace) {
  * @returns {Object} Оригинальный конфиг
  */
 module.exports.merge = function(otherConfig) {
-    for (var key in otherConfig) {
-        if (otherConfig.hasOwnProperty(key)) {
-            var value = otherConfig[key];
-            var shouldBePushed = false;
+    _.forOwn(otherConfig, function(value, key) {
+        var shouldBePushed = false;
 
-            if (key.startsWith('+')) {
-                shouldBePushed = true;
-                key = key.substr(1);
-            }
-
-            var originalValue = config[key];
-
-            if (shouldBePushed && _.isArray(originalValue)) {
-                originalValue.push.apply(originalValue, value);
-            } else {
-                config[key] = value;
-            }
+        if (key.startsWith('+')) {
+            key = key.substr(1);
+            shouldBePushed = true;
         }
-    }
+
+        var originalValue = config[key];
+
+        if (shouldBePushed && _.isArray(originalValue)) {
+            originalValue.push.apply(originalValue, value);
+        } else {
+            config[key] = value;
+        }
+    });
 
     return config;
 };
