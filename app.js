@@ -648,7 +648,7 @@ module.exports = function() {
             var descriptor = internals.moduleDescriptors[moduleId];
 
             if (!descriptor) {
-                console.error('No module with moduleId ' + moduleId + ' found.');
+                throw new Error('[slot getModuleDescriptorById] No module with moduleId ' + moduleId + ' found.');
             }
 
             return descriptor;
