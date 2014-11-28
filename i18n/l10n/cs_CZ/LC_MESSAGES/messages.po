@@ -1,0 +1,2705 @@
+# Czech (Czech Republic) translations for 2GIS Online V4.
+# Copyright (C) 2014 Online4 2gis team
+# This file is distributed under the same license as the 2GIS Online V4
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2GIS Online V4 Praha\n"
+"Report-Msgid-Bugs-To: online4@2gis.ru\n"
+"POT-Creation-Date: 2014-11-24 11:09+0600\n"
+"PO-Revision-Date: 2014-10-17 12:27+0600\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: cs_CZ <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#. $admDivisionName название округа/района и тп. - , $admDivisionType - тип локации (округ/район и тп), $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Центральный район Новосибирска — 2ГИС".
+msgid "$admDivisionName $admDivisionType $cityNameGenitive — 2ГИС"
+msgstr "$admDivisionName $admDivisionType $cityNameGenitive — 2GIS"
+
+#. $admDivisionName - название округа/района и тп., $admDivisionType - тип локации (округ/район и тп), $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Центральный район Новосибирска: вся необходимая информация на карте — администрация, налоговая, суд, паспортный стол, загс и многое
+#. другое.".
+msgid ""
+"$admDivisionName $admDivisionType $cityNameGenitive: вся необходимая информация на карте — администрация, налоговая, суд, паспортный стол, загс и многое "
+"другое."
+msgstr "$admDivisionName $admDivisionType $cityNameGenitive: všechny nezbytné informace na mapě — úřady, soudy, polikliniky, matriky a mnoho dalšího."
+
+#. $buildingName - назание здания, $geoName - имя геообъекта
+#. Фраза звучит вроде: "Сан Сити, улица Карла Маркса, 7: обслуживающие организации - ЖЭУ, ТСЖ, поликлиники, почтовые отделения, интернет-провайдеры и многое
+#. другое."
+msgid "$buildingName, $geoName: обслуживающие организации - ЖЭУ, ТСЖ, поликлиники, почтовые отделения, интернет-провайдеры и многое другое."
+msgstr "$buildingName, $geoName: poskytovatelé služeb — společenství vlastníků jednotek, polikliniky, pošty, poskytovatelé Internetu a mnoho dalšího."
+
+#. $buildingName - назание здания, $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: "Сан-Сити, улица Красный проспект, 12: обслуживающие организации — 2ГИС".
+msgid "$buildingName, $geoName: обслуживающие организации — 2ГИС"
+msgstr "$buildingName, $geoName: poskytovatel služeb — 2GIS"
+
+#. $buildingName - название здания, $geoName - назание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Кафедральный собор, улица Красный проспект, 12 в Новосибирске — 2ГИС".
+msgid "$buildingName, улица $geoName в $cityNamePrepositional — 2ГИС"
+msgstr "$buildingName, $geoName v $cityNamePrepositional — 2GIS"
+
+#. $buildingName - название здания, $geoName - азание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Сан-сити, улица Красная площадь, 7 в Новосибирске: организации в здании и удобные способы доехать до места."
+msgid "$buildingName, улица $geoName в $cityNamePrepositional: организации в здании и удобные способы доехать до места."
+msgstr "$buildingName, $geoName v $cityNamePrepositional: organizace v budově a optimální cesty k ní."
+
+#. $buildingName - название здания, $geoName - назание улицы и номер дома, $cityName - название города.
+#. Фраза звучит вроде: "Кафедральный собор, улица Красный проспект, 12, Новосибирск — 2ГИС".
+msgid "$buildingName, улица $geoName, $cityName — 2ГИС"
+msgstr "$buildingName, $geoName, $cityName — 2GIS"
+
+#. $buildingName - название здания, $geoName - назание улицы и номер дома, $cityName - название города.
+#. Фраза звучит вроде: "Сансити, улица площадь Маркса, 7, Новосибирск: организации в здании и удобные способы доехать до места."
+msgid "$buildingName, улица $geoName, $cityName: организации в здании и удобные способы доехать до места."
+msgstr "$buildingName, $geoName, $cityName: organizace v budově a optimální cesty do ní."
+
+#. $cityName - название города. Фраза звучит вроде: "Новосибирск: карта с улицами, домами и организациями города — 2ГИС"".
+msgid "$cityName: карта с улицами, домами и организациями города — 2ГИС"
+msgstr "$cityName: mapa s ulicemi, budovami a organizacemi ve městě — 2GIS"
+
+#. $cityName - название города.
+#. Фраза звучит вроде: "Новосибирск: подробная карта с детализацией до дома, поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на
+#. авто и городском транспорте."
+msgid ""
+"$cityName: подробная карта с детализацией до дома, поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на авто и городском "
+"транспорте."
+msgstr ""
+"$cityName: podrobná mapa s rozlišením až po budovy, vyhledávání podle adresy + telefonní čísla, recenze, fotografie, pracovní doby organizací + jednoduché "
+"vyhledávání trasy autem a MHD."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Шульц в Новосибирске (Советская, 19) — 2ГИС".
+msgid "$firmName в $cityNamePrepositional ($firmAddress) — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional ($firmAddress) — 2GIS"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города, $firmAddress - адрес фирмы, $attributes - атрибуты: любая отдельная фраза.
+#. Фраза звучит вроде: "Шульц в Новосибирске (Советская, 19): адреса, номера телефонов, время работы и как доехать. Wi-Fi бразильская кухня."
+msgid "$firmName в $cityNamePrepositional ($firmAddress): адреса, номера телефонов, время работы и как доехать. $attributes"
+msgstr "$firmName v $cityNamePrepositional ($firmAddress): adresy, telefonní čísla, pracovní doby a jak se tam dostat. $attributes"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске — 2ГИС".
+msgid "$firmName в $cityNamePrepositional — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional — 2GIS"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Сбербанк, ООО в Новосибирске, Красный пр-т, 46: большая подборка фотографий от пользователей и владельцев компании."
+msgid "$firmName в $cityNamePrepositional, $firmAddress: большая подборка фотографий от пользователей и владельцев компании."
+msgstr "$firmName v $cityNamePrepositional, $firmAddress: široký výběr fotografií od uživatelů a majitelů společnosti."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Шульц в Новосибирске, Советская, 19: фото — 2ГИС".
+msgid "$firmName в $cityNamePrepositional, $firmAddress: фото — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional, $firmAddress: foto — 2GIS"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города, $attributes - атрибуты: любая отдельная фраза.
+#. Фраза звучит вроде: "Шульц в Новосибирске: адреса, номера телефонов, время работы и как доехать. Wi-Fi бразильская кухня."
+msgid "$firmName в $cityNamePrepositional: адреса, номера телефонов, время работы и как доехать. $attributes"
+msgstr "$firmName v $cityNamePrepositional: adresy, telefonní čísla, pracovní doby a jak se tam dostat. $attributes"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Сбербанк, ООО в Новосибирске: большая подборка фотографий от пользователей и владельцев компании."
+msgid "$firmName в $cityNamePrepositional: большая подборка фотографий от пользователей и владельцев компании."
+msgstr "$firmName v $cityNamePrepositional: široký výběr fotografií od uživatelů a majitelů společnosti."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске: вся информация о филиалах на одной странице — адреса, телефоны, время работы и отзывы. Проложите маршрут до нужного
+#. вам филиала."
+msgid ""
+"$firmName в $cityNamePrepositional: вся информация о филиалах на одной странице — адреса, телефоны, время работы и отзывы. Проложите маршрут до нужного вам "
+"филиала."
+msgstr ""
+"$firmName v $cityNamePrepositional: všechny informace o pobočkách na jedné stránce — adresy, telefonní čísla, pracovní doby a recenze. Vytyčte trasu k "
+"požadované pobočce."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске: вся информация о филиалах на одной странице — адреса, телефоны, время работы, фотографии и отзывы. Проложите маршрут
+#. до нужного вам филиала."
+msgid ""
+"$firmName в $cityNamePrepositional: вся информация о филиалах на одной странице — адреса, телефоны, время работы, фотографии и отзывы. Проложите маршрут до "
+"нужного вам филиала."
+msgstr ""
+"$firmName v $cityNamePrepositional: všechny informace o pobočkách na jedné stránce — adresy, telefonní čísla, pracovní doby, fotografie a recenze. Vytyčte "
+"trasu k požadované pobočce."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске: отзывы — 2ГИС".
+msgid "$firmName в $cityNamePrepositional: отзывы — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional: recenze — 2GIS"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Сбербанк, ООО в Новосибирске: свежие отзывы и возможность поделиться впечатлениями с другими пользователями."
+msgid "$firmName в $cityNamePrepositional: свежие отзывы и возможность поделиться впечатлениями с другими пользователями."
+msgstr "$firmName v $cityNamePrepositional: nejnovější recenze a možnost podělit se o své dojmy s ostatními uživateli."
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске: филиалы — 2ГИС".
+msgid "$firmName в $cityNamePrepositional: филиалы — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional: pobočky — 2GIS"
+
+#. $firmName - название огранизации, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Шульц в Новосибирске: фото — 2ГИС".
+msgid "$firmName в $cityNamePrepositional: фото — 2ГИС"
+msgstr "$firmName v $cityNamePrepositional: fotografie — 2GIS"
+
+#. $firmName - название огранизации, $cityName - название города.
+#. Фраза звучит вроде: "Шульц, Новосибирск — 2ГИС".
+msgid "$firmName, $cityName — 2ГИС"
+msgstr "$firmName, $cityName — 2GIS"
+
+#. $firmName - название огранизации, $cityName - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Шульц, Новосибирск, Советская, 19 — 2ГИС".
+msgid "$firmName, $cityName, $firmAddress — 2ГИС"
+msgstr "$firmName, $cityName, $firmAddress — 2GIS"
+
+#. $firmName - название огранизации, $cityName - название города, $firmAddress - адрес фирмы, $attributes - атрибуты: любая отдельная фраза.
+#. Фраза звучит вроде: "Шульц, Новосибирск, Советская, 19: адреса, номера телефонов, время работы и как доехать. Горячие закуски, Немецкая кухня".
+msgid "$firmName, $cityName, $firmAddress: адреса, номера телефонов, время работы и как доехать. $attributes"
+msgstr "$firmName, $cityName, $firmAddress: adresy, telefonní čísla, pracovní doby a jak se tam dostat. $attributes"
+
+#. $firmName - название огранизации, $cityName - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Шульц, Новосибирск, ул. Советская, 29: большая подборка фотографий."
+msgid "$firmName, $cityName, $firmAddress: большая подборка фотографий от пользователей и владельцев компании."
+msgstr "$firmName, $cityName, $firmAddress: široký výběr fotografií od uživatelů a majitelů společnosti."
+
+#. $firmName - название огранизации, $cityName - название города, $firmAddress - адрес фирмы.
+#. Фраза звучит вроде: "Шульц, Новосибирск, Советская, 19: фото — 2ГИС".
+msgid "$firmName, $cityName, $firmAddress: фото — 2ГИС"
+msgstr "$firmName, $cityName, $firmAddress: fotografie — 2GIS"
+
+#. $firmName - название огранизации, $cityName - название города, $attributes - атрибуты: любая отдельная фраза.
+#. Фраза звучит вроде: "Шульц, Новосибирск: адреса, номера телефонов, время работы и как доехать. Горячие закуски, Немецкая кухня".
+msgid "$firmName, $cityName: адреса, номера телефонов, время работы и как доехать. $attributes"
+msgstr "$firmName, $cityName: adresy, telefonní čísla, pracovní doby a jak se tam dostat. $attributes"
+
+#. $firmName - название огранизации, $cityName - название города.
+#. Фраза звучит вроде: "Шульц, Новосибирск: большая подборка фотографий."
+msgid "$firmName, $cityName: большая подборка фотографий от пользователей и владельцев компании."
+msgstr "$firmName, $cityName: široký výběr fotografií od uživatelů a majitelů společnosti."
+
+#. $firmName - название огранизации, $cityName - название города.
+#. Фраза звучит вроде: "Шульц, Новосибирск: отзывы — 2ГИС".
+msgid "$firmName, $cityName: отзывы — 2ГИС"
+msgstr "$firmName, $cityName: recenze — 2GIS"
+
+#. $firmName - название огранизации, $cityName - название города.
+#. Фраза звучит вроде: "Шульц, Новосибирск: свежие отзывы и возможность поделиться впечатлениями с другими пользователями."
+msgid "$firmName, $cityName: свежие отзывы и возможность поделиться впечатлениями с другими пользователями."
+msgstr "$firmName, $cityName: nejnovější recenze a možnost podělit se o své dojmy s ostatními uživateli."
+
+#. $firmName - название огранизации, $cityName - название города.
+#. Фраза звучит вроде: "Шульц, Новосибирск: фото — 2ГИС".
+msgid "$firmName, $cityName: фото — 2ГИС"
+msgstr "$firmName, $cityName: fotografie — 2GIS"
+
+#. $fullName - полное название геообъекта с указанием города
+#. Фраза звучит вроде: "Химки, Подрезково — 2ГИС".
+msgid "$fullName — 2ГИС"
+msgstr "$fullName — 2GIS"
+
+#. $fullName - полное название геообъекта с указанием города
+#. Фраза звучит вроде: Химки, Подрезково: вся необходимая информация на карте — администрация, налоговая, суд, паспортный стол, загс и многое другое.
+msgid "$fullName: вся необходимая информация на карте — администрация, налоговая, суд, паспортный стол, загс и многое другое."
+msgstr "$fullName: všechny nezbytné informace na mapě — úřady, soudy, polikliniky, matriky a mnoho dalšího."
+
+#. $gateType - тип прохода/проезда , $gatePurpose - параметр прохода проезда.
+#. Фраза звучит вроде: "Вход, центральный — 2ГИС".
+msgid "$gateType, $gatePurpose — 2ГИС"
+msgstr "$gateType, $gatePurpose — 2GIS"
+
+#. $gateType - назание объекта, $gatePurpose - цель, $gateAccess - тип
+#. Фраза звучит вроде: Ворота, Центральный проезд, бесплатно – 2ГИС.
+msgid "$gateType, $gatePurpose, $gateAccess — 2ГИС"
+msgstr "$gateType, $gatePurpose, $gateAccess — 2GIS"
+
+#. $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: "Улица Красный проспект, 12 — 2ГИС".
+msgid "$geoName — 2ГИС"
+msgstr "$geoName — 2GIS"
+
+#. $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: "Ленина, 7: вся необходимая информация на карте города."
+msgid "$geoName: вся необходимая информация на карте города."
+msgstr "$geoName: všechny nezbytné informace na mapě města."
+
+#. $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: Крылова 34: вся необходимая информация на карте.
+msgid "$geoName: вся необходимая информация на карте."
+msgstr "$geoName: všechny nezbytné informace na mapě."
+
+#. $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: "Улица Красный проспект, 12: обслуживающие организации — ЖЭУ, ТСЖ, поликлиники, почтовые отделения, интернет-провайдеры и многое другое.".
+msgid "$geoName: обслуживающие организации - ЖЭУ, ТСЖ, поликлиники, почтовые отделения, интернет-провайдеры и многое другое."
+msgstr "$geoName: poskytovatelé služeb — společenství vlastníků jednotek, polikliniky, pošty, poskytovatelé Internetu a mnoho dalšího."
+
+#. $geoName - назание улицы и номер дома.
+#. Фраза звучит вроде: "Улица Красный проспект, 12: обслуживающие организации — 2ГИС".
+msgid "$geoName: обслуживающие организации — 2ГИС"
+msgstr "$geoName: poskytovatelé služeb — 2GIS"
+
+#. $mainRubric - название рубрики, $cityNameGenitive - название городе
+#. Фраза звучит вроде: "Бытовая техника: все компании Новосибирска с адресами, телефонами и временем работы — 2ГИС".
+msgid "$mainRubric: все компании $cityNameGenitive с адресами, телефонами и временем работы — 2ГИС"
+msgstr "$mainRubric: všechny organizace v $cityNameGenitive, včetně adres, telefonních čísel a pracovní doby — 2GIS"
+
+#. $name - название объекта доп слоя, $cityName - название города.
+#. Фраза звучит вроде: "Тройной мост (Санкт-Петербург) — 2ГИС".
+msgid "$name ($city) — 2ГИС"
+msgstr "$name ($city) — 2GIS"
+
+#. $parkingAccess - тип доступа на парковку, $parkingName - название парковки, $parkingAddress - адрес парковки
+#. Фраза звучит вроде: "Общедоступная, бесплатная Парковка ТЦ Александровский, Новосибирск, Покрышкина, 4 — 2ГИС".
+msgid "$parkingAccess $parkingName, $parkingAddress — 2ГИС"
+msgstr "$parkingAccess $parkingName, $parkingAddress 2GIS"
+
+#. $parkingAccess - тип доступа на парковку, $parkingType - вид парковки, $parkingName - название парковки, $parkingAddress - адрес парковки
+#. Фраза звучит вроде: "Общедоступная, перехватывающая Сан Сити, ул. Ленина, 1: вся информация на карте."
+msgid "$parkingAccess, $parkingType $parkingName, $parkingAddress: вся информация на карте."
+msgstr "$parkingAccess, $parkingType $parkingName, $parkingAddress: všechny informace na mapě."
+
+#. $query - любое выражение, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "пиво в Новосибирске — 2ГИС".
+msgid "$query в $cityNamePrepositional — 2ГИС"
+msgstr "$query v $cityNamePrepositional — 2GIS"
+
+#. $query - любое выражение, $cityNamePrepositional - название города
+#. Фраза звучит вроде: Сало в Киеве: вся необходимая информация.
+msgid "$query в $cityNamePrepositional: вся необходимая информация."
+msgstr "$query v $cityNamePrepositional: všechny nezbytné informace."
+
+#. $query - название рубрики, $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Шляпы на карте Новосибирска — 2ГИС".
+msgid "$query на карте $cityNameGenitive — 2ГИС"
+msgstr "$query na mapě $cityNameGenitive — 2GIS"
+
+#. $query - название рубрики, $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Шляпы на карте Новосибирска: адреса, номера телефонов и время работы. Свежие отзывы и рейтинги помогут определиться с выбором."
+msgid "$query на карте $cityNameGenitive: адреса, номера телефонов и время работы. Свежие отзывы и рейтинги помогут определиться с выбором."
+msgstr "$query na mapě $cityNameGenitive: adresy, telefonní čísla a pracovní doba. Nejnovější recenze a žebříčky Vám pomohou s výběrem."
+
+#. $query - название рубрики, $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Шляпы на карте Новосибирска: адреса, номера телефонов и время работы. Свежие отзывы, рейтинги и фото помогут определиться с выбором."
+msgid "$query на карте $cityNameGenitive: адреса, номера телефонов и время работы. Свежие отзывы, рейтинги и фото помогут определиться с выбором."
+msgstr "$query na mapě $cityNameGenitive: adresy, telefonní čísla a pracovní doba. Nejnovější recenze, žebříčky a fotografie Vám pomohou s výběrem."
+
+#. Фраза звучит вроде: "Лениская линия метро в Новосибирске: маршрут и остановки — 2ГИС".
+msgid "$routeName $routeType в $cityNamePrepositional: маршрут и остановки — 2ГИС"
+msgstr "$routeName $routeType v $cityNamePrepositional: trasa a stanice — 2GIS"
+
+#. Фраза звучит вроде: Лениская линия метро: маршрут и остановки на карте Новосибирска." .
+msgid "$routeName $routeType: маршрут и остановки на карте $cityNameGenitive."
+msgstr "$routeName $routeType: trasa a stanice na mapě $cityNameGenitive."
+
+#. $sightType - назание объекта.
+#. Фраза звучит вроде: "Фонтан — 2ГИС" или "Туалет — 2ГИС".
+msgid "$sightType – 2ГИС"
+msgstr "$sightType — 2GIS"
+
+#. $sightType - назание объекта
+#. Фраза звучит вроде: "Туалет: вся необходимая информация на карте города."
+msgid "$sightType: вся необходимая информация на карте города."
+msgstr "$sightType: všechny nezbytné informace na mapě města."
+
+#. $stationType - название вида транспорта, $stationName - название остановки/станции/платформы, $cityName - название города.
+#. Фраза звучит вроде: "Станция фуникулера Вокзал-главный (Новосибирск) — 2ГИС".
+msgid "$stationType $stationName ($cityName) — 2ГИС"
+msgstr "$stationType $stationName ($cityName) — 2GIS"
+
+#. $stationType - назывние вида транспорта, $stationName - название остновки $cityName - название города
+#. Фраза звучит вроде: Автобусная остановка Цирк (Новосибирск): самые удобные способы добраться до нужного вам места.
+msgid "$stationType $stationName ($cityName): самые удобные способы добраться до нужного вам места."
+msgstr "$stationType $stationName ($cityName): optimální způsoby, jak se dostat do požadovaného místa."
+
+#. %1 заменится на кол-во геообъектов. Например: "15 геообъектов"
+msgid "%1 геообъект"
+msgid_plural "%1 геообъектов"
+msgstr[0] "%1 zeměpisný objekt"
+msgstr[1] "%1 zeměpisné objekty"
+msgstr[2] "%1 zeměpisných objektů"
+
+#. Расстояние. %1 заменится на расстояние в километрах (цифрой)
+msgctxt "километры"
+msgid "%1 км"
+msgstr "%1 km"
+
+#. Расстояние. %1 заменится на расстояние в метрах (цифрой)
+msgctxt "метры"
+msgid "%1 м"
+msgstr "%1 m"
+
+#. Вместимость парковки. %1 заменится на количество парковочных мест (цифрой)
+msgctxt "Вместимость парковки"
+msgid "%1 место"
+msgid_plural "%1 мест"
+msgstr[0] "%1 místo"
+msgstr[1] "%1 místa"
+msgstr[2] "%1 míst"
+
+#. сокращение от 'минута'. %1 заменится на цифру
+msgctxt "минута"
+msgid "%1 мин"
+msgstr "%1 min"
+
+#. Будет использовано во фразе типа "Откроется через 1 минуту". Вместо %1 подставится число минут.
+msgid "%1 минуту"
+msgid_plural "%1 минут"
+msgstr[0] "%1 minutu"
+msgstr[1] "%1 minuty"
+msgstr[2] "%1 minut"
+
+#. %1 заменится на количество организаций. Пример: "5 организаций"
+msgid "%1 организация"
+msgid_plural "%1 организаций"
+msgstr[0] "%1 organizace"
+msgstr[1] "%1 organizace"
+msgstr[2] "%1 organizací"
+
+#. Заголовок для списка организаций, расположенных в данном здании. %1 заменится на кол-во организаций. Например: "3 организации в здании"
+#. Количество организаций, расположенных в данном здании. %1 заменится на кол-во организаций. Например: "3 организации в здании"
+msgid "%1 организация в здании"
+msgid_plural "%1 организаций в здании"
+msgstr[0] "%1 organizace v budově"
+msgstr[1] "%1 organizace v budově"
+msgstr[2] "%1 organizací v budově"
+
+#. %1 заменится на количество отзывов (цифрой)
+#. Вместо %1 подставится число отзывов
+#. Количество отзывов об организации. %1 заменится на количество отзывов (цифрой)
+msgid "%1 отзыв"
+msgid_plural "%1 отзывов"
+msgstr[0] "%1 recenze"
+msgstr[1] "%1 recenze"
+msgstr[2] "%1 recenzí"
+
+#. Подсказка по маршруту движения, сколько пересадок нужно будет сделать. Вместо %1 подставится количество пересадок цифрой
+msgid "%1 пересадка"
+msgid_plural "%1 пересадок"
+msgstr[0] "%1 přestup"
+msgstr[1] "%1 přestupy"
+msgstr[2] "%1 přestupů"
+
+#. Например, "Организации по запросу «15»", %1 — Организации, %2 — «15»
+msgid "%1 по запросу %2"
+msgstr "%1 podle hledaného výrazu %2"
+
+#. %1 заменится на расстояние, которое необходимо будет пройти прямо.
+msgid "%1 прямо"
+msgstr "%1 rovně"
+
+#. Выводится как подсказка о длине отзыва. %1 и %2 - служебные символы, вместо них подставится количество символов и текст подсказки. Например: "90 символов.
+#. Маловато будет!"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "%1 символ. %2"
+msgid_plural "%1 символов. %2"
+msgstr[0] "%1 symbol. %2"
+msgstr[1] "%1 symboly. %2"
+msgstr[2] "%1 symbolů. %2"
+
+#. Вместо %1 будет число филиалов
+msgid "%1 филиал"
+msgid_plural "%1 филиалов"
+msgstr[0] "%1 pobočka"
+msgstr[1] "%1 pobočky"
+msgstr[2] "%1 poboček"
+
+msgid "%1 фотография"
+msgid_plural "%1 фотографий"
+msgstr[0] "%1 fotografie"
+msgstr[1] "%1 fotografie"
+msgstr[2] "%1 fotografií"
+
+#. сокращение от 'час'. %1 заменится на цифру
+msgctxt "час"
+msgid "%1 ч"
+msgstr "%1 h"
+
+#. Будет использовано во фразе типа "Откроется через 1 час". Вместо %1 подставится число часов.
+msgid "%1 час"
+msgid_plural "%1 часов"
+msgstr[0] "%1 hodinu"
+msgstr[1] "%1 hodiny"
+msgstr[2] "%1 hodin"
+
+#. %1 заменится на количество читателей (цифрой)
+msgid "%1 читатель"
+msgid_plural "%1 читателей"
+msgstr[0] "%1 čtenář"
+msgstr[1] "%1 čtenáři"
+msgstr[2] "%1 čtenářů"
+
+#. Преобразуется к фразе типа "12 этажей". %1 заменится на количество этажей
+msgid "%1 этаж"
+msgid_plural "%1 этажей"
+msgstr[0] "%1 patro"
+msgstr[1] "%1 patra"
+msgstr[2] "%1 pater"
+
+#. Описание маршрута движения. %1 - последовательность действий, %2 - название улицы. Пример: "Крутой поворот налево на Крылова, далее по Гоголя""
+msgctxt "Маневр"
+msgid "%1, далее по %2"
+msgstr "%1, poté po %2"
+
+#. &#151; -  спецсимвол тире "-". %1 заменится на имя пользователя. Пример: Роман, если Вы нашли ошибку или у Вас возникли трудности, замечания или предложения -
+#. пожалуйста, напишите нам.
+msgid "%1, если Вы нашли ошибку или у Вас возникли трудности, замечания или предложения &#151; пожалуйста, напишите нам"
+msgstr "%1, pokud jste našli chybu nebo vznikly potíže, případně máte jakékoli připomínky či návrhy &#151; napište nám, prosím"
+
+#. %1 - Имя пользователя, &#151; - спецсимвол, обозначающий тире. Пример: Сергей, если вы считаете, что данное фото нарушает Соглашение об использовании сервисов
+#. 2ГИС - пожалуйста, напишите нам
+msgid "%1, если вы считаете, что данное фото нарушает %{Link Соглашение об использовании сервисов 2ГИС} &#151; пожалуйста, напишите нам."
+msgstr "%1, pokud se domníváte, že tato fotografie porušuje %{Link Smlouvu o použití služeb 2GIS} &#151; napište nám, prosím."
+
+#. %1 - Имя пользователя, &#151; - спецсимвол, обозначающий тире. Пример: Сергей, если вы считаете, что содержание этого буклета нарушает Соглашение об
+#. использовании сервисов 2ГИС - пожалуйста, напишите нам.
+msgid "%1, если вы считаете, что содержание этого буклета нарушает %{Link Соглашение об использовании сервисов 2ГИС} &#151; пожалуйста, напишите нам."
+msgstr "%1, pokud se domníváte, že obsah tohoto prospektu porušuje %{Link Smlouvu o použití služeb 2GIS} &#151; napište nám, prosím."
+
+#. %1 заменится на название населенного пункта или района, %2 - на название улицы. Пример: Бердск, ул. Ленина
+msgid "%1, ул. %2"
+msgstr "%1, %2"
+
+#. Вместо %1 подставится название улицы. Пример: "Ленина, улица"
+msgctxt "Геообъект улица"
+msgid "%1, улица"
+msgstr "%1, ulice"
+
+#. Преобразуется к строке типа "Обед. Откроется в 12:30". %1 заменится на "Обед" или "Перерыв", %2 заменится на точное время открытия
+msgid "%1. Откроется в %2"
+msgstr "%1. Otevře se v %2"
+
+#. Преобразуется к строке типа "Обед. Откроется менее чем через минуту". %1 заменится на "Обед" или "Перерыв"
+msgid "%1. Откроется менее чем через минуту"
+msgstr "%1. Otevře se za necelou minutu"
+
+#. Преобразуется к строке типа "Обед. Откроется через 30 минут". %1 заменится на "Обед" или "Перерыв", %2 заменится на промежуток времени
+msgid "%1. Откроется через %2"
+msgstr "%1. Otevře se za %2"
+
+#. Не переводить
+msgid "2GIS Dialer"
+msgstr "2GIS Dialer"
+
+#. Кнопка, ведущая на версию 2ГИС для персональных компьютеров
+msgid "2ГИС для ПК"
+msgstr "2GIS pro PC"
+
+#. Ссылка на страницу расширения 2ГИС для браузера
+msgid "2ГИС для браузера"
+msgstr "2GIS pro prohlížeč"
+
+#. Название нативного приложения 2гис. Выводится во всплывающей плашке, которая предлагает установить нативное приложение 2гис как альтернативу веб-версии
+msgid "2ГИС, офлайн карта и справочник города"
+msgstr "2GIS - informační systém Prahy s mapou města"
+
+#. Ограничения на формат и размер загружаемого скриншота
+msgid "png, gif, jpg или bmp не более 2 Мб"
+msgstr "png, gif, jpg nebo bmp s maximální velikostí 2 Mb"
+
+#. Административный округ
+msgctxt "Поиск"
+msgid "АО"
+msgstr "Správní obvod"
+
+msgctxt "Рубрика"
+msgid "Аварийные службы"
+msgstr "Havarijní služby"
+
+msgid "Автобус"
+msgstr "Autobus"
+
+#. Текст на кнопках для поиска проезда на конкретном виде транспорта.
+msgid "Автомобильные маршруты"
+msgstr "Trasy autem"
+
+#. Заголовок карточки автомобильного маршрута при выводе на печать
+msgid "Автомобильный маршрут"
+msgstr "Trasa autem"
+
+#. Заголовок окна входа в систему
+msgid "Авторизация"
+msgstr "Přihlášení"
+
+#. Текст окна. Отображается, когда пользователь повторно перешел по ссылке из письма на подтверждение
+msgid "Авторизуйтесь, пожалуйста."
+msgstr "Přihlaste se, prosím."
+
+msgctxt "Дашборд"
+msgid "Автосервисы"
+msgstr "Autoservis"
+
+#. $geoName - назание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Адреса, номера телефонов, время работы, отзывы и фото организаций по адресу Ленина, 89 в Москве."
+msgid "Адреса, номера телефонов, время работы, отзывы и фото организаций по адресу $geoName в $cityNamePrepositional."
+msgstr "Adresy, telefonní čísla, pracovní doby, recenze a fotografie organizací na $geoName v $cityNamePrepositional."
+
+#. $geoName - назание улицы и номер дома, $cityName - название города.
+#. Фраза звучит вроде: "Адреса, номера телефонов, время работы, отзывы и фото организаций по адресу Ленина, 7, Новосибирск."
+msgid "Адреса, номера телефонов, время работы, отзывы и фото организаций по адресу $geoName, $cityName."
+msgstr "Adresy, telefonní čísla, pracovní doby, recenze a fotografie organizací na adrese $geoName, $cityName."
+
+msgctxt "Дашборд"
+msgid "Аптеки"
+msgstr "Lékárny"
+
+msgctxt "Дашборд"
+msgid "Банкоматы"
+msgstr "Bankomaty"
+
+msgctxt "Здание"
+msgid "Без названия"
+msgstr "Bez názvu"
+
+#. Название фильтра. Фильтрует по способу оплаты услуг фирмы.
+msgctxt "Способ оплаты"
+msgid "Безналичный"
+msgstr "Bezhotovostní"
+
+msgctxt "Тип парковки по стоимости"
+msgid "Бесплатная"
+msgstr "Bezplatné"
+
+#. Пояснение, что текущая версия не может самостоятельно обновляться.
+msgid "Бета-версия пока не умеет обновляться самостоятельно, но мы скоро её этому научим"
+msgstr "V beta verzi zatím nejsou přístupné automatické aktualizace, ale již brzy to napravíme"
+
+#. После фразы добавится название остановки. Пример: Ближайшая остановка «Заельцовская»
+msgid "Ближайшая остановка"
+msgstr "Nejbližší zastávka"
+
+#. Организация работает в будни
+msgid "Будние дни"
+msgstr "Pracovní dny"
+
+#. %1 заменится на дистанцию в километрах (цифрой). Имеется в виду расстояние: что-то находится в 2 км отсюда
+msgid "В %1 км"
+msgstr "%1 km"
+
+#. %1 заменится на дистанцию в метрах (цифрой). Имеется в виду расстояние: что-то находится в 20 метрах отсюда
+msgid "В %1 метре"
+msgid_plural "В %1 метрах"
+msgstr[0] "%1 metr"
+msgstr[1] "%1 metry"
+msgstr[2] "%1 metrů"
+
+#. %1 -  количество организаций. Примеры: В здании 1 организация. В здании 3 организации. В здании 5 организаций.
+msgid "В здании %{Link %1 организация}"
+msgid_plural "В здании %{Link %1 организаций}"
+msgstr[0] "V budově se nachází %{Link %1 organizace}"
+msgstr[1] "V budově se nachází %{Link %1 organizace}"
+msgstr[2] "V budově se nachází %{Link %1 organizací}"
+
+#. $cityNameGenitive - название города
+#. Фраза звучит вроде: "В списке компаний и организаций города Новосибирска вы легко найдёте именно ту, что нужна вам. Все компании отсортированы по виду
+#. деятельности и отмечены на карте города."
+msgid ""
+"В списке компаний и организаций города $cityNameGenitive вы легко найдёте именно ту, что нужна вам. Все компании отсортированы по виду деятельности и "
+"отмечены на карте города."
+msgstr ""
+"V adresáři společností a organizací města $cityNameGenitive snadno naleznete právě tu, kterou potřebujete. Všechny společnosti jsou řazeny podle oblasti "
+"činnosti a jsou vyznačeny na mapě města."
+
+#. Заголовок для списка организаций, находящихся в том же здании, что и выбранная
+msgid "В этом же здании"
+msgstr "Ve stejné budově"
+
+#. Сообщение выводится после успешного изменения пароля пользователя.
+msgid "Ваш пароль успешно изменен!"
+msgstr "Vaše heslo bylo úspěšně změněno!"
+
+#. Сообщение выводится после успешной регистрации мобильного телефона пользователя к системе 2ГИС. Под кликом понимается клик по телефонному номеру фирмы из
+#. справочника на сайте 2ГИС.
+msgid "Ваш телефон привязан к браузеру. Вы можете звонить в один клик прямо из справочника!"
+msgstr "Váš telefon je propojen s prohlížečem. Můžete volat jediným kliknutím přímo z adresáře!"
+
+#. Сообщение выводится после успешной регистрации мобильного телефона пользователя к системе 2ГИС. Под кликом понимается клик по телефонному номеру фирмы из
+#. справочника на сайте 2ГИС.
+msgid "Ваш телефон привязан к профилю 2ГИС. Вы можете звонить в один клик прямо из справочника!"
+msgstr "Váš telefon je propojen s profilem 2GIS. Můžete volat jediným kliknutím přímo z adresáře!"
+
+#. Ссылка на страницу с условиями публикации рекламы
+msgid "Ваша реклама в 2ГИС"
+msgstr "Vaše reklama ve 2GIS"
+
+msgid "Ваше сообщение"
+msgstr "Vaše zpráva"
+
+msgid "Ваши пожелания и предложения по улучшению нашего сервиса"
+msgstr "Vaše přání a návrhy na zlepšení naší služby"
+
+#. Плэйсхолдер для поля фильтрации по списку городов'
+msgid "Введите название города"
+msgstr "Zadejte název města"
+
+#. Появившийся - значит появившийся на экране мобильного телефона. Переводить как "Введите появившийся пин-код"
+msgid "Введите появившийся пин-&#65279;код."
+msgstr "Zadejte zobrazený PIN-&#65279;kód."
+
+#. Название фильтра. Оставляет в списке фирм только те, которые попадают в область карты, видимую в данный момент.
+#. Фирмы, которые в данный момент видно на карте
+#. Видимые на карте
+msgid "Видимые на карте"
+msgstr "Zobrazené na mapě"
+
+msgid "Включите JavaScript"
+msgstr "Zapněte JavaScript"
+
+#. &nbsp; - пробел. Предложение установить расширение для браузера
+msgid "Возьмите 2ГИС с&nbsp;собой"
+msgstr "Vezměte si 2GIS s&nbsp;sebou"
+
+#. Текст кнопки в форме логина
+msgctxt "Аккаунт"
+msgid "Войти"
+msgstr "Přihlásit se"
+
+#. Слово 'восстановить' находится в одном контексте с 'Город удален. '. Подразумевается, что данный город можно востановить в списке установленных городов
+msgid "Восстановить"
+msgstr "Obnovit"
+
+#. Ссылка в форме логина, ведущая на форму восстановления пароля
+msgid "Восстановить пароль"
+msgstr "Obnovit heslo"
+
+#. Заголовок окна
+msgid "Восстановление пароля"
+msgstr "Obnovení hesla"
+
+#. $cityNameGenitive - название города
+#. $mainRubric - название рубрики.
+#. $subRubrics - список из первых трех подрубрик через запятую.
+#. Фраза звучит вроде: "Все компании в рубрике Автосервис / Автотовары на карте города Новосибирска: Автомойки, Шиномонтаж, Автоаксессуары и многое другое".
+msgid "Все компании в рубрике $mainRubric на карте города $cityNameGenitive: $subRubrics и многое другое."
+msgstr "Všechny společnosti v rubrice $mainRubric na mapě města $cityNameGenitive: $subRubrics a mnoho dalšího."
+
+#. $cityNameGenitive - название городе
+#. Фраза звучит вроде: "Все компании и организации Новосибирска с адресами, телефонами и временем работы — 2ГИС".
+msgid "Все компании и организации $cityNameGenitive с адресами, телефонами и временем работы — 2ГИС"
+msgstr "Všechny společnosti a organizace v $cityNameGenitive, včetně adres, telefonních čísel a pracovní doby — 2GIS"
+
+#. $stationName - название остановки, $cityName - название города
+#. Фраза звучит вроде: Все маршруты остановки Цирк (Новосибирск).
+msgid "Все маршруты остановки $stationName ($cityName)."
+msgstr "Všechny linky na zastávce $stationName ($cityName)."
+
+#. Ссылка на список всех организаций в этом здании
+msgid "Все организации"
+msgstr "Všechny organizace"
+
+msgctxt "Дашборд"
+msgid "Все рубрики"
+msgstr "Všechny rubriky"
+
+#. %1 заменяется на число маршрутов, проходящих через данную остановку общестенного транспорта. Пример: "Всего 15 маршрутов"
+msgid "Всего %1 маршрут"
+msgid_plural "Всего %1 маршрутов"
+msgstr[0] "Celkem %1 linka"
+msgstr[1] "Celkem %1 linky"
+msgstr[2] "Celkem %1 linek"
+
+#. %1 - количество организаций. Примеры: Всего 1 организация. Всего 3 организации. Всего 5 организаций.
+msgid "Всего %1 организация"
+msgid_plural "Всего %1 организаций"
+msgstr[0] "Celkem %1 organizace"
+msgstr[1] "Celkem %1 organizace"
+msgstr[2] "Celkem %1 organizací"
+
+#. &laquo; - спецсимвол, обозначающий открытую кавычку. &raquo; - спецсимвол, обозначающий закрытую кавычку. Пример: Вход на ст. метро "Покрышкина"
+msgid "Вход на ст. метро &laquo;%{Link name}&raquo;"
+msgstr "Vstup do st. metra &laquo;%{Link name}&raquo;"
+
+#. Ссылка на форму входа в систему
+msgid "Вход с паролем"
+msgstr "Přihlášení pomocí hesla"
+
+#. &nbsp; - пробел. Переводить как "Входы в здания", для Сантьяго это галереи
+msgid "Входы в&nbsp;галереи"
+msgstr "Vstupy do&nbsp;budov"
+
+#. &nbsp; - пробел. Переводить как "Входы в здания"
+msgid "Входы в&nbsp;здания"
+msgstr "Vstupy do&nbsp;budov"
+
+msgid "Вы авторизованы."
+msgstr "Přihlásili jste se."
+
+msgid "Вы владелец компании?"
+msgstr "Jste majitel společnosti?"
+
+#. Пользователь попробовал войти в систему с помошью аккаунта социальной сети, но в последний момент не дал доступ к нему из приложения 2ГИС
+msgid "Вы должны авторизовать приложение."
+msgstr "Musíte přihlásit aplikaci."
+
+#. Пользователь должен поставить галочку, что он принимает лицензионное соглашение
+msgid "Вы должны принять лицензионное соглашение."
+msgstr "Musíte souhlasit s licenční smlouvou."
+
+#. Подразумевается, что был выбран город и напротив названия города появляется данная надпись
+msgid "Вы здесь"
+msgstr "Jste tady"
+
+#. Сообщение в тултипе маркера, если местоположение пользователя успешно определено
+msgctxt "Геолокация"
+msgid "Вы здесь"
+msgstr "Jste tady"
+
+#. Текст на конечной точке маршрута проезда
+msgctxt "Поиск проезда"
+msgid "Вы на месте!"
+msgstr "Jste v cíli!"
+
+msgid "Выберите город"
+msgstr "Vyberte město"
+
+msgid "Выберите место на карте."
+msgstr "Vyberte místo na mapě."
+
+#. &nbsp; - пробел. Промо расширения для браузера
+msgid "Выбирайте компании, не открывая 2ГИС"
+msgstr "Vybírejte společnosti bez otevírání 2GIS"
+
+#. Выйти из аккаунта, разлогиниться
+msgctxt "Аккаунт"
+msgid "Выйти"
+msgstr "Odhlásit se"
+
+msgid "Город"
+msgstr "Město"
+
+#. было совершено действие, после которого появляется данная надпись, пробел после точки необходим
+msgid "Город удален."
+msgstr "Město bylo odstraněno."
+
+#. Вместо $countryNameGenitive будет название страны. Например: "Города на карте 2ГИС — улицы, дома, справочник организаций городов России".
+msgid "Города на карте 2ГИС — улицы, дома, справочник организаций городов $countryNameGenitive"
+msgstr "Města na mapě 2GIS – ulice, budovy, adresář organizací ve městech $countryNameGenitive"
+
+msgctxt "Рубрика"
+msgid "Городские информационные сайты"
+msgstr "Městské informační stránky"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 10000 символов. Смысл: "слишком длинный отзыв"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Горшочек, не вари!"
+msgstr "Hrnečku, dost!"
+
+msgctxt "Дашборд"
+msgid "Гостиницы"
+msgstr "Hotely"
+
+msgctxt "Рубрика"
+msgid "Государственные информационные сайты"
+msgstr "Státní informační stránky"
+
+#. Плэйсхолдер для текстового поля, в которое пользователь должен ввести капчу
+msgid "Два слова с картинки выше"
+msgstr "Dvě slova z výše uvedeného obrázku"
+
+msgctxt "Доступность или предназначение парковки"
+msgid "Для инвалидов"
+msgstr "Pro ZTP"
+
+msgctxt "Доступность или предназначение парковки"
+msgid "Для клиентов"
+msgstr "Pro klienty"
+
+#. Заголовок для маршрута общественного транспорта. %1 заменится на название конечной остановки. Пример: "До «Гагаринская»"
+msgid "До «%1»"
+msgstr "Směr „%1“"
+
+#. &nbsp; - пробел. Фразу стоит переводить как 'До метро слишком далеко. Попробуйте проложить маршрут на наземном транспорте.'
+msgid "До метро слишком далеко. Попробуйте проложить маршрут на&nbsp;%{Link наземном транспорте}."
+msgstr "Do metra je odsud příliš daleko. Zkuste zvolit cestu&nbsp;%{Link pozemní dopravou}."
+
+#. 'Добавить организацию' - добавить данные об организации в справочник 2ГИС
+msgid "Добавить организацию"
+msgstr "Přidat organizaci"
+
+msgctxt "Здание"
+msgid "Дом"
+msgstr "Budova"
+
+msgctxt "Рубрика"
+msgid "Доставка готовых блюд"
+msgstr "Rozvoz jídla"
+
+msgid "Достопримечательность"
+msgstr "Pamětihodnost"
+
+#. Подразумевается, что вышла новая версия приложения, которую можно скачать. &nbsp; - спецсимво обозначающий пробел.
+msgid "Доступна&nbsp;новая&nbsp;версия&nbsp;2ГИС"
+msgstr "Nová&nbsp;verze&nbsp;2GIS&nbsp;je&nbsp;k&nbsp;dispozici"
+
+#. Отображается в расписании в строке типа "Ежедневно 08:00-20:00"
+#. Организация работает ежедневно
+msgid "Ежедневно"
+msgstr "Každý den"
+
+#. &#151; -  спецсимвол тире "-". Пример: Если Вы нашли ошибку или у Вас возникли трудности, замечания или предложения - пожалуйста, напишите нам.
+msgid "Если Вы нашли ошибку или у Вас возникли трудности, замечания или предложения &#151; пожалуйста, напишите нам"
+msgstr "Pokud jste našli chybu, nebo vznikly potíže, případně máte jakékoli připomínky či návrhy &#151; napište nám, prosím"
+
+#. &#151; - спецсимвол, обозначающий тире. Пример: Если вы считаете, что данное фото нарушает нарушает Соглашение об использовании сервисов 2ГИС - пожалуйста,
+#. напишите нам
+msgid "Если вы считаете, что данное фото нарушает %{Link Соглашение об использовании сервисов 2ГИС} &#151; пожалуйста, напишите нам."
+msgstr "Pokud se domníváte, že tato fotografie porušuje %{Link Smlouvu o použití služeb 2GIS} &#151; napište nám, prosím."
+
+#. &#151; - спецсимвол, обозначающий тире. Пример: Если вы считаете, что содержание этого буклета нарушает Соглашение об использовании сервисов 2ГИС - пожалуйста,
+#. напишите нам
+msgid "Если вы считаете, что содержание этого буклета нарушает %{Link Соглашение об использовании сервисов 2ГИС} &#151; пожалуйста, напишите нам."
+msgstr "Pokud se domníváte, že obsah tohoto prospektu porušuje %{Link Smlouvu o použití služeb 2GIS} &#151; napište nám, prosím."
+
+#. &nbsp; - пробел, &#151; - '—', фразу стоит переводить как "Если вы точно знаете, какой организации не хватает в нашем справочнике — пожалуйста, добавьте её."
+msgid "Если вы точно знаете, какой организации не&nbsp;хватает в&nbsp;нашем справочнике&nbsp;&#151; пожалуйста, добавьте&nbsp;её."
+msgstr "Pokud jste přesvědčeni o tom, že v&nbsp;našem adresáři&nbsp; chybí nějaká&nbsp;organizace &#151; doplňte&nbsp;ji, prosím."
+
+#. Имеется в виду, что в раздел "Установленные города" был добавлен еще один город
+msgid "Есть новые"
+msgstr "Nová města"
+
+#. Название фильтра. Оставляет в списке фирм только те, у которых указан адрес сайта.
+msgid "Есть сайт"
+msgstr "Má webové stránky"
+
+#. Подсказка к кнопке, разворачивающей меню
+msgid "Ещё"
+msgstr "Více"
+
+#. Сообщение о том, что идет процесс создания короткой ссылки для отправки в социальные сети
+msgid "Загружаю..."
+msgstr "Načítám..."
+
+msgctxt "Рубрика"
+msgid "Заказ автобусов"
+msgstr "Objednávka autobusů"
+
+msgctxt "Рубрика"
+msgid "Заказ пассажирского легкового транспорта"
+msgstr "Objednávka taxi služby"
+
+#. Подсказка в расписании, что фирма закроется через несколько секунд
+msgid "Закроется менее чем через минуту"
+msgstr "Zavírá se za necelou minutu"
+
+#. Преобразуется к строке типа "Закроется через 1 час 10 минут". %1 заменится на промежуток времени
+msgid "Закроется через %1"
+msgstr "Zavře se za %1"
+
+#. Пользователь не заполнил капчу
+#. Пользователь должен ввести капчу
+msgid "Заполните капчу."
+msgstr "Vyplňte CAPTCHA."
+
+#. Ссылка, открывающая форму регистрации
+#. Кнопка в форме регистрации
+msgid "Зарегистрироваться"
+msgstr "Zaregistrovat se"
+
+#. &nbsp; - пробел. Переводить как: "Звоните в компании прямо из записной книжки и забудьте о неизвестных номерах"
+msgid "Звоните в компании прямо из записной книжки и&nbsp;забудьте о неизвестных номерах"
+msgstr "Volejte do společnosti přímo z adresáře a&nbsp;zapomeňte na neznámá čísla"
+
+#. Заголовок окна. Суть: получите возможность звонить со своего мобильного телефона на телефонные номера фирм, содержащиеся в справочнике 2ГИС.
+msgid "Звоните прямо из справочника"
+msgstr "Volejte přímo z adresáře"
+
+#. Название кнопки, открывающей окно настроек функции набора телефонных номеров из справочника сразу на мобильном телефоне
+#. Подпись к кнопке, открывающей окно с настройками привязанного к системе мобильного телефона
+msgid "Звонки"
+msgstr "Hovory"
+
+#. &nbsp; - пробел. Переводить как "Звонок в один клик". Суть: воспользуйтесь возможностью звонить со своего мобильного телефона на телефонные номера фирм,
+#. содержащиеся в справочнике 2ГИС.
+msgid "Звонок в&nbsp;один клик"
+msgstr "Hovor&nbsp;jediným kliknutím"
+
+#. Заголовок для списка организаций, обслуживающих данное здание (почты, поликлиники и т.д.)
+msgid "Здание обслуживают"
+msgstr "Poskytovatelé služeb"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: больше 10000 символов. Смысл: "отзыв слишком длинный, его никто не станет читать"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "И тут читатель уснул"
+msgstr "A tady už čtenář usnul"
+
+#. Подпись к кнопке, открывающей панель "избранное"
+msgid "Избранное"
+msgstr "Oblíbené"
+
+#. Переводить как: "Изменяйте устаревшие и добавляйте новые данные в Личном кабинете"
+msgid "Изменяйте устаревшие и добавляйте новые данные в %{Link Личном кабинете}"
+msgstr "Změňte neaktuální a přidávejte nové údaje v%{Link v osobním profilu}"
+
+msgid "Имя"
+msgstr "Jméno"
+
+msgctxt "Рубрика"
+msgid "Интернет-магазины"
+msgstr "Internetové obchody"
+
+#. Пояснение к фразе "Мы покажем вход" в промо входов в здания
+msgid "Информация о входах в организации"
+msgstr "Informace o vstupech do organizací"
+
+#. Откуда была взята фотография (адрес сайта)
+msgctxt "Провайдер данных"
+msgid "Источник"
+msgstr "Zdroj"
+
+#. Если города не оказалось при поиске города в проеке, то выводим сообщение, что нет такого города. &nbsp; - в данном случае неразрывный пробел
+msgid "К сожалению, такого города пока нет в&nbsp;базе 2ГИС"
+msgstr "Bohužel, toto město zatím není v&nbsp;informačním systému 2GIS"
+
+#. &nbsp; - пробел. Фразу стоит переводить как "Как сюда добраться, пока не знает даже 2ГИС".
+#. &nbsp; - пробел. Фразу стоит переводить как 'Как сюда добраться, пока не знает даже 2ГИС'
+msgid "Как сюда добраться, пока не знает даже&nbsp;2ГИС"
+msgstr "Jak se sem dostat zatím netuší ani&nbsp;2GIS"
+
+msgid "Какие данные маршрута некорректны?"
+msgstr "Které údaje o trase nejsou správné?"
+
+msgid "Какие данные на карте некорректны?"
+msgstr "Které údaje na mapě nejsou správné?"
+
+msgid "Какие данные некорректны?"
+msgstr "Které údaje nejsou správné?"
+
+msgid "Какие именно данные об организации некорректны?"
+msgstr "Které údaje organizace nejsou správné?"
+
+msgid "Канатная дорога"
+msgstr "Visutá lanová dráha"
+
+#. Вместо $cityNameGenitive будет название города. Например: "Карта Москвы: улицы, дома и организации города — 2ГИС".
+msgid "Карта $cityNameGenitive: улицы, дома и организации города — 2ГИС"
+msgstr "Mapa $cityNameGenitive: ulice, budovy a organizace ve městě — 2GIS"
+
+#. $seoTitle - перечисление городов и городов-спутников в родительном падеже.
+#. Например: "Карта Караганды, Темиртау: улицы, дома и организации города — 2ГИС".
+msgid "Карта $seoTitle: улицы, дома и организации города — 2ГИС"
+msgstr "Mapa $seoTitle: ulice, budovy a organizace ve městě — 2GIS"
+
+msgid "Карта c улицами, домами и организациями города — 2ГИС"
+msgstr "Mapa s ulicemi, budovami a organizacemi ve městě – 2GIS"
+
+#. Речь идет об удалении точки маршрута
+msgid "Кликните дважды, чтобы удалить точку"
+msgstr "Bod odstraníte dvojím kliknutím"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 6000 символов. Смысл: "уже можно заканчивать отзыв"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Когда же кульминация?"
+msgstr "Už se blížíme do velkého finále?"
+
+msgid "Код подтверждения"
+msgstr "Kód pro potvrzení"
+
+#. &nbsp; - пробел. Промо расширения для браузера
+msgid "Контактные данные и отзывы о&nbsp;фирмах на&nbsp;сайтах по всему интернету"
+msgstr "Kontaktní údaje a recenze&nbsp; na organizace na&nbsp;webových stránkách po celém Internetu"
+
+msgctxt "Дашборд"
+msgid "Красота и здоровье"
+msgstr "Zdraví a krása"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 7000 символов. Смысл: "отзыв становится слишком длинным"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Краткость — не ваш конёк :)"
+msgstr "Stručnost není Vaší předností :)"
+
+#. Кратчайший маршрут
+msgctxt "Тип маршрута"
+msgid "Кратчайший"
+msgstr "Nejkratší"
+
+#. Единственная надпись в расписании для фирм с круглосуточным режимом работы
+msgid "Круглосуточно"
+msgstr "Nonstop"
+
+#. %1 - номер съезда. Пример: Круговое движение 2 съезд
+msgctxt "Маневр"
+msgid "Круговое движение %1 съезд"
+msgstr "Kruhový objezd, %1. výjezd"
+
+#. %1 - номер съезда, %2 - название улицы. Пример: Круговое движение 2 съезд на Крылова
+msgctxt "Маневр"
+msgid "Круговое движение %1 съезд на %2"
+msgstr "Kruhový objezd, %1. výjezd na %2"
+
+#. %1 - номер съезда, %2 и %3 - названия улиц. Пример: Круговое движение 2 съезд на Крылова, далее по Гоголя
+msgctxt "Маневр"
+msgid "Круговое движение %1 съезд на %2, далее по %3"
+msgstr "Kruhový objezd, %1. výjezd na %2, dále po %3"
+
+msgctxt "Маневр"
+msgid "Крутой поворот налево"
+msgstr "Ostrá zatáčka vlevo"
+
+msgctxt "Маневр"
+msgid "Крутой поворот направо"
+msgstr "Ostrá zatáčka vpravo"
+
+msgid "Легкое метро"
+msgstr "Nadzemní metro"
+
+#. Подсказка для кнопки, включающей режим измерения расстояния на карте города. С помощью этого инструмента можно выставить на карте начальную и конечную точку и
+#. увидеть расстояние между ними в метрах или километрах. Также можно выставить несколько точек и измерить общую длину получившегося маршрута.
+msgctxt "Инструмент измерения"
+msgid "Линейка"
+msgstr "Pravítko"
+
+#. Ссылка на текст лицензионного соглашения
+msgid "Лицензионное соглашение"
+msgstr "Licenční smlouva"
+
+msgid "Личный кабинет для компаний"
+msgstr "Osobní profil společnosti"
+
+#. Характеристика отзыва на флампе
+msgid "Лучший отзыв"
+msgstr "Nejlepší recenze"
+
+msgid "Лёгкое метро"
+msgstr "Nadzemní metro"
+
+msgid "МБ"
+msgstr "MB"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 100 символов. Смысл: "слишком короткий отзыв".
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Маловато будет!"
+msgstr "Nezdá se Vám to příliš krátké?"
+
+#. Маршрут общественного транспорта
+msgid "Маршрут"
+msgstr "Linka"
+
+msgid "Маршрут на общественном транспорте"
+msgstr "Trasa MHD"
+
+msgid "Маршрутное такси"
+msgstr "Minibus taxi"
+
+#. Маршруты общественного транспорта
+#. Заголовок для списка маршрутов общественного транспорта
+msgid "Маршруты"
+msgstr "Linky"
+
+msgid "Мгновенный набор номера компании"
+msgstr "Okamžité vytočení telefonního čísla společnosti"
+
+#. Сообщение рекламирует возможность зарегестрировать свой мобильный телефон в системе 2ГИС. После этого при клике по телефонному номеру фирмы из справочника на
+#. сайте 2ГИС этот номер автоматически будет набран на зарегестрированном смартфоне пользователя. Эта возможность избавляет пользователей от необходимости набирать
+#. номер на телефоне вручную.
+msgid "Мгновенный набор номера на вашем мобильном!"
+msgstr "Okamžitě vytočit telefonní číslo na Vašem mobilním telefonu!"
+
+#. Преобразуется к фразе типа "Меньше минуты до закрытия на обед". Вместо %1 подставится "обед" или "перерыв"
+msgid "Меньше минуты до закрытия на %1"
+msgstr "Za necelou minutu začíná %1"
+
+#. Название вкладки результатов поиска
+msgctxt "Поиск"
+msgid "Места на карте"
+msgstr "Místa na mapě"
+
+msgctxt "Место на географической карте"
+msgid "Место"
+msgstr "Místo"
+
+msgid "Метро"
+msgstr "Metro"
+
+#. %1 - название станции метро. Пример: Метро Покрышкина
+msgid "Метро %{Link %1}"
+msgstr "Metro %{Link %1}"
+
+#. Текст на кнопках для поиска проезда на конкретном виде транспорта.
+msgid "Метрополитен"
+msgstr "Metro"
+
+msgid "Метротрам"
+msgstr "Podpovrchová tramvaj"
+
+msgid "Микрорайон"
+msgstr "Katastrální území"
+
+msgctxt "Тип парковки"
+msgid "Многоуровневая"
+msgstr "Vícepodlažní"
+
+#. Заголовок для ссылок мобильных версий
+msgid "Мобильная версия"
+msgstr "Mobilní verze"
+
+msgid "Мои города"
+msgstr "Moje města"
+
+msgid "Монорельс"
+msgstr "Jednokolejka"
+
+#. Подсказка для кнопки, включающей отображение местоположения пользователя
+msgctxt "Контрол на карте"
+msgid "Моё местоположение"
+msgstr "Moje poloha"
+
+#. &nbsp; - это пробел. Переводить как "Мы внимательно рассмотрим ваш отзыв и учтем в своей работе. Оставайтесь с нами"
+msgid "Мы внимательно рассмотрим ваш отзыв и учтем в&nbsp;своей работе. Оставайтесь с нами!"
+msgstr "Důkladně se budeme věnovat Vaší recenzi a vezmeme ji pro příště v&nbsp;potaz. Zůstaňte s námi!"
+
+msgid "Мы не гарантируем стабильную работу приложения в вашем браузере. Попробуйте обновиться:"
+msgstr "Nezaručujeme stabilní fungování aplikace ve Vašem prohlížeči. Zkuste provést aktualizaci:"
+
+msgid "Мы не гарантируем стабильную работу приложения на вашем устройстве."
+msgstr "Nezaručujeme stabilní fungování aplikace na Vašem zařízení."
+
+#. Ошибка при определении местоположения пользователя
+msgid "Мы не смогли вас найти"
+msgstr "Nedokázali jsme Vás najít"
+
+#. Сообщение об ошибке, если не удалось найти маршруты общественного транспорта, проходящие через данную остановку
+msgid "Мы пока не узнали, какие маршруты проходят через эту остановку, но скоро обязательно это исправим."
+msgstr "Zatím jsme nezjistili, které linky vedou touto zastávkou, ale brzy vše určitě napravíme."
+
+#. Вторая фраза в промо входов в здания: "1) Нажмите кнопку 2) Мы покажем вход"
+msgid "Мы покажем вход"
+msgstr "Ukážeme Vám, kde se nachází vstup"
+
+#. &nbsp; - пробел. Фразу стоит переводить как 'Мы уже работаем над этим. А пока вы можете заказать такси.'
+msgid "Мы уже работаем над этим. А пока вы можете заказать&nbsp;%{Link такси}."
+msgstr "Už na tom pracujeme. Zatím si můžete objednat&nbsp;%{Link taxi}."
+
+#. &nbsp; - это пробел. Фразу стоит переводить как "Мы обязательно найдем причину и исправим её. Вы можете повторить попытку через пару минут."
+msgid "Мы&nbsp;обязательно найдем причину и&nbsp;исправим&nbsp;её. Вы&nbsp;можете повторить попытку через пару минут."
+msgstr "Slibujeme, že určitě&nbsp;najdeme příčinu a&nbsp;vše&nbsp;napravíme. Pokus&nbsp;můžete zopakovat za několik minut."
+
+#. Сообщение после отправки кода подтверждения. %1 - Служебный символ, вместо него подставится адрес email пользователя. Например: "На example@2gis.ru было выслано
+#. письмо. Воспользуйтесь ссылкой в письме чтобы завершить регистрацию."
+msgctxt "Подтверждение регистрации"
+msgid "На %1 было выслано письмо. Воспользуйтесь ссылкой в письме чтобы завершить регистрацию."
+msgstr "Na e-mail %1 jsme odeslali zprávu. Kliknutím na zaslaný odkaz dokončíte registraci."
+
+#. Сообщение для оповещения об отправке письма. %1 - Служебный символ, вместо него подставится адрес email пользователя. Например: "На example@2gis.ru было выслано
+#. письмо. Воспользуйтесь ссылкой в письме чтобы задать новый пароль."
+msgctxt "Восстановление пароля"
+msgid "На %1 было выслано письмо. Воспользуйтесь ссылкой в письме чтобы задать новый пароль."
+msgstr "Na e-mail %1 jsme odeslali zprávu. Kliknutím na zaslaný odkaz zadáte nové heslo."
+
+#. Первая фраза в промо входов в здания: "1) Нажмите кнопку 2) Мы покажем вход"
+msgid "Нажмите кнопку"
+msgstr "Stiskněte tlačítko"
+
+msgctxt "Тип парковки"
+msgid "Наземная"
+msgstr "Pozemní"
+
+#. Фраза "Найти вход" подразумевает вход в здание/организацию.
+#. Подпись к кнопке. Суть: найти и показать на карте, где находится вход в это здание или организацию
+msgid "Найти вход"
+msgstr "Najít vstup"
+
+#. Название фильтра. Фильтрует по способу оплаты услуг фирмы.
+msgctxt "Способ оплаты"
+msgid "Наличный расчёт"
+msgstr "Platba hotově"
+
+#. Текст ссылки ведущей на фламп, для написания отзыва
+msgid "Написать отзыв"
+msgstr "Napsat recenzi"
+
+#. Инструкция по восстановлению пароля в форме восстановления
+msgid "Напишите адрес электронной почты, с помощью который вы зарегистрировались."
+msgstr "Zadejte e-mailovou adresu, prostřednictvím níž jste se zaregistrovali."
+
+msgid "Населённый пункт"
+msgstr "Obec"
+
+msgid "Начальная и конечная точки маршрута совпадают."
+msgstr "Výchozí a cílový bod trasy je stejný."
+
+msgid "Наши серверы отказываются отвечать. Мы уже прикладываем максимум усилий, чтобы вразумить их. Попробуйте ещё раз через несколько минут."
+msgstr "Naše servery odmítají reagovat. Již nyní vynakládáme velké úsilí, abychom je přivedli k rozumu. Zkuste akci opakovat za několik minut."
+
+#. Подпись для кнопки, выставляющей оценку нашего приложения с точки зрения пользователя. Равнозначно оценке 2 из 5.
+msgctxt "Оценка приложения"
+msgid "Не очень"
+msgstr "Nic moc"
+
+#. Ошибка входа в систему с помощью аккаунта социальной сети
+msgid "Не удалось авторизоваться через социальную сеть. Попробуйте позже."
+msgstr "Autorizace prostřednictvím sociální sítě se nezdařila. Zkuste to prosím později."
+
+#. Ошибка произошла, когда пользователь пытался удалить свой телефон из аккаунта на сайте
+msgid "Не удалось отвязать телефон, попробуйте ещё раз."
+msgstr "Zrušit propojení s telefonem se nezdařilo. Zkuste to prosím znovu."
+
+#. Пользователь ошибся при заполнении капчи
+#. Пользователь неверно ввел капчу
+msgid "Неверно заполнена капча."
+msgstr "Chybně vyplněná CAPTCHA."
+
+#. Пользователь ошибся при вводе кода подтверждения после регистрации (должен был прийти в письме)
+msgid "Неверный код подтверждения."
+msgstr "Chybný kód pro potvrzení."
+
+#. Не удалось залогинить пользователя с введенным логином и паролем
+msgid "Неверный логин или пароль."
+msgstr "Chybné přihlašovací jméno nebo heslo."
+
+#. Пользователь неверно ввел новый пароль при его смене
+msgid "Неверный новый пароль."
+msgstr "Chybné nové heslo."
+
+#. Пользователь неверно ввел старый пароль при его смене
+msgid "Неверный пароль."
+msgstr "Chybné heslo."
+
+#. Пользователь неверно ввел новый пароль при его смене
+msgid "Неверный пароль. Попробуйте ещё раз."
+msgstr "Chybné heslo. Zkuste to prosím znovu."
+
+msgid "Неверный формат файла"
+msgstr "Chybný formát souboru"
+
+msgctxt "Рубрика"
+msgid "Независимые службы аварийных комиссаров"
+msgstr "Nezávislé služby havarijních komisařů"
+
+msgctxt "Точка на географической карте"
+msgid "Неизвестная точка"
+msgstr "Neznámý bod"
+
+#. Сообщение о максимальном количестве точек маршрута. %1 заменится на число точек цифрой
+msgid "Нельзя добавить больше %1 точки"
+msgid_plural "Нельзя добавить больше %1 точек"
+msgstr[0] "Nelze přidat více než %1 bod"
+msgstr[1] "Nelze přidat více než %1 body"
+msgstr[2] "Nelze přidat více než %1 bodů"
+
+#. Ошибка. Неправильно введен пин-код, пришедший пользователю на мобильный телефон
+msgid "Неправильный пин-код"
+msgstr "Nesprávný PIN-kód"
+
+#. Сообщение о том, что в результате поиска не нашлось ни одной организации
+msgid "Нет подходящих организаций"
+msgstr "Nebyla nalezena žádná organizace"
+
+msgctxt "Дашборд"
+msgid "Новостройки"
+msgstr "Novostavby"
+
+#. Плэйсхолдер для текстового поля формы, в которое пользователь должен ввести новый пароль
+msgid "Новый пароль"
+msgstr "Nové heslo"
+
+#. Подпись на кнопке, выводящей информацию о городе
+msgid "О городе"
+msgstr "O městě"
+
+#. &nbsp; - пробел. Промо расширения для браузера
+msgid "О фирмах на любых сайтах — контактные&nbsp;данные и отзывы"
+msgstr "O firmách na jakýchkoli webových stránkách — kontaktní&nbsp;údaje a recenze"
+
+#. Подпись компании 2гис под ссылкой на скачивание нативного приложения для мобилки.
+msgid "ООО \"ДубльГИС\""
+msgstr "2GIS"
+
+#. Говорит о том, что новый город закачался и идет распаковка и обработка данных
+msgid "Обрабатывается"
+msgstr "Zpracovává se"
+
+#. Подсказка к кнопке, вызывающей окно обратной связи
+msgid "Обратная связь"
+msgstr "Zpětná vazba"
+
+msgctxt "Доступность или предназначение парковки"
+msgid "Общедоступная"
+msgstr "Veřejně přístupné"
+
+#. Текст на кнопках для поиска проезда на конкретном виде транспорта.
+msgid "Общественный транспорт"
+msgstr "MHD"
+
+#. Кнопка, показывающая прогнозируемую нагруженность дорог; ниже ней можно выбрать нужное время
+msgid "Обычно"
+msgstr "Zpravidla"
+
+#. Пользователю предлагается зарегестрировать свой мобильный телефон в системе и получить возможность звонить по телефонным номерам фирм из справочника 2ГИС. Под
+#. кликом понимается клик по телефонному номеру фирмы из справочника на сайте 2ГИС.
+msgid "Один клик в справочнике 2ГИС, и ваш телефон начнет набирать номер нужной организации."
+msgstr "Postačí jediné kliknutí v adresáři 2GIS, a Váš telefon začne vytáčet telefonní číslo požadované organizace."
+
+msgid "Округ"
+msgstr "Správní obvod"
+
+#. Ошибка при определении местоположения пользователя
+msgid "Определить местоположение невозможно"
+msgstr "Není možné určit polohu"
+
+#. Оптимальный (по времени) маршрут
+msgctxt "Тип маршрута"
+msgid "Оптимальный"
+msgstr "Optimální"
+
+#. Оптимальный (по времени) маршрут с учетом пробок
+msgctxt "Тип маршрута"
+msgid "Оптимальный с учетом пробок"
+msgstr "Optimální s přihlédnutím k dopravní situaci"
+
+#. Название вкладки результатов поиска
+msgctxt "Поиск"
+msgid "Организации"
+msgstr "Organizace"
+
+#. $geoName - назание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Организации по адресу Красный проспект, 12 в Новосибирске — 2ГИС".
+msgid "Организации по адресу $geoName в $cityNamePrepositional — 2ГИС"
+msgstr "Organizace na adrese $geoName v $cityNamePrepositional — 2GIS"
+
+msgid "Организации по адресу $geoName, $cityName — 2ГИС"
+msgstr "Organizace na adrese $geoName, $cityName — 2GIS"
+
+#. Данная фраза говорит нам о статусе загрузки нового города в проект. Фраза выглядит типа "Осталось 13 МБ"
+#, python-format
+msgid "Осталось %left{Link %1} МБ"
+msgstr "Zbývá %left{Link %1} Mb"
+
+#. Фирмы, которые в данный момент не видно на карте
+#. Не видимые на карте
+msgctxt "Невидимые на карте"
+msgid "Остальные"
+msgstr "Ostatní"
+
+#. Остановка общественного транспорта
+msgctxt "Остановка общественного транспорта"
+msgid "Остановка"
+msgstr "Zastávka"
+
+#. $stationName - название остановки/станции/платформы, $cityName - название города.
+#. Фраза звучит вроде: "Остановка Вокзал-главный (Новосибирск) — 2ГИС".
+msgid "Остановка $stationName ($cityName) — 2ГИС"
+msgstr "Zastávka $stationName ($cityName) — 2GIS"
+
+msgid "Остановка наземного транспорта"
+msgstr "Zastávka pozemní dopravy"
+
+#. Остановки общественного транспорта
+msgctxt "Остановка общественного транспорта"
+msgid "Остановки"
+msgstr "Zastávky"
+
+msgid "Остановочная платформа"
+msgstr "Zastávka"
+
+#. Часть фразы "600 тысяч фотографий от компаний и их клиентов"
+msgid "От компаний и их клиентов"
+msgstr "Od společností a jejich klientů"
+
+#. Надпись на кнопке. Смысл: отключить свой мобильный телефон от аккаунта на сайте 2ГИС. Переводить как "Отвязать телефон"
+msgid "Отвязать&#8200;телефон"
+msgstr "Zrušit propojení&#8200;telefonu"
+
+msgid "Отзыв на Флампе"
+msgstr "Recenze na Flampu"
+
+#. Преобразуется к строке типа "Откроется в понедельник в 20:00". %1 заменится на день открытия, %2 на время
+msgid "Откроется %1 в %2"
+msgstr "Otevře se v %1 v %2"
+
+#. Преобразуется к строке типа "Откроется в 9:15". %1 заменится на точное время открытия
+msgid "Откроется в %1"
+msgstr "Otevře se v %1"
+
+#. Преобразуется к строке типа "Откроется завтра в 20:00". %1 заменится на время
+msgid "Откроется завтра в %1"
+msgstr "Otevře se zítra v %1"
+
+#. Подсказка в расписании, когда фирма откроется
+msgid "Откроется менее чем через минуту"
+msgstr "Otevře se za necelou minutu"
+
+#. Преобразуется к строке типа "Откроется послезавтра в 20:00". %1 заменится на время
+msgid "Откроется послезавтра в %1"
+msgstr "Otevře se pozítří v %1"
+
+#. Преобразуется к строке типа "Откроется через 20 минут". Вместо %1 подставится промежуток времени
+msgid "Откроется через %1"
+msgstr "Otevře se za %1"
+
+#. После фразы будет нарисована иконка на которую нужно нажать после открытия мобильного приложения
+msgid "Откройте приложение, нажмите на"
+msgstr "Spusťte aplikaci, stiskněte"
+
+#. &nbsp; - пробел. Переводить как "Открываем нужную дверь — заходите!". Описание для функции "входы в здания". Суть: "мы нашли для Вас вход в организацию, чтобы
+#. Вам не пришлось этого делать самостоятельно"
+msgid "Открываем нужную дверь&nbsp;&#151; заходите!"
+msgstr "Otevíráme ty správné dveře&nbsp;&#151; vstupte!"
+
+#. Фирма в данный момент открыта (по расписанию)
+#. Название фильтра. Оставляет в списке фирм только те, которые открыты в данный момент (выясняется по расписанию работы).
+msgid "Открыто"
+msgstr "Otevřeno"
+
+msgid "Отправить"
+msgstr "Odeslat"
+
+#. Текст ссылки в форме подтверждения регистрации. Повторно отправляет код подтверждения регистрации на электронную почту пользователя
+msgid "Отправить код ещё раз"
+msgstr "Opakovaně odeslat kód"
+
+msgid "Оценить 2ГИС"
+msgstr "Ohodnotit 2GIS"
+
+msgid "Оценка: "
+msgstr "Hodnocení:"
+
+msgid "Очистить все параметры"
+msgstr "Smazat všechny parametry"
+
+#. Заголовок окна с ошибкой авторизации ()
+msgid "Ошибка"
+msgstr "Chyba"
+
+#. Ошибка входа в систему
+msgid "Ошибка авторизации"
+msgstr "Chyba přihlášení"
+
+msgid "Ошибка в данных метро"
+msgstr "Chyba v údajích o metru"
+
+msgid "Ошибка в данных организации"
+msgstr "Chyba v údajích o organizaci"
+
+msgid "Ошибка в данных остановки"
+msgstr "Chyba v údajích o zastávce"
+
+msgid "Ошибка в маршруте городского транспорта"
+msgstr "Chyba v lince MHD"
+
+msgid "Ошибка на карте"
+msgstr "Chyba na mapě"
+
+#. Сообщение об ошибке. Суть: пользователь попытался позвонить по телефонному номеру из справочника, но во время набора номера произошла ошибка.
+msgid "Ошибка набора"
+msgstr "Chyba při vytáčení"
+
+#. По неизвестной причине не удалось отправить письмо пользователю на e-mail
+msgid "Ошибка отправки почты."
+msgstr "Chyba při odesílání e-mailu."
+
+msgid "Ошибка отправки формы"
+msgstr "Chyba při odesílání formuláře"
+
+msgid "Ошибочка вышла"
+msgstr "Chybička se vloudila"
+
+#. Автомобильная парковка
+msgctxt "Территория"
+msgid "Парковка"
+msgstr "Parkoviště"
+
+#. Плэйсхолдер текстого поля в форме, в которое пользователь должен ввести свой пароль
+msgid "Пароль"
+msgstr "Heslo"
+
+#. Пользователь при регистрации ввел пароль короче 6 символов
+msgid "Пароль должен быть не менее 6 символов."
+msgstr "Heslo musí obsahovat alespoň 6 symbolů."
+
+#. Заголовок окна. Отображается после изменения пароля пользователя
+msgid "Пароль изменен"
+msgstr "Heslo bylo změněno"
+
+#. Ссылка на сайт рекламодателя во всплывающем окне с видеобаннером
+msgid "Перейти на сайт"
+msgstr "Přejít na webovou stránku"
+
+msgid "Перекресток"
+msgstr "Křižovatka"
+
+#. Речь идет о перемещении точки маршрута
+msgid "Переместите, чтобы изменить маршрут"
+msgstr "Posunutím bodu změníte trasu"
+
+msgctxt "Тип парковки"
+msgid "Перехватывающая"
+msgstr "Přibližovací (P+R)"
+
+#. Полностью фраза будет звучать: "Переход на станцию Гагаринская". (Вместо Гагаринской может быть любое название станции метро)
+#. Полность фраза будет выглядить "Переход на станцию Гагаринская". Вместо Гагаринская может быть название любой станции метро.
+#. Полностью фраза будет выглядить "Переход на станцию Гагаринская". Вместо Гагаринская может быть название любой станции метро.
+msgid "Переход на станцию"
+msgstr "Přestup na stanici"
+
+#. Надпись на кнопке, отправляющей страницу на печать
+msgid "Печать"
+msgstr "Tisk"
+
+msgid "Пеший маршрут"
+msgstr "Pěší trasa"
+
+msgctxt "Маневр"
+msgid "Плавный поворот налево"
+msgstr "Mírná zatáčka vlevo"
+
+msgctxt "Маневр"
+msgid "Плавный поворот направо"
+msgstr "Mírná zatáčka vpravo"
+
+msgctxt "Тип парковки по стоимости"
+msgid "Платная"
+msgstr "Placené"
+
+#. Платный вход
+msgid "Платный"
+msgstr "Placený"
+
+#. Подпись для кнопки, выставляющей оценку нашего приложения с точки зрения пользователя. Равнозначно оценке 1 из 5.
+msgctxt "Оценка приложения"
+msgid "Плохо"
+msgstr "Špatné"
+
+#. Источник данных о прогнозируемых пробках
+msgid "По данным статистики 2ГИС"
+msgstr "Podle statistických údajů 2GIS"
+
+#. Название фильтра. Фильтрует по способу оплаты услуг фирмы.
+msgctxt "Способ оплаты"
+msgid "По картам"
+msgstr "Platební kartou"
+
+msgctxt "Маневр"
+msgid "Поворот"
+msgstr "Zatáčka"
+
+msgctxt "Маневр"
+msgid "Поворот налево"
+msgstr "Odbočka vlevo"
+
+msgctxt "Маневр"
+msgid "Поворот направо"
+msgstr "Odbočka vpravo"
+
+#. Подсказка к кнопке, вызывающей окно "Поделиться ссылкой"
+#. Заголовок окна отправки ссылки в социальные сети
+msgid "Поделиться ссылкой"
+msgstr "Sdílet odkaz"
+
+msgctxt "Тип парковки"
+msgid "Подземная"
+msgstr "Podzemní"
+
+#. $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Подробная карта Новосибирска с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на
+#. авто и городском транспорте."
+msgid ""
+"Подробная карта $cityNameGenitive с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на авто и "
+"городском транспорте."
+msgstr ""
+"Podrobná mapa $cityNameGenitive s rozlišením až po budovy, vyhledávání podle adresy + telefonní čísla, recenze, fotografie, pracovní doby organizací + "
+"jednoduché vyhledávání trasy autem a MHD."
+
+#. $seoDescription - перечисление городов и городов-спутников в родительном падеже.
+#. Фраза звучит вроде: "Подробная карта Караганды, Темиртау с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск
+#. проезда на авто и городском транспорте."
+msgid ""
+"Подробная карта $seoDescription с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на авто и "
+"городском транспорте."
+msgstr ""
+"Podrobná mapa $seoDescription s rozlišením až po budovy, vyhledávání podle adresy + telefonní čísla, recenze, fotografie, pracovní doby organizací + "
+"jednoduché vyhledávání trasy autem a MHD."
+
+#. Вместо $countryNameGenitive будет название страны. Например: "Подробная карта городов России с детализацией до дома: поиск по адресу + телефоны, отзывы, фото,
+#. часы работы фирм + удобный поиск проезда на авто и городском транспорте.".
+msgid ""
+"Подробная карта городов $countryNameGenitive с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на "
+"авто и городском транспорте."
+msgstr ""
+"Podrobná mapa měst $countryNameGenitive až po budovy: vyhledávání podle adresy + telefonní čísla, fotografie, pracovní doba organizací + pohodlné vyhledávání"
+" trasy autem a MHD."
+
+msgid "Подробная карта с детализацией до дома: поиск по адресу + телефоны, отзывы, фото, часы работы фирм + удобный поиск проезда на авто и городском транспорте."
+msgstr "Podrobná mapa až po stánky: vyhledávání dle adresy + telefonní čísla, pracovní doba organizací + pohodlné vyhledávání trasy autem a MHD."
+
+#. Кнопка в форме восстановления пароля. Означает: отправить мне письмо с кодом подтверждения
+msgid "Подтвердить"
+msgstr "Potvrdit"
+
+#. Заголовок окна
+msgid "Подтверждение e-mail"
+msgstr "Potvrzení e-mailem"
+
+#. Общее название для кафе, ресторанов и т.д.
+msgctxt "Дашборд"
+msgid "Поесть"
+msgstr "Najíst se"
+
+msgid "Пожаловаться на буклет"
+msgstr "Stěžovat se na prospekt"
+
+msgid "Пожаловаться на фото"
+msgstr "Stěžovat se na fotografii"
+
+#. Сообщение о неизвестной ошибке
+msgid "Пожалуйста, повторите попытку через пару минут."
+msgstr "Pokus prosím zopakujte za několik minut."
+
+#. Пользователю должн был прийти e-mail с ссылкой на подтверждение
+msgid "Пожалуйста, подтвердите свою электронную почту."
+msgstr "Potvrďte prosím svůj e-mail."
+
+msgctxt "Рубрика"
+msgid "Пожарная охрана"
+msgstr "Požární ochrana"
+
+#. Заголовок для поля поиска по справочнику организаций
+msgctxt "Поиск по организациям"
+msgid "Поиск"
+msgstr "Adresář"
+
+#. &nbsp; - это пробел. То есть переводить как: "Поиск не сработал. Мы обязательно найдем причину и исправим её."
+msgid "Поиск не&nbsp;сработал. Мы&nbsp;обязательно найдем причину и&nbsp;исправим&nbsp;её."
+msgstr "Vyhledávání&nbsp;nefunguje. Slibujeme, že&nbsp;určitě najdeme příčinu a&nbsp;vše&nbsp;napravíme."
+
+msgid "Поиск проезда на карте — 2ГИС"
+msgstr "Vyhledání trasy na mapě — 2GIS"
+
+#. Подпись для кнопки, выставляющей оценку нашего приложения с точки зрения пользователя. Равнозначно оценке 3 из 5.
+msgctxt "Оценка приложения"
+msgid "Пойдет"
+msgstr "Ujde to"
+
+#. Заголовок окна
+msgid "Пользовательское соглашение"
+msgstr "Smlouva o použití služeb 2GIS"
+
+#. Надпись на кнопке смены пароля от своего аккаунта
+msgid "Поменять пароль"
+msgstr "Změnit heslo"
+
+#. Ссылка на установку расширения для браузера
+msgid "Попробовать"
+msgstr "Vyzkoušet"
+
+msgid "Попробуйте другие ключевые слова или воспользуйтесь быстрым поиском:"
+msgstr "Zkuste zadat jiná klíčová slova nebo použijte rychlé vyhledávání:"
+
+msgid "Попробуйте ещё раз"
+msgstr "Zkuste to ještě jednou"
+
+#. Сообщение о том, что в результате поиска не нашлось ни одной организации
+msgid "Попробуйте менее строгие критерии поиска."
+msgstr "Zkuste zadat méně přísná kritéria vyhledávání."
+
+#. Переводить как: "Последний из %1 отзыва на Флампе". %1 заменится на количество отзывов
+msgid "Последний из %{Link %1 отзыва} на Флампе"
+msgid_plural "Последний из %{Link %1 отзывов} на Флампе"
+msgstr[0] "Poslední z %{Link %1 recenze} na Flampu"
+msgstr[1] "Poslední z %{Link %1 recenzí} na Flampu"
+msgstr[2] "Poslední z %{Link %1 recenzí} na Flampu"
+
+msgid "Посмотреть буклет"
+msgstr "Zobrazit prospekt"
+
+msgid "Посмотреть все атрибуты"
+msgstr "Zobrazit všechny atributy"
+
+msgid "Посмотреть все рубрики"
+msgstr "Zobrazit všechny rubriky"
+
+#. После клика пользователем по фразе 'Посмотреть телефон' - появляется телефонный номер организации
+msgid "Посмотреть телефон"
+msgstr "Zobrazit telefonní číslo"
+
+#. Текст, который будет опубликован в социальной сети при нажатии кнопки "Поделиться". Другое значение: "Поищите в 2ГИС"
+msgid "Посмотрите в 2ГИС"
+msgstr "Podívejte se do 2GIS"
+
+msgid "Постройка"
+msgstr "Stavba"
+
+msgid "Почта подтверждена"
+msgstr "E-mail byl potvrzen"
+
+#. Заголовок для рекламного блока
+#. Заголовок списка организаций, похожих на выбранную
+msgid "Предложения других организаций"
+msgstr "Nabídky dalších organizací"
+
+#. Пользователю предлагается зарегестрировать свой мобильный телефон в системе и получить возможность звонить по телефонным номерам фирм из справочника 2ГИС. Под
+#. кликом понимается клик по телефонному номеру фирмы из справочника на сайте 2ГИС.
+msgid "Привяжите ваш телефон к браузеру и звоните в один клик прямо из справочника!"
+msgstr "Propojte svůj telefon s prohlížečem, a volejte jediným kliknutím přímo z adresáře!"
+
+#. Пользователю предлагается зарегестрировать свой мобильный телефон в системе и получить возможность звонить по телефонным номерам фирм из справочника 2ГИС. Под
+#. кликом понимается клик по телефонному номеру фирмы из справочника на сайте 2ГИС.
+msgid "Привяжите ваш телефон к профилю 2ГИС и звоните в один клик прямо из справочника!"
+msgstr "Propojte svůj telefon s profilem 2GIS a volejte jediným kliknutím přímo z adresáře!"
+
+#. Сообщение об ошибке. Суть: пользователь зарегестрировал свой мобильный телефон в системе для возможности звонить по телефонам из справочника, но произошла
+#. ошибка, и ему нужно зарегестрировать телефон повторно.
+msgid "Привяжите телефон заново"
+msgstr "Zopakujte propojení telefonu"
+
+#. Надпись на кнопке. Смысл: подключить свой мобильный телефон к аккаунту на сайте 2ГИС
+msgid "Привязать телефон"
+msgstr "Propojit s telefonem"
+
+#. Пользователь при регистрации не ввел пароль
+msgid "Придумайте пароль."
+msgstr "Vymyslete si heslo."
+
+msgid "Прикрепить скриншот"
+msgstr "Připojit snímek obrazovky"
+
+#. Кнопка в окне с лицензионным соглашением. Означает, что пользователь прочитал и принимает лицензионное соглашение
+msgctxt "Лицензионное соглашение"
+msgid "Принимаю"
+msgstr "Souhlasím"
+
+#. Подсказка для кнопки, включающей режим отображения пробок на карте
+msgctxt "Контрол на карте"
+msgid "Пробки"
+msgstr "Zácpy"
+
+msgid "Проверьте, все ли названия написаны верно;"
+msgstr "Zkontrolujte, zda jsou všechny názvy napsány správně;"
+
+msgctxt "Тип проход/проезд"
+msgid "Проезд"
+msgstr "Průjezd"
+
+#. Заголовок для поля поиска маршрута проезда
+msgctxt "Способ передвижения"
+msgid "Проезд"
+msgstr "Trasa"
+
+#. %1 - тип проезда. Пример: Проезд основной
+msgctxt "Тип проход/проезд"
+msgid "Проезд %1"
+msgstr "Průjezd %1"
+
+#. %1 - тип проезда, %2 - характеристика стоимости. Пример: Проезд основной, бесплатный
+msgctxt "Тип проход/проезд"
+msgid "Проезд %1, %2"
+msgstr "Průjezd %1, %2"
+
+#. Общее название для ворот, калиток, проходных и т.д. Используется при отображении сведений о проходе/проезде
+msgid "Проход/проезд"
+msgstr "Průchod/průjezd"
+
+#. Показать полный текст комментария или статьи
+msgid "Прочесть полностью"
+msgstr "Přečíst vše"
+
+msgctxt "Маневр"
+msgid "Прямо"
+msgstr "Rovně"
+
+msgid "Пустое сообщение"
+msgstr "Prázdná zpráva"
+
+#. Подпись к кнопке. Суть: использовать эту точку на карте как пункт отправления при построении маршрута проезда. Это превая часть фразы "Путь отсюда - сюда"
+#. Фразы "Путь отсюда" и "сюда" находятся в едином смысловом контексте. Выглядеть это будет "Путь отсюда - сюда".
+msgid "Путь отсюда"
+msgstr "Cesta odsud"
+
+#. Название фильтра. Фильтрует список фирм по режиму работы.
+#. Круглосуточный режим работы организации
+msgid "Работает круглосуточно"
+msgstr "Otevřeno nonstop"
+
+#. Синоним: онлайн-версия 2ГИС использует в своей работе API 2GIS
+msgid "Работает на API 2GIS"
+msgstr "Běží na API 2GIS"
+
+msgctxt "Маневр"
+msgid "Разворот"
+msgstr "Otáčení"
+
+#. Ссылка на страницу с инструкциями по размещению рекламы в 2ГИС для компаний
+msgid "Разместить рекламу"
+msgstr "Zadat reklamu"
+
+msgid "Район"
+msgstr "Městská část"
+
+#. &nbsp; - пробел. Предложение установить расширение для браузера
+msgid "Расширение 2ГИС для&nbsp;вашего браузера"
+msgstr "Rozšíření 2GIS pro&nbsp;Váš prohlížeč"
+
+#. клик по 'Расширенный поиск' дает возможность выбирать фильтры для более точного поиска организаций.
+msgid "Расширенный поиск"
+msgstr "Rozšířené vyhledávání"
+
+#. Заголовок окна регистрации пользователя в системе
+msgid "Регистрация"
+msgstr "Registrace"
+
+msgid "Редактируйте данные, добавляйте фотографии"
+msgstr "Upravujte údaje, přidávejte fotografie"
+
+#. дефолтное название группы
+msgid "Результаты поиска"
+msgstr "Výsledky vyhledávání"
+
+#. Ссылка на страницу с условиями публикации рекламы
+msgid "Реклама в 2ГИС"
+msgstr "Reklama ve 2GIS"
+
+#. Рекомендация пользователя
+msgid "Рекомендую"
+msgstr "Doporučuji"
+
+msgid "Речной транспорт"
+msgstr "Říční doprava"
+
+msgid "Россия"
+msgstr "Rusko"
+
+#. Ссылка на информацию о 2ГИС как о продукте и компании вцелом
+msgid "Сайт 2ГИС"
+msgstr "Webová stránka 2GIS"
+
+msgctxt "Рубрика"
+msgid "Сайты объявлений"
+msgstr "Inzerce na webu"
+
+#. Отображается в расписании в строке типа "Сегодня 08:00-20:00"
+msgid "Сегодня"
+msgstr "Dnes"
+
+#. Отображается в строке расписания на сегодня как единственный текст, если сегодня не работает
+msgid "Сегодня выходной"
+msgstr "Dnes je zavřeno"
+
+#. Кнопка, показывающая текущую нагруженность дорог
+msgid "Сейчас"
+msgstr "Nyní"
+
+#. Техническая ошибка доступа с серверу
+#. Не удалось залогиниться, потому что сервер не отвечает
+msgid "Сервис авторизации недоступен."
+msgstr "Služba autorizace není dostupná."
+
+#. Техническая ошибка доступа с серверу
+msgid "Сервис регистрации недоступен."
+msgstr "Služba registrace není dostupná."
+
+#. Надпись на кнопке, которая открывает окошко со ссылками на приложение
+#. Кнопка, которая открывает страницу appstore или аналог, где находится нативное приложение 2гис для данной платформы
+msgid "Скачать"
+msgstr "Stáhnout"
+
+#. Ссылка на страницу скачивания ПК версии
+msgid "Скачать ПК версию"
+msgstr "Stáhnout PC verzi"
+
+#. надпись на кнопке для скачивания настольной версии
+msgid "Скачать версию для Windows"
+msgstr "Stáhnout si verzi pro Windows"
+
+msgctxt "Рубрика"
+msgid "Скорая медицинская помощь"
+msgstr "Zdravotnická záchranná služba"
+
+msgid "Скоростной трамвай"
+msgstr "Rychlodrážní tramvaj"
+
+msgid "Слишком длинное сообщение"
+msgstr "Zpráva je příliš dlouhá"
+
+msgctxt "Контрол дополнительных слоев"
+msgid "Слои"
+msgstr "Vrstvy"
+
+#. Синоним: обслуживающие организации вашего дома (поликлиники, почты и т.д.)
+msgid "Службы в вашем доме"
+msgstr "Služby pro vaši budovu"
+
+msgctxt "Рубрика"
+msgid "Службы спасения"
+msgstr "Služby tísňového volání / Záchranné služby"
+
+msgctxt "Рубрика"
+msgid "Службы экстренного вызова"
+msgstr "Pohotovostní / informační / tísňové služby"
+
+#. Заголовок окна
+msgid "Смена пароля"
+msgstr "Změna hesla"
+
+#. Надпись на кнопке в форме смены пароля
+msgid "Сменить пароль"
+msgstr "Změnit heslo"
+
+#. Сообщить об ошибке в информации, указанной в карточке фирмы
+#. Сообщить об ошибке в информации, указанной в карточке здания
+#. Сообщить об ошибке в информации, указанной в карточке метро
+#. Сообщить об ошибке в информации, указанной в карточке маршрута
+#. Сообщить об ошибке в информации, указанной в карточке останоки
+msgid "Сообщить об ошибке"
+msgstr "Nahlásit chybu"
+
+#. Заголовок для списка фильтров. Например: "Сортировать по: рейтингу, режиму работы".
+msgid "Сортировать по"
+msgstr "Řadit podle"
+
+#. Кнопка в форме. Сохранить изменения
+msgid "Сохранить"
+msgstr "Uložit"
+
+msgid "Спасибо за сообщение"
+msgstr "Děkujeme za zprávu"
+
+#. Заголовок для списка всех рубрик первого уровня
+msgid "Справочник организаций"
+msgstr "Adresář organizací"
+
+msgctxt "Рубрика"
+msgid "Справочно-информационные услуги"
+msgstr "Referenční a informační služby"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 5000 символов. Смысл: "лучше написать еще"
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Становится интересно"
+msgstr "Začíná to být zajímavé"
+
+#. Станция метротрама
+msgctxt "Метротрам"
+msgid "Станция"
+msgstr "Stanice"
+
+#. Станция железной дороги
+msgctxt "Железная дорога"
+msgid "Станция"
+msgstr "Stanice"
+
+msgid "Станция канатной дороги"
+msgstr "Stanice visuté lanové dráhy"
+
+msgid "Станция легкого метро"
+msgstr "Stanice nadzemního metra"
+
+msgid "Станция метро"
+msgstr "Stanice metra"
+
+#. $stationName - название остановки/станции/платформы, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Станция метро Гагаринская в Новосибирске — 2ГИС".
+msgid "Станция метро $stationName в $cityNamePrepositional — 2ГИС"
+msgstr "Stanice metra $stationName v $cityNamePrepositional — 2GIS"
+
+#. $stationName - название остановки, $stationName - название города
+#. Фраза звучит вроде: Станция метро Покрышкина на карте Новосибирска и все удобные способы добраться до неё..
+msgid "Станция метро $stationName на карте $cityNameGenitive и все удобные способы добраться до неё."
+msgstr "Stanice metra $stationName na mapě $cityNameGenitive a všechny optimální cesty k ní."
+
+msgid "Станция монорельсовой дороги"
+msgstr "Stanice jednokolejné dráhy"
+
+msgid "Станция фуникулера"
+msgstr "Stanice pozemní lanové dráhy"
+
+#. Плэйсхолдер для текстового поля формы, в которое пользователь должен ввести свой старый пароль
+msgid "Старый пароль"
+msgstr "Staré heslo"
+
+#. Подпись для кнопки, выставляющей оценку нашего приложения с точки зрения пользователя. Равнозначно оценке 5 из 5.
+msgctxt "Оценка приложения"
+msgid "Супер!"
+msgstr "Perfektní!"
+
+msgctxt "Рубрика"
+msgid "Телефоны доверия"
+msgstr "Linky důvěry"
+
+#. Текст окна. Отображается после изменения пароля пользователя
+msgid "Теперь вы можете авторизоваться с новым паролем."
+msgstr "Nyní se můžete přihlásit s novým heslem."
+
+msgid "Трамвай"
+msgstr "Tramvaj"
+
+#. Название вкладки результатов поиска
+msgctxt "Поиск"
+msgid "Транспорт"
+msgstr "Doprava"
+
+#. Требуется обновление данных для установленного города в проекте.
+msgid "Требуется обновление,"
+msgstr "Je vyžadována aktualizace,"
+
+msgid "Троллейбус"
+msgstr "Trolejbus"
+
+#. Переводить как: "У организации ещё %1 филиал". %1 заменится на количество филиалов
+msgid "У организации ещё %{Link %1 филиал}"
+msgid_plural "У организации ещё %{Link %1 филиалов}"
+msgstr[0] "Organizace má ještě %{Link %1 pobočku}"
+msgstr[1] "Organizace má ještě %{Link %1 pobočky}"
+msgstr[2] "Organizace má ještě %{Link %1 poboček}"
+
+#. &nbsp; - это пробел. Фразу стоит переводить, как "Увы, мы не знаем ответа на ваш вопрос"
+msgid "Увы, мы&nbsp;не&nbsp;знаем ответа на&nbsp;ваш вопрос"
+msgstr "Bohužel,&nbsp;neznáme&nbsp;odpověď na&nbsp;Váš dotaz"
+
+#. После клика по фразе 'Узнать больше' появляется дополнительная информация о метро.
+#. Надпись на кнопе под кратким описанием фирмы (или другого объекта). После нажатия показывается более подробная информация.
+msgid "Узнать больше"
+msgstr "Zjistit více"
+
+#. Пользователь при регистрации не ввел адрес e-mail
+msgid "Укажите адрес электронной почты."
+msgstr "Zadejte e-mailovou adresu."
+
+msgid "Улица"
+msgstr "Ulice"
+
+#. $geoName - назание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Улица Красный проспект, 12 в Новосибирске — 2ГИС".
+msgid "Улица $geoName в $cityNamePrepositional — 2ГИС"
+msgstr "Ulice $geoName v $cityNamePrepositional — 2GIS"
+
+#. $geoName - назание улицы и номер дома, $cityNamePrepositional - название города.
+#. Фраза звучит вроде: "Улица Ленина, 32 в Москве: организации в здании и удобные способы доехать до места."
+msgid "Улица $geoName в $cityNamePrepositional: организации в здании и удобные способы доехать до места."
+msgstr "Ulice $geoName v $cityNamePrepositional: organizace v budově a optimální cesty k ní."
+
+#. $geoName - назание улицы и номер дома, $cityName - название города.
+#. Фраза звучит вроде: "Улица Красный проспект, 12, Новосибирск — 2ГИС".
+msgid "Улица $geoName, $cityName — 2ГИС"
+msgstr "Ulice $geoName, $cityName — 2GIS"
+
+#. $geoName - назание улицы и номер дома, $cityName - название города.
+#. Фраза звучит вроде: "Улица площадь Маркса, 7, Новосибирск: организации в здании и удобные способы доехать до места."
+msgid "Улица $geoName, $cityName: организации в здании и удобные способы доехать до места."
+msgstr "$geoName, $cityName: organizace v budově a optimální cesty k ní."
+
+#. $streetName - название улицы, $cityName - название города.
+#. Фраза звучит вроде: "Улица Ленина (Новосибирск) с указанием маршрутов, кафе, ресторанов, магазинов и другой полезной информации."
+msgid "Улица $streetName ($cityName) с указанием маршрутов, кафе, ресторанов, магазинов и другой полезной информации."
+msgstr "Ulice $streetName ($cityName), s uvedením linek, kaváren, restaurací, obchodů a dalších užitečných informací."
+
+#. Вместо $streetName - название улицы, вместо $cityNamePrepositional - название города. Фраза звучит вроде: "Улица Мира в Новосибирске — 2ГИС".
+msgid "Улица $streetName в $cityNamePrepositional — 2ГИС"
+msgstr "Ulice $streetName v $cityNamePrepositional — 2GIS"
+
+#. $streetName - название улицы, $cityNameGenitive - название города.
+#. Фраза звучит вроде: "Улица Ленина на карте Новосибирска с указанием маршрутов, кафе, ресторанов, магазинов и другой полезной информации."
+msgid "Улица $streetName на карте $cityNameGenitive с указанием маршрутов, кафе, ресторанов, магазинов и другой полезной информации."
+msgstr "Ulice $streetName na mapě $cityNameGenitive, s uvedením linek MHD, kaváren, restaurací, obchodů a dalších užitečných informací."
+
+#. $streetName - название улицы, $cityName - название города. Фраза звучит вроде: "Улица Мира, Москва — 2ГИС".
+msgid "Улица $streetName, $cityName — 2ГИС"
+msgstr "Ulice $streetName, $cityName — 2GIS"
+
+#. Переводить как: "Управляйте информацией из Личного кабинета" . Выводится в форме авторизации. "Личного кабинета" - является ссылкой на ЛК
+msgid "Управляйте информацией из %{Link Личного кабинета}"
+msgstr "Spravujte informace z %{Link osobního profilu}"
+
+#. Мобильный телефон успешно привязан к аккаунту на сайте 2ГИС, и можно попробовать воспользоваться функцией push2dial. К этому моменту пользователь уже знает, что
+#. именно ему можно попробовать
+msgid "Ура, можно попробовать!"
+msgstr "Hurá! Můžeme to vyzkoušet!"
+
+msgctxt "Рубрика"
+msgid "Услуги фото / видеосъёмки на выезде"
+msgstr "Služby fotografování/videonahrávek v terénu"
+
+#. Заголовок для окна, в котором содержатся ссылки на устновку версий 2ГИС для персонального компьютера и смартфонов
+msgid "Установи 2ГИС"
+msgstr "Nainstaluj 2GIS"
+
+#. Плашка в дашборде мобильных телефонов типа "Установи 2ГИС для iOS"
+msgid "Установи 2ГИС для %1"
+msgstr "Nainstaluj 2GIS pro %1"
+
+#. &nbsp; - пробел. Предложение установить расширение для браузера
+msgid "Установите 2ГИС в&nbsp;свой браузер"
+msgstr "Nainstalujte 2GIS do&nbsp;svého prohlížeče"
+
+#. Ссылка на инструкцию по вставке карты 2ГИС на свой собственный сайт
+msgid "Установите карту и справочник на свой сайт"
+msgstr "Vložte mapu a adresář na svou webovou stránku"
+
+msgid "Установите свежую версию мобильного 2ГИС"
+msgstr "Nainstalujte nejnovější verzi mobilního 2GIS"
+
+#. Кнопка установки расширения для браузера
+#. Ссылка на установку расширения для браузера
+#. Надпись на кнопке, после нажатия которой у нас появится возможность установить более новую версию приложения.
+msgid "Установить"
+msgstr "Nainstalovat"
+
+#. Ссылка на установку расширения для браузера. %1 - название браузера
+msgid "Установить в %1"
+msgstr "Nainstalovat do %1"
+
+msgid "Уточните адрес в справочнике организаций;"
+msgstr "Upřesněte adresu v adresáři organizací;"
+
+msgid "Файл слишком большой"
+msgstr "Soubor je příliš velký"
+
+#. Поисковые фильтры
+msgid "Фильтры"
+msgstr "Filtry"
+
+#. Фото было загружено представителем фирмы
+msgid "Фото от владельца"
+msgstr "Fotografie byla vložena majitelem"
+
+msgid "Фотографии"
+msgstr "Fotografie"
+
+msgid "Фуникулер"
+msgstr "Pozemní lanová dráha"
+
+#. Выводится как подсказка по длине отзыва. Ситуация: меньше 250 символов. Смысл: "все еще короткий отзыв".
+msgctxt "Подсказка о длине отзыва на Флампе"
+msgid "Хорошее начало!"
+msgstr "Dobrý začátek!"
+
+#. Подпись для кнопки, выставляющей оценку нашего приложения с точки зрения пользователя. Равнозначно оценке 4 из 5.
+msgctxt "Оценка приложения"
+msgid "Хорошо"
+msgstr "Dobré"
+
+msgid "Чем, по-вашему, плоха эта фотография?"
+msgstr "Co se Vám nezdá na této fotografii?"
+
+#. Преобразуется к фразе типа "Через 20 минут закрывается на обед". Вместо %1 подставится промежуток времени, вместо %2 подставится "обед" или "перерыв"
+msgid "Через %1 закрывается на %2"
+msgstr "Za %1 se zavírá na %2"
+
+#. Смысл: "читайте чужие отзывы, выбирайте лучшие организации, пишите отзывы"
+msgid "Читайте, выбирайте, пишите"
+msgstr "Čtěte, vybírejte, pište"
+
+#. Показать полный текст комментария или статьи
+msgid "Читать полностью"
+msgstr "Číst vše"
+
+msgid "Что, по-вашему, не так с этим буклетом?"
+msgstr "Co se Vám nezdá na tomto prospektu?"
+
+#. Сообщение о неизвестной ошибке, возникшей при попытке позвонить по телефону из справочника.
+#. Сообщение о неизвестной ошибке
+msgid "Что-то пошло не так"
+msgstr "Něco je špatně"
+
+#. Неизвестная ошибка при регистрации или авторизации
+msgid "Что-то пошло не так. Пожалуйста, повторите попытку."
+msgstr "Něco je špatně. Opakujte prosím pokus."
+
+#. Неизвестная ошибка
+msgid "Что-то пошло не так. Попробуйте ещё раз."
+msgstr "Něco je špatně. Zkuste to znovu."
+
+msgid "Что-то пошло не так. Попробуйте перейти по ссылке ещё раз или отправьте новое письмо с подтверждением."
+msgstr "Něco je špatně. Zkuste použít odkaz ještě jednou nebo odešlete novou zprávu s potvrzením."
+
+msgctxt "Рубрика"
+msgid "Эвакуация автомобилей"
+msgstr "Odtah vozidel"
+
+#. Плэйсхолдер текстого поля в форме, в которое пользователь должен ввести свой адрес электронной почты
+#. Плэйсхолдер текстого поля в форме восстановления пароля, в которое пользователь должен ввести свой e-mail
+#. Плэйсхолдер текстого поля в форме, в которое пользователь должен ввести свой e-mail
+msgid "Электронная почта"
+msgstr "E-mail"
+
+#. При авторизации пользователь ввел e-mail, с которым еще не зарегестрировался
+msgid "Электронная почта не зарегистрирована."
+msgstr "E-mail není registrován."
+
+#. Пользователь с таким e-mail уже существует
+msgid "Электронная почта уже зарегистрирована."
+msgstr "E-mail je již registrován."
+
+#. Пользователь повторно перешел по ссылке из письма на подтверждение
+msgid "Электронная почта уже подтверждена."
+msgstr "E-mail je již potvrzen."
+
+msgid "Электропоезд"
+msgstr "Vlak"
+
+msgid "Это место мы ещё не успели изучить"
+msgstr "Toto místo jsme zatím nestihli prozkoumat"
+
+#. Пользователь при регистрации ввел вместо адреса e-mail что-то не то или ошибся при вводе
+msgid "Этот адрес электронной почты нам не знаком. Попробуйте другой адрес или %{Link зарегистрируйте} этот."
+msgstr "Neznáme tento e-mail. Zkuste zadat jiný e-mail nebo %{Link zaregistrujte} tento."
+
+#. Текст ссылки на вход в личный кабинет
+msgid "Я владелец"
+msgstr "Jsem majitel"
+
+#. Речь идет об интернет-провайдерах
+msgid "а ещё мы знаем всех провайдеров"
+msgstr "a navíc známe všechny poskytovatele internetu"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "автобус"
+msgstr "autobus"
+
+msgctxt "Доступность прохода/проезда"
+msgid "бесплатный"
+msgstr "volný"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в воскресенье"
+msgstr "v neděli"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в понедельник"
+msgstr "v pondělí"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в пятницу"
+msgstr "v pátek"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в среду"
+msgstr "ve středu"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в субботу"
+msgstr "v sobotu"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "в четверг"
+msgstr "ve čtvrtek"
+
+#. Фраза из расписания типа 'Откроется в понедельник'
+msgid "во вторник"
+msgstr "v úterý"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "воскресенье"
+msgstr "neděle"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "вс"
+msgstr "ne"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "вт"
+msgstr "út"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "вторник"
+msgstr "úterý"
+
+#. вход в метро Пример: Метро Покрышкина - вход
+msgctxt "Станция метро"
+msgid "вход"
+msgstr "vstup"
+
+#. Подсказка по маршруту движения, после какой станции следует выйти из общественного транспорта. Вместо %1 подставится название станции/остановки
+msgid "выходить после «%1»"
+msgstr "vystoupit po stanici „%1“"
+
+#. Сегодня у организации выходной
+msgid "выходной"
+msgstr "zavřeno"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "город"
+msgstr "město"
+
+msgid "город"
+msgid_plural "городов"
+msgstr[0] "město"
+msgstr[1] "města"
+msgstr[2] "měst"
+
+msgid "для автомобилей"
+msgstr "pro auta"
+
+#. Конечная позиция диапазона (например, цен). Пример: от 7 до 10.
+msgctxt "фильтр максимум"
+msgid "до"
+msgstr "do"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "дом"
+msgstr "budova"
+
+msgctxt "Тип прохода/проезда"
+msgid "дополнительный"
+msgstr "doplňkový"
+
+#. Переводить как: "ещё %1 филиал". %1 заменится на количество филиалов
+msgid "ещё %{Link %1 филиал}"
+msgid_plural "ещё %{Link %1 филиалов}"
+msgstr[0] "ještě %{Link %1 pobočku}"
+msgstr[1] "ještě %{Link %1 pobočky}"
+msgstr[2] "ještě %{Link %1 poboček}"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "ж/д станция"
+msgstr "železniční stanice"
+
+#. Союз "из" во фразе "20 из 100"
+msgctxt "Часть из общего количества"
+msgid "из"
+msgstr "z"
+
+#. столько то результатов {из} стольки то
+msgid "из %1"
+msgstr "z %1"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "канатная дорога"
+msgstr "visutá lanová dráha"
+
+#. Выводится в текстовом поле, в котором можно ввести пункт назначения при поиске маршрута
+msgctxt "Плэйсхолдер для поля поиска маршрута проезда"
+msgid "куда"
+msgstr "kam"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "лёгкое метро"
+msgstr "nadzemní metro"
+
+#. Микрорайон
+msgctxt "Поиск"
+msgid "м/н"
+msgstr "katastrální území"
+
+msgctxt "Поиск"
+msgid "маршрут"
+msgstr "trasa"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "маршрутное такси"
+msgstr "minibus taxi"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "метро"
+msgstr "metro"
+
+msgid "метро"
+msgstr "metro"
+
+#. После этой фразы выведется название станции метро. Пример: метро Заельцовская
+msgctxt "Станция метро"
+msgid "метро"
+msgstr "metro"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "метротрам"
+msgstr "podpovrchová tramvaj"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "микрорайон"
+msgstr "katastrální území"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "монорельсовая дорога"
+msgstr "jednokolejná dráha"
+
+#. Предлог "на" во фразе "повернуть на улицу Крылова"
+msgctxt "Маневр"
+msgid "на"
+msgstr "na"
+
+msgctxt "Вместимость парковки"
+msgid "на %1 место"
+msgid_plural "на %1 мест"
+msgstr[0] "%1 místo"
+msgstr[1] "%1 místa"
+msgstr[2] "%1 míst"
+
+msgid "на улице"
+msgstr "v ulici"
+
+#. Смысл: отзывы об организации отсутствуют
+msgid "нет отзывов"
+msgstr "žádné recenze"
+
+#. Населенный пункт
+msgctxt "Поиск"
+msgid "нп"
+msgstr "obec"
+
+#. Отображается в расписании в строке типа "Сегодня 08:00-20:00, обед 13:00-14:00"
+msgid "обед"
+msgstr "přestávka na oběd"
+
+#. Обеденный перерыв у фирмы
+msgctxt "Тип перерыва"
+msgid "обед"
+msgstr "přestávka na oběd"
+
+msgid "общественного транспорта"
+msgstr "MHD"
+
+msgid "округ"
+msgstr "správní obvod"
+
+#. Выводится в текстовом поле поиска по справочнику. Означает, что в это поле можно ввести название фирмы, адрес дома, номер маршрута станции, название остановки
+#. или любого другого географического объекта в городе
+msgctxt "Плэйсхолдер для поля поиска по справочнику"
+msgid "организации, адреса, маршруты"
+msgstr "organizace, adresy, linky MHD"
+
+msgctxt "Тип прохода/проезда"
+msgid "основной"
+msgstr "hlavní"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "остановка"
+msgstr "zastávka"
+
+#. Начальная позиция диапазона (например, цен). Пример: от 7 до 10.
+msgctxt "фильтр минимум"
+msgid "от"
+msgstr "od"
+
+#. В начале добавится количество отзывов об организации. Пример: "17 отзывов на Флампе"
+msgid "отзыв на Флампе"
+msgid_plural "отзывов на Флампе"
+msgstr[0] "recenze na Flampu"
+msgstr[1] "recenze na Flampu"
+msgstr[2] "recenzí na Flampu"
+
+#. Показать полный текст отзыва
+msgid "отзыв полностью"
+msgstr "zobrazit celou recenzi"
+
+#. Выводится в текстовом поле, в котором можно ввести пункт отправления при поиске маршрута
+msgctxt "Плэйсхолдер для поля поиска маршрута проезда"
+msgid "откуда"
+msgstr "odkud"
+
+msgctxt "Фильтры поиска"
+msgid "очистить"
+msgstr "vymazat"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "парковка"
+msgstr "parkoviště"
+
+msgid "парковка"
+msgstr "parkoviště"
+
+#. Отображается в расписании в строке типа "Сегодня 08:00-20:00, перерыв 17:00-17:10"
+msgid "перерыв"
+msgstr "přestávka"
+
+#. Перерыв в работе фирмы (любой, кроме обеденного)
+msgctxt "Тип перерыва"
+msgid "перерыв"
+msgstr "přestávka"
+
+#. Пеший маршрут.
+msgctxt "Переход между станциями метро"
+msgid "пешком"
+msgstr "přestup"
+
+#. Пеший маршрут.
+msgctxt "Наземный переход"
+msgid "пешком"
+msgstr "přesun po svých"
+
+#. Пеший маршрут. %1 заменится на дистанцию в метрах. Пример: "пешком 50м"
+msgctxt "Переход между станциями метро"
+msgid "пешком %1"
+msgstr "přestup %1"
+
+#. Пеший маршрут. %1 заменится на дистанцию в метрах. Пример: "пешком 50м"
+msgctxt "Наземный переход"
+msgid "пешком %1"
+msgstr "přesun po svých %1"
+
+msgctxt "Доступность прохода/проезда"
+msgid "платный"
+msgstr "placený"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "пн"
+msgstr "po"
+
+#. Предлог "по" во фразе "движение прямо по улице Крылова"
+msgctxt "Маневр"
+msgid "по"
+msgstr "po"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "понедельник"
+msgstr "pondělí"
+
+msgid "посмотреть все"
+msgstr "zobrazit vše"
+
+#. Подсказка по маршруту движения, сколько станций (остановок) нужно проехать. Вместо %1 подставится количество станций
+msgid "проехать %1 станцию"
+msgid_plural "проехать %1 станций"
+msgstr[0] "projet %1 stanici"
+msgstr[1] "projet %1 stanice"
+msgstr[2] "projet %1 stanic"
+
+#. Прямой маршрут
+msgid "прямой"
+msgstr "přímá"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "пт"
+msgstr "pá"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "пятница"
+msgstr "pátek"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "район"
+msgstr "městská část"
+
+msgid "район"
+msgstr "městská část"
+
+#. Название способа сортировки. Сортирует фирмы по рейтингу.
+msgid "рейтинг"
+msgstr "hodnocení"
+
+#. В начале добавится количество рекомендаций пользователя. Пример: "17 рекомендаций"
+msgid "рекомендация"
+msgid_plural "рекомендаций"
+msgstr[0] "doporučení"
+msgstr[1] "doporučení"
+msgstr[2] "doporučení"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "речной транспорт"
+msgstr "vodní doprava"
+
+msgid "рубрика"
+msgid_plural "рубрик"
+msgstr[0] "rubrika"
+msgstr[1] "rubriky"
+msgstr[2] "rubrik"
+
+#. Переводить как "с пользовательским соглашением ознакомился и согласен"
+msgid "с %{Link пользовательским соглашением} ознакомился и&nbsp;согласен"
+msgstr "přečetl jsem si %{Link Smlouvu o použití služeb 2GIS} a&nbsp;souhlasím s ní"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "сб"
+msgstr "so"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "скоростной трамвай"
+msgstr "rychlodrážní tramvaj"
+
+msgid "скрыть"
+msgstr "skrýt"
+
+msgctxt "Тип прохода/проезда"
+msgid "служебный"
+msgstr "služební"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "ср"
+msgstr "st"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "среда"
+msgstr "středa"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "ст. метро"
+msgstr "st. metra"
+
+msgctxt "Поиск"
+msgid "станция метро"
+msgstr "stanice metra"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "суббота"
+msgstr "sobota"
+
+#. Подпись к кнопке. Суть: использовать эту точку на карте как пункт назначения при построении маршрута проезда. Это вторая часть фразы "Путь отсюда - сюда"
+msgctxt "Путь сюда"
+msgid "сюда"
+msgstr "sem"
+
+msgctxt "Доступность прохода/проезда"
+msgid "только по пропускам"
+msgstr "pouze s povolením"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "трамвай"
+msgstr "tramvaj"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "троллейбус"
+msgstr "trolejbus"
+
+#. Часть фразы "500 тысяч отзывов"
+msgid "тысяч отзывов"
+msgstr "tisíc recenzí"
+
+#. Часть фразы "600 тысяч фотографий"
+msgid "тысяч фотографий"
+msgstr "tisíc fotografií"
+
+msgid "удалить"
+msgstr "odstranit"
+
+#. %1 заменится на название улицы. Пример: ул. Ленина
+msgid "ул. %1"
+msgstr "%1"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "улица"
+msgstr "ulice"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "фуникулёр"
+msgstr "pozemní lanová dráha"
+
+#. Фраза из расписания типа 'понедельник-четверг круглосуточно'
+msgid "четверг"
+msgstr "čtvrtek"
+
+#. Сокращённое название дня недели из 2 букв в таблице расписания
+msgid "чт"
+msgstr "čt"
+
+#. Категория в подсказках при поиске
+msgctxt "Поиск"
+msgid "электричка"
+msgstr "vlak"
+
+
