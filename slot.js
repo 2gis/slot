@@ -45,6 +45,7 @@ module.exports = function(app, params) {
 
         addTransition: app.addTransition,
         runInQueue: app.runInQueue,
+        invoke: app.invoke,
 
         /**
          * Инициализирует модуль.
