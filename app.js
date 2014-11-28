@@ -687,6 +687,16 @@ module.exports = function() {
         },
 
         /**
+         * Вызывается при запуске транзишенов.
+         * Для переопределения в конечных продуктах.
+         *
+         * @param {Array} transitions
+         */
+        transitionSort: function(transitions) {
+
+        },
+
+        /**
          * Собирает кастомные template helpers.
          * Вызывается после создания каждого нового moduleWrapper.
          * Для переопределения в конечных продуктах.
