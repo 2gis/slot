@@ -38,6 +38,12 @@ gulp.task('hooks.clear', function(cb) {
 });
 
 gulp.task('hooks.run', function(cb) {
-    runSequence('test', 'lint', cb);
+    runSequence(
+        'cover.init',
+        'test',
+        'cover.report',
+        'lint',
+        cb
+    );
 });
 gulp.task('t', ['hooks.run']);
