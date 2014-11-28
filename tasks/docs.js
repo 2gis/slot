@@ -15,7 +15,6 @@ gulp.task('docs', function() {
         'app.js',
         'serverApp.js',
         'clientApp/index.js',
-        'clientApp/transitions.js',
 
         'lib/*.js',
 
