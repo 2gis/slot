@@ -1,7 +1,7 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-var helper = require('slot/clientApp/transitions');
+var helper = require('../../clientApp/transitions');
 
 describe('transitions helpers', function() {
     it('-> sort #1', function() {
