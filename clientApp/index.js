@@ -3,7 +3,6 @@ var _ = require('lodash');
 var baseAppConstructor = require('../app');
 var namer = require('../lib/namer');
 var defer = require('../lib/defer');
-var transitionsHelper = require('./transitions');
 
 module.exports = function() {
     var baseApp = baseAppConstructor();
@@ -186,7 +185,7 @@ module.exports = function() {
             if (transitionsAreRunning) return;
             transitionsAreRunning = true;
 
-            transitionsHelper.sort(transitions);
+            app.transitionSort(transitions);
             transitionStep();
 
             function transitionStep() {
