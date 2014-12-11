@@ -9,6 +9,22 @@ module.exports = function() {
     var app = baseApp.instance;
     var internals = baseApp.internals;
 
+    var moduleBlockIdPrefix = 'module-';
+
+    /**
+     * Возвращает internal id модуля по элементу, если элемент является блоком модуля
+     * @param  {DOMElement} element
+     * @return {String|Undefined}
+     */
+    function getModuleId(element) {
+        var ids = element.id.split(' ');
+        for (var i = 0, l = ids.length; i < l; i++) {
+            if (ids[i].startsWith(moduleBlockIdPrefix)) {
+                return ids[i].replace(moduleBlockIdPrefix, '');
+            }
+        }
+    }
+
     if (typeof $ != 'undefined') {
         /**
          * jQuery плагин, который:
@@ -40,6 +56,12 @@ module.exports = function() {
                 return firstEl.mods || (
                     firstEl.mods = namer.parseMods(firstEl.className)
                 );
+            }
+
+            // если элемент — блок какого-то модуля, то применим модификаторы через app.mod
+            var moduleId = getModuleId(firstEl);
+            if (moduleId) {
+                return app.mod(moduleId, mods);
             }
 
             this.each(function(index, el) {
@@ -106,7 +128,7 @@ module.exports = function() {
     }
 
     function moduleBlockId(moduleId) {
-        return '#module-' + moduleId;
+        return ['#', moduleBlockIdPrefix, moduleId].join('');
     }
 
     function bind(selector, elementName, container, eventName, handler, on) {
