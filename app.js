@@ -143,13 +143,22 @@ module.exports = function() {
 
         require: env.require,
 
+        /**
+         * Возвращает рутовый модуль.
+         * Названеи берется из конфига приложения, ключ 'mainModule' - строка.
+         * Если строка начинается с '::', то считаем что это метод app
+         *
+         * @param req
+         * @returns {slot.Slot}
+         */
         resolveEntryPoint: function(req) {
             req = req || {};
 
             var name;
 
-            if (_.isFunction(app.config.mainModule)) {
-                name = app.config.mainModule(req);
+            if (app.config.mainModule && app.config.mainModule.startsWith('::')) {
+                var methodName = app.config.mainModule.replace('::', '');
+                name = app[methodName] && app[methodName](req);
             } else {
                 name = app.config.mainModule;
             }
