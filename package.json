@@ -28,7 +28,8 @@
     "request": "~2.27.0",
     "setimmediate": "^1.0.2",
     "ua-parser-js": "~0.6.2",
-    "winston": "~0.7.2"
+    "winston": "~0.7.2",
+    "wrench": "~1.5.8"
   },
   "optionalDependencies": {
     "posix": "~1.0.3",

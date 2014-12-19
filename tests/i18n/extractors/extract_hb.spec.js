@@ -8,8 +8,6 @@ describe('Тест экстрактора handlebars для Babel', function() {
     var specPath = path.join(__dirname, 'fixtures');
     var files = fs.readdirSync(specPath);
 
-    var buildConfig = req('config/build');
-
     files.forEach(function(filename) {
         if (/expected\.js/.test(filename)) return;
 
@@ -22,15 +20,15 @@ describe('Тест экстрактора handlebars для Babel', function() {
         it('файл ' + basename, function(done) {
             if (basename.indexOf('.skip') == -1) {
 
-                var keywords = buildConfig.i18n.keywords.map(function(k) {
+                var keywords = ([ '_t', '_nt:1,3', '_pt:1c,2', '_npt:1c,2,4', '_ht', '_hnt:1,3']).map(function(k) {
                     return '-k ' + k;
                 }).join(' ');
 
-                var comments = buildConfig.i18n.comments.map(function(c) {
+                var comments = (['";"']).map(function(c) {
                     return '-c ' + c;
                 }).join(' ');
 
-                var cmd = '../run_hb.py ' + keywords + ' ' + comments + ' ' + 'fixtures/' + filename;
+                var cmd = '../../../i18n/tasks/extractors/run_hb.py ' + keywords + ' ' + comments + ' ' + 'fixtures/' + filename;
 
                 exec(cmd, execOpts, function(err, stdout, stderr) {
                     if (err || stderr) {
