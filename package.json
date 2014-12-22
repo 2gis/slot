@@ -1,6 +1,6 @@
 {
   "name": "slot",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "homepage": "https://github.com/2gis/slot",
   "repository": "git@github.com:2gis/slot.git",
   "description": "Flexible framework for complex JS applications",
@@ -21,15 +21,15 @@
     "jquery-deferred": "~0.3.0",
     "lodash": "2.4.1",
     "mkdirp": "~0.5.0",
-    "posix": "~1.0.3",
     "po2json": "0.2.3",
     "request": "~2.27.0",
     "setimmediate": "^1.0.2",
-    "smokesignals": "~0.0.7",
+    "smokesignals": "file:smokesignals",
     "ua-parser-js": "~0.6.2",
     "winston": "~0.7.2"
   },
   "optionalDependencies": {
+    "posix": "~1.0.3",
     "winston-graylog2": "git+ssh://git@github.com:krivchun/winston-graylog2.git"
   },
   "scripts": {

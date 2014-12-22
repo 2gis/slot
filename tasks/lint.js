@@ -25,7 +25,8 @@ function check(type) {
 var files = [
     '**/*.js',
     '!docs/**/*.js',
-    '!node_modules/**/*.js',
+    '!smokesignals/index.js',
+    '!**/node_modules/**/*',
     '!coverage/**/*.js'
 ];
 
