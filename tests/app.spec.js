@@ -1,6 +1,7 @@
 var assert = require('assert');
 var sinon = require('sinon');
 var _ = require('lodash');
+var Application = require('../app');
 
 describe('app', function() {
     var app,
@@ -8,10 +9,10 @@ describe('app', function() {
         appConfig;
 
     beforeEach(function() {
-        app = require('../app.js')();
+        app = new Application();
         DEBUG = true;
-        appIntance = app.instance;
-        appConfig = app.appConfig;
+        appIntance = app;
+        appConfig = app;
     });
 
     it('blank', function() {
@@ -21,8 +22,8 @@ describe('app', function() {
     describe(' plugins', function() {
         it('Подключает только те плагины, которые указаны в конфиге', function() {
             appIntance.config.plugins = ['ua'];
-            app = require('../app.js')();
-            appIntance = app.instance;
+            app = new Application();
+            appIntance = app;
 
             assert(_.isFunction(appIntance.ua), 'После инициализации плагин ua должен подключиться, ведь он в конфиге');
             assert(!appIntance.fpsMeter, 'После инициализации плагин fpsMeter не должен подключиться, ведь его нет в конфиге');
@@ -232,7 +233,7 @@ describe('app', function() {
         });
 
         it('Вызов без объекта модификаторов', function() {
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {},
                     mods: {}
@@ -245,7 +246,7 @@ describe('app', function() {
         });
 
         it('jQuery-like', function() {
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {},
                     mods: {}
@@ -271,7 +272,7 @@ describe('app', function() {
                 nu: 999
             };
 
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {},
                     mods: {}
@@ -295,7 +296,7 @@ describe('app', function() {
                 key2: undefined
             };
 
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {},
                     mods: {}
@@ -319,7 +320,7 @@ describe('app', function() {
                 u: undefined
             };
 
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {
                         modHandlers: {
@@ -335,7 +336,7 @@ describe('app', function() {
                 }
             };
 
-            var spy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'num');
+            var spy = sinon.spy(app._moduleDescriptors['1'].moduleConf.modHandlers, 'num');
 
             appConfig.mod('1', setMods);
 
@@ -356,7 +357,7 @@ describe('app', function() {
             sinon.spy(jQueryFake, 'addClass');
             sinon.spy(jQueryFake, 'removeClass');
 
-            app.internals.moduleDescriptors = {
+            app._moduleDescriptors = {
                 '1': {
                     moduleConf: {
                         modHandlers: {
@@ -379,8 +380,8 @@ describe('app', function() {
                 return jQueryFake;
             };
 
-            var numSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'num');
-            var activeSpy = sinon.spy(app.internals.moduleDescriptors['1'].moduleConf.modHandlers, 'active');
+            var numSpy = sinon.spy(app._moduleDescriptors['1'].moduleConf.modHandlers, 'num');
+            var activeSpy = sinon.spy(app._moduleDescriptors['1'].moduleConf.modHandlers, 'active');
 
             appConfig.mod('1', setMods);
 
