@@ -76,7 +76,7 @@ module.exports = function(app) {
         // Выставляем версию браузера.
         var parser = new UAParser();
 
-        userAgentString = userAgentString || this.registry('ua').ua || '';
+        userAgentString = userAgentString || this.registry.hash('ua').ua || '';
         parser.setUA(userAgentString);
 
         var result = parser.getResult();
