@@ -43,9 +43,9 @@ module.exports = function(app, params) {
         modules: {},
         config: app.config,
 
-        addTransition: app.addTransition,
-        runInQueue: app.runInQueue,
-        invoke: app.invoke,
+        addTransition: _.bind(ensureFunction(app.addTransition), app),
+        runInQueue: _.bind(ensureFunction(app.runInQueue), app),
+        invoke: _.bind(app.invoke, app),
 
         /**
          * Инициализирует модуль.
@@ -190,16 +190,16 @@ module.exports = function(app, params) {
             requests = [];
         },
 
-        notify: _.partial(ensureFunction(app.notify), moduleId),
+        notify: _.bind(ensureFunction(app.notify), app, moduleId),
 
         /**
          * Рассылает сообщения всем потомкам.
          */
-        broadcast: _.partial(ensureFunction(app.broadcast), moduleId),
+        broadcast: _.bind(ensureFunction(app.broadcast), app, moduleId),
 
-        queryModules: _.partial(ensureFunction(app.queryModules), moduleId),
+        queryModules: _.bind(ensureFunction(app.queryModules), app, moduleId),
 
-        block: _.partial(ensureFunction(app.block), moduleId),
+        block: _.bind(ensureFunction(app.block), app, moduleId),
 
         /**
          * @type {boolean}
@@ -211,9 +211,9 @@ module.exports = function(app, params) {
          */
         isClient: app.isClient,
 
-        domBound: app.isBound,
+        domBound: _.bind(app.isBound, app),
 
-        rerender: _.partial(ensureFunction(app.rerender), moduleId),
+        rerender: _.bind(ensureFunction(app.rerender), app, moduleId),
 
         rebind: function() {
             if (slot.isClient) {
@@ -222,16 +222,16 @@ module.exports = function(app, params) {
             }
         },
 
-        element: _.partial(app.element, moduleId),
+        element: _.bind(ensureFunction(app.element), app, moduleId),
 
-        bindEvents: _.partial(ensureFunction(app.bindEvents), moduleId),
+        bindEvents: _.bind(ensureFunction(app.bindEvents), app, moduleId),
 
-        mod: _.partial(ensureFunction(app.mod), moduleId),
+        mod: _.bind(ensureFunction(app.mod), app, moduleId),
 
         /**
          * Возвращает дочерний модуль по айдишнику.
          */
-        moduleById: _.partial(ensureFunction(app.getChildModuleWrapperById), moduleId),
+        moduleById: _.bind(ensureFunction(app.getChildModuleWrapperById), app, moduleId),
 
         /**
          * @returns {string} Айдишник модуля.
@@ -292,9 +292,9 @@ module.exports = function(app, params) {
 
         registry: app.registry,
 
-        raise: app.raise,
+        raise: _.bind(app.raise, app),
 
-        onTransitionEnd: app.onTransitionEnd,
+        onTransitionEnd: _.bind(ensureFunction(app.onTransitionEnd), app),
 
         self: function() {
             var descriptor = app.getModuleDescriptorById(moduleId);
@@ -315,7 +315,7 @@ module.exports = function(app, params) {
             };
         },
 
-        cookie: app.cookie
+        cookie: _.bind(app.cookie, app)
     };
 
     _.each(app.config['plugins'], function(name) {

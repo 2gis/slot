@@ -22,6 +22,8 @@ require('../lib/templateHelpers'); // регистрирует хелперы с
 var Registry = require('./registry');
 
 function Application() {
+    AsyncEmitter.call(this);
+
     this._moduleDescriptors = {};
     this._ids = {};
 
@@ -161,7 +163,6 @@ Application.prototype.init = function(req, callback) {
 
         try {
             var mainModule = self.mainModule = self.resolveEntryPoint(req);
-
             mainModule.init(req, function(err) {
                 self.emit('initEnd', mainModule);
                 callback(err, mainModule);
@@ -431,7 +432,7 @@ Application.prototype.requireModuleJs = function(moduleName, fileName) {
 };
 
 Application.prototype.invoke = function(fn, args, provider, self) {
-    provider = provider || this.requireComponent;
+    provider = provider || _.bind(this.requireComponent, this);
     return injector.invoke(fn, args, provider, self);
 };
 
@@ -481,7 +482,7 @@ Application.prototype.loadModule = function(data) {
     this._moduleDescriptors[moduleId] = moduleDescriptor;
 
     if (parentId) {
-        moduleDescriptor.children.push(moduleId);
+        this._moduleDescriptors[parentId].children.push(moduleId);
     }
 
     var moduleConstructor = require('../moduleConstructor'),
