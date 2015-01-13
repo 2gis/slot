@@ -1,5 +1,6 @@
 
-var namer = require('../lib/namer');
+var namer = require('../lib/namer'),
+    _ = require('lodash');
 
 if (typeof $ != 'undefined') {
     /**

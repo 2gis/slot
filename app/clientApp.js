@@ -74,13 +74,13 @@ ClientApplication.prototype.addTransition = function(handler, purpose) {
 };
 
 ClientApplication.prototype.runTransitions = function(callback) {
+    var app = this;
+
     if (this._transitionsAreRunning) return;
     this._transitionsAreRunning = true;
 
     this.transitionSort(this.transitions);
     transitionStep();
-
-    var app = this;
 
     function transitionStep() {
         var transition = app.transitions.shift();

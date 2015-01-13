@@ -59,7 +59,6 @@
   "browser": {
     "jquery-deferred": false,
     "request": false,
-    "./logger": false,
-    "./app/index.js": "./app/clientApp.js"
+    "./logger": false
   }
 }
