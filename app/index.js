@@ -457,8 +457,6 @@ Application.prototype.loadModule = function(data) {
         templates: templateProvider.forModule(moduleName)
     }]);
 
-    this.emit('slotInit', slot);
-
     if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
         throw new Error('Bad moduleJs: ' + moduleName);
     }

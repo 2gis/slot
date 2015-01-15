@@ -322,5 +322,7 @@ module.exports = function(app, params) {
         slot[name] = app[name];
     });
 
+    app.emit('slotInit', slot);
+
     return slot;
 };
