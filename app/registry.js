@@ -4,12 +4,19 @@ function Registry() {
 }
 
 /**
- * Возвращает значение или пустой объект по заданному ключу
+ * Устанавливает значение по умолчанию для заданного ключа.
+ *
+ * Возвращает значение по ключу если оно есть, если нет,
+ * записывает переданное значение и возвращает его.
+ *
  * @param {string} name
+ * @param {*} [def={}]
  * @returns {*}
  */
-Registry.prototype.hash = function(name) {
-    return this.data[name] || (this.data[name] = {});
+Registry.prototype.setDefault = function(name, def) {
+    if (def === void 0) def = {};
+
+    return this.has(name) ? this.data[name] : (this.data[name] = def);
 };
 
 /**

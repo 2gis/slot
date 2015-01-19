@@ -1,9 +1,4 @@
 
-/*!
- * Оставлю этот камент здесь! Потом покажу сыну если что :)
- * Мы поехали в роддом! Кажется началось. надеюсь не в холостую
- */
-
 var _ = require('lodash');
 var async = require('async');
 var UAParser = require('ua-parser-js');
