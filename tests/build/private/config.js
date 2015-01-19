@@ -1,0 +1,2 @@
+
+exports.mainModule = 'empty';

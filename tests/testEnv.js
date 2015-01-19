@@ -4,11 +4,10 @@ var path = require('path');
 var env = require('../env');
 env.setRootPath(path.join(__dirname, '..'));
 
-var config = require('../config');
-var appConstructor = require('../serverApp');
+var Application = require('../app');
 
 module.exports = function() {
-    var app = appConstructor(config);
+    var app = new Application();
     var slotConstructor = require('../slot');
 
     return {

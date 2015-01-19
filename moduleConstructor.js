@@ -283,9 +283,9 @@ module.exports = function(app, moduleConf, slot, cte) {
     };
 
     if (app.isClient) {
-        moduleWrapper.block = _.partial(app.block, moduleConf.uniqueId);
-        moduleWrapper.bindEvents = _.partial(app.bindEvents, moduleConf.uniqueId);
-        moduleWrapper.unbindEvents = _.partial(app.unbindEvents, moduleConf.uniqueId);
+        moduleWrapper.block = _.bind(app.block, app, moduleConf.uniqueId);
+        moduleWrapper.bindEvents = _.bind(app.bindEvents, app, moduleConf.uniqueId);
+        moduleWrapper.unbindEvents = _.bind(app.unbindEvents, app, moduleConf.uniqueId);
     }
 
     return moduleWrapper;
