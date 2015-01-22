@@ -525,6 +525,8 @@ Application.prototype.loadModule = function(data) {
 
     // Модуль удаляется из дом-дерева. Необходимо сначала его убить.
     var remove = function() {
+        if (moduleConf.dispose) moduleConf.dispose();
+
         if (slot.isClient) {
             slot.block().remove();
         }
@@ -536,8 +538,6 @@ Application.prototype.loadModule = function(data) {
                 app._moduleDescriptors[childId].instance.remove();
             });
         }
-
-        if (moduleConf.dispose) moduleConf.dispose();
 
         app.emit('moduleDisposed', moduleDescriptor);
 
