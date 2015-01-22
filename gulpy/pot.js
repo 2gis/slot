@@ -40,18 +40,22 @@ module.exports = function(args) {
     }
 
     /**
-     * Фильтр для сборки модулей
+     * Фильтр для сборки модулей. Чёрный список имеет приоритет: если модуль есть и там и там, он не попадёт в сборку. + идёт фильтрация по isSameFolder
      * @param {string} filepath - путь до файла
-     * @param {Array <string>} blackList - модули, которые нужно исключить
      * @returns {boolean}
      */
-    function modulesFilter(filepath, blackList) {
+    function modulesFilter(filepath) {
         if (!pot.flags) throw new Error("You must define flags to run modulesFilter");
         var bases = getPathBases(filepath);
 
-        if (_.contains(blackList, bases.basename)) {
+        if (_.contains(pot.config.blackListModules, bases.basename)) {
             return false;
         }
+
+        if (pot.config.whiteListModules && pot.config.whiteListModules.length && !_.contains(pot.config.whiteListModules, bases.basename)) {
+            return false;
+        }
+
         return bases.dirname == bases.basename;
     }
 
@@ -172,7 +176,7 @@ module.exports = function(args) {
 
         // @TODO: будем ли менять место положение конфигов для сборки в приложении?
         get config() {
-            var baseCfg = projectRequire('config/build');
+            var baseCfg = pot.projectRequire('config/build');
             var glob = require('flat-glob').sync;
 
             var extPattern = path.join(pot.projectPath, './config/build/*.js');
