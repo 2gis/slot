@@ -72,12 +72,14 @@ module.exports = function(app) {
     /**
      * @returns {Object} Объект, по которому можно определить браузер и операционку.
      */
-    return function(userAgentString) {
+    function getUA(userAgentString) {
         // Выставляем версию браузера.
         var parser = new UAParser();
 
-        userAgentString = userAgentString || this.registry.hash('ua').ua || '';
-        parser.setUA(userAgentString);
+        userAgentString = userAgentString || app.registry.get('ua').ua || false;
+        if (userAgentString) {
+            parser.setUA(userAgentString);
+        }
 
         var result = parser.getResult();
         var osName = (result.os && result.os.name || '').toLowerCase().replace(/ /g, '');
@@ -104,5 +106,14 @@ module.exports = function(app) {
         });
 
         return result;
+    }
+
+    var cache = {};
+
+    return function(userAgentString) {
+        if (!cache[userAgentString]) {
+            cache[userAgentString] = getUA(userAgentString);
+        }
+        return cache[userAgentString];
     };
 };
