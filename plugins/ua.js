@@ -69,6 +69,10 @@ module.exports = function(app) {
             (os.name == 'Windows' && browser.name == 'Safari');
     }
 
+    function getUAFromRegistry() {
+        return app.registry.has('ua') ? app.registry.get('ua').ua : '';
+    }
+
     /**
      * @returns {Object} Объект, по которому можно определить браузер и операционку.
      */
@@ -76,10 +80,8 @@ module.exports = function(app) {
         // Выставляем версию браузера.
         var parser = new UAParser();
 
-        userAgentString = userAgentString || app.registry.get('ua').ua || false;
-        if (userAgentString) {
-            parser.setUA(userAgentString);
-        }
+        userAgentString = userAgentString || getUAFromRegistry() || '';
+        parser.setUA(userAgentString);
 
         var result = parser.getResult();
         var osName = (result.os && result.os.name || '').toLowerCase().replace(/ /g, '');
