@@ -155,16 +155,6 @@ describe('app', function() {
         });
     });
 
-    describe('-> resolveEntryPoint', function() {
-        it('Не падает когда devPages нет в конфиге', function(done) {
-            appConfig.config = {};
-            appConfig.loadModule = function() {};
-
-            appConfig.resolveEntryPoint();
-            done();
-        });
-    });
-
     describe.skip('-> getModificators', function() {
         var mods;
         var appInstance;
