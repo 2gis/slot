@@ -118,15 +118,9 @@ Application.prototype.init = function(req, callback) {
     this._stage = 'init';
     var self = this;
 
-    var data = {
-        host: req.host,
-        protocol: req.protocol,
-        port: req.port,
-        ip: req.ip,
-        ua: UAParser(req.ua)
-    };
+    req.ua = typeof req.ua == 'string' ? UAParser(req.ua) : req.ua;
 
-    this.registry.setup(data);
+    this.registry.setup(req);
     // Куки, прилетевшие в инит приложения (используется на сервере)
     this.cookies = req.cookies;
 
