@@ -26,6 +26,7 @@
     "po2json": "0.2.3",
     "posix": "~1.0.3",
     "request": "~2.27.0",
+    "reqwest": "git://github.com/2gis/reqwest",
     "setimmediate": "^1.0.2",
     "ua-parser-js": "~0.6.2",
     "winston": "~0.7.2",
