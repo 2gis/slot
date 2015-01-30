@@ -3,6 +3,7 @@
  */
 
 require('./lib/shim.js');
+var _ = require('lodash');
 
 var rootPath = './',
     buildPath,
@@ -19,6 +20,38 @@ if (!isServer) {
  * @type {global}
  */
 exports.global = global;
+
+var envConfig = {};
+global.DEBUG = false;
+exports.getConfig = function() {
+    return envConfig;
+};
+
+exports.mergeConfig = function(toMergeConfigs) {
+    function merge(cfg, upstream) {
+        for (var key in upstream) {
+            if (upstream.hasOwnProperty(key)) {
+                var value = upstream[key];
+                var doPush = false;
+                if (key.charAt(0) == '+') {
+                    doPush = true;
+                    key = key.substr(1);
+                }
+
+                var origin = cfg[key];
+                if (doPush && key in cfg && _.isArray(origin)) {
+                    origin.push.apply(origin, value);
+                } else {
+                    cfg[key] = value;
+                }
+            }
+        }
+        return cfg;
+    }
+
+    _.reduce(toMergeConfigs, merge, envConfig);
+    global.DEBUG = envConfig.debug;
+};
 
 /**
  * @returns {string}
