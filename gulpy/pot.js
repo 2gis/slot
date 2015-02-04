@@ -153,7 +153,7 @@ module.exports = function(args) {
         },
         initEnvGlobals: function(rootPath) {
             try {
-                var env = require('slot/env');
+                var env = require('../env');
                 env.setRootPath(rootPath);
             } catch (ex) {
                 console.warn("Could'nt init slot/env", ex);
@@ -210,7 +210,7 @@ module.exports = function(args) {
         },
         app: {} // namespace для конечного продукта
     };
-    var extList = ['platform', 'ulimit', 'watch']; // loadDir не используем для ленивости! ленивость для скорости!
+    var extList = ['platform', 'ulimit', 'watch', 'introspection']; // loadDir не используем для ленивости! ленивость для скорости!
     // идея в чем - если мы перестаем использовать тот или иной модуль он автоматически перестает загружаться
     // экономя время и память
     var extensions = {};
