@@ -304,13 +304,16 @@ module.exports = function(app, params) {
         /**
          * Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит.
          *
-         * @param {Function} fn
+         * @param {Function} onAlive
+         * @param {Function} onDead
          * @returns {Function}
          */
-        ifAlive: function(fn) {
+        ifAlive: function(onAlive, onDead) {
             return function() {
-                if (!(slot.stage & slot.STAGE_NOT_ALIVE)) {
-                    fn.apply(this, arguments);
+                if (!(slot.stage & slot.STAGE_NOT_ALIVE) && _.isFunction(onAlive)) {
+                    onAlive.apply(this, arguments);
+                } else if (_.isFunction(onDead)) {
+                    onDead.apply(this, arguments);
                 }
             };
         },
