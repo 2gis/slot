@@ -112,8 +112,7 @@ StateApi.prototype.isEqual = function(api, ignoreParams) {
 };
 
 /**
- * Стэйт для шаринга
- * @returns {object}
+ * @returns {object} Стэйт который будет учавствовать в формировании урла
  */
 StateApi.prototype.getShareState = function() {
     return this.state;
