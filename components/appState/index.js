@@ -155,8 +155,9 @@ AppState.prototype.init = function(url, callback) {
     });
 };
 
-AppState.prototype.getUri = function() {
-    return '/' + resolver(this.stateConf, this.getShareState(), this.uriAliases);
+AppState.prototype.getUri = function(state) {
+    state = state || this.getShareState();
+    return '/' + resolver(this.stateConf, state, this.uriAliases);
 };
 
 AppState.prototype.addUriAlias = function(pattern, params, alias) {
