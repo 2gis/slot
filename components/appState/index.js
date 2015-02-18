@@ -13,6 +13,26 @@ var StateConf = require('./stateConf');
 
 var FinalStateApi = null;
 
+/**
+ * Компонент реализует стэйт приложения.
+ *
+ * Приложение имеет некоторый стэйт и UI соответствующий ему.
+ * Стэйт, который равен UI называется actualState.
+ * С помощью различных методов аппстейта можно изменить текущий стэйт.
+ * Изменения аккумулируются в wantedState.
+ *
+ * Далее при пуше или реплейсе компаратор сравнивает wantedState и actualState и применяет полученный diff.
+ * После этого считается что UI обновился и actualState становится равным wantedState.
+ *
+ * Насчет prevState, сейчас есть костыль, и actualState обновляется _перед_ применения diff'а,
+ * а иметь предыдущий стэйт на момент применения diff'а хочется. Поэтому есть prevState который на момент применения
+ * diff'а реально равен предыдущему стэйту (а не текущему как actualState).
+ *
+ * @param {Application} app
+ * @param {StateTracker} $stateTracker компонент трэкающий стэйт
+ * @returns {AppState}
+ * @constructor
+ */
 function AppState(app, $stateTracker) {
     if (this instanceof AppState) {
         AsyncEmitter.call(this);

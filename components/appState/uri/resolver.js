@@ -26,7 +26,8 @@ module.exports = function(stateConf, state, aliases, encode) {
         var uri = pattern.inject(data, encode);
 
         _.some(aliases, function(entry) {
-            if (!entry.alias) return; // москва? не имеет алиаса в офлайне
+            if (!entry.alias) return;
+
             var entryUri = entry.getUri();
             if (uri == entryUri || uri.startsWith(entryUri + '/')) {
                 uri = uri.replace(entryUri, serializer.encode(entry.alias));
