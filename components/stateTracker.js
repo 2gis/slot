@@ -65,8 +65,13 @@ StateTracker.prototype.applyState = function() {
     this.emit('statechange', newState);
 };
 
-StateTracker.prototype.push = _.partial(StateTracker.prototype.add, 'push');
-StateTracker.prototype.replace = _.partial(StateTracker.prototype.add, 'replace');
+StateTracker.prototype.push = function(state, url) {
+    this.add('push', state, url);
+};
+
+StateTracker.prototype.replace = function(state, url) {
+    this.add('replace', state, url);
+};
 
 StateTracker.prototype.bind = function() {
     if (typeof window == 'undefined') return false;

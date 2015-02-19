@@ -236,8 +236,13 @@ AppState.prototype.add = function(type, handler, force) {
     return true;
 };
 
-AppState.prototype.push = _.partial(AppState.prototype.add, 'push');
-AppState.prototype.replace = _.partial(AppState.prototype.add, 'replace');
+AppState.prototype.push = function(handler, force) {
+    return this.add('push', handler, force);
+};
+
+AppState.prototype.replace = function(handler, force) {
+    return this.add('replace', handler, force);
+};
 
 /**
  * Актуализировать часть стейта из wantedState
