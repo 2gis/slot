@@ -20,12 +20,16 @@ function StateApi() {
 /**
  * Сбрасываем все состояние на заданное
  * @param {Object} [newState]
+ * @param {Boolean} [runFinalizer=false]
  */
-StateApi.prototype.assign = function(newState) {
+StateApi.prototype.assign = function(newState, runFinalizer) {
     this.state = newState || {};
+    if (runFinalizer) {
+        this.applyFinalizer();
+    }
 };
 
-StateApi.prototype.clearState = function() {
+StateApi.prototype.clear = function() {
     this.assign();
 };
 
@@ -116,6 +120,25 @@ StateApi.prototype.isEqual = function(api, ignoreParams) {
  */
 StateApi.prototype.getShareState = function() {
     return this.state;
+};
+
+/**
+ * Задает метод которым будет служить доводчиком состояния
+ * @param {function} func функция с интерфейсом (state, diff)
+ */
+StateApi.prototype.setFinalizer = function(func) {
+    this.finalizer = func;
+};
+
+/**
+ * Применяет финализатор стэйта, если задан
+ * @param {Object?} diff
+ */
+StateApi.prototype.applyFinalizer = function(diff) {
+    if (this.finalizer) {
+        this.finalizer(this, diff);
+    }
+    return this;
 };
 
 module.exports = StateApi;

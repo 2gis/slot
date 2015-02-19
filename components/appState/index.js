@@ -124,10 +124,6 @@ AppState.prototype.bind = function(stateTracker) {
     });
 };
 
-AppState.prototype.newStateApi = function() {
-    return new FinalStateApi();
-};
-
 AppState.prototype.parse = function(url, callback) {
     var self = this,
         stateConf = this.stateConf,
