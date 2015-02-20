@@ -40,7 +40,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "postinstall": "./scripts/postinstall.js"
+    "postinstall": "node ./scripts/postinstall.js"
   },
   "license": "BSD",
   "devDependencies": {

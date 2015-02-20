@@ -5,9 +5,6 @@ import os, sys
 import argparse
 import json
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(PROJECT_ROOT, 'bin/i18n'))
-
 from extractors.hb import extract_hb
 from babel.messages.extract import _strip_comment_tags
 

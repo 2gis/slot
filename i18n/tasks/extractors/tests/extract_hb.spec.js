@@ -28,15 +28,21 @@ describe('Тест экстрактора handlebars для Babel', function() {
                     return '-c ' + c;
                 }).join(' ');
 
-                var cmd = '../../../i18n/tasks/extractors/run_hb.py ' + keywords + ' ' + comments + ' ' + 'fixtures/' + filename;
+                var cmd = '../run_hb.py ' + keywords + ' ' + comments + ' ' + 'fixtures/' + filename;
 
                 exec(cmd, execOpts, function(err, stdout, stderr) {
                     if (err || stderr) {
                         assert(err || stderr);
-                        done();
+                        return done();
                     }
+                    var result;
 
-                    var result = JSON.parse(stdout);
+                    try {
+                        result = JSON.parse(stdout);
+                    } catch (ex) {
+                        assert(false, "Cannot parse '" + stdout + "'. No Babel installed ?");
+                        return done();
+                    }
                     result = result[Object.keys(result)[0]];
 
                     var expected = require('./fixtures/' + basename + '.expected');
