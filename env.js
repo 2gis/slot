@@ -14,14 +14,6 @@ var isServer = typeof window == 'undefined';
 
 if (!isServer) {
     window.global = window;
-} else {
-    var fs = require('fs');
-    // install slot as symlink in node_modules
-    var nodeModulesPath = __dirname + '/node_modules';
-    var slotLinkPath = nodeModulesPath + '/slot';
-    if (fs.existsSync(nodeModulesPath) && !fs.existsSync(slotLinkPath)) {
-        fs.symlinkSync('../', slotLinkPath, 'junction');
-    }
 }
 
 exports.slotPath = __dirname;
