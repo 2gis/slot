@@ -9,12 +9,12 @@ var through = require('through2');
  */
 function getInjectCode(src) {
     var injector = require('slot/lib/injector');
-    var args = injector.annotateComponent(src.toString());
+    var args = injector.getArgs(src.toString());
     var writeInject = args && args.length && args.some(function(arg) {
         return arg.charAt(0) == '$';
     });
     if (writeInject) {
-        return 'module.exports.$inject = ' + JSON.stringify(args) + ';';
+        return 'module.exports._args = ' + JSON.stringify(args) + ';';
     }
 }
 

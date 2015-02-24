@@ -16,6 +16,8 @@ if (!isServer) {
     window.global = window;
 }
 
+exports.slotPath = __dirname;
+
 /**
  * @type {global}
  */
