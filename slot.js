@@ -218,7 +218,9 @@ Slot.prototype.clearRequests = function() {
 Slot.prototype.notify = proxy('notify', true);
 Slot.prototype.broadcast = proxy('broadcast', true);
 Slot.prototype.queryModules = proxy('queryModules', true);
-
+Slot.prototype.kill = proxy('killModule', true);
+Slot.prototype.remove = proxy('removeModule', true);
+Slot.prototype.dispose = proxy('disposeModule', true);
 
 Slot.prototype.domBound = proxy('isBound');
 

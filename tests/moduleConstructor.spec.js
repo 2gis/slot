@@ -9,7 +9,10 @@ var appMock = {
     }
 };
 var slotMock = {
-    templates: {}
+    templates: {},
+    kill: _.noop,
+    remove: _.noop,
+    dispose: _.noop
 };
 var handlebarsMock = {};
 

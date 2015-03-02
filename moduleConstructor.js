@@ -289,6 +289,12 @@ module.exports = function(app, moduleConf, slot, cte) {
 
         elements: moduleConf.elements,
 
+        viewContext: moduleConf.viewContext,
+
+        kill: _.bind(slot.kill, slot),
+        remove: _.bind(slot.remove, slot),
+        dispose: _.bind(slot.dispose, slot),
+
         /**
          * @type {slot.Slot}
          */
