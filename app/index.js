@@ -443,6 +443,7 @@ Application.prototype.loadModule = function(data) {
 
     var slot = new Slot(app, {
         moduleId: moduleId,
+        moduleName: moduleName,
         templates: templateProvider.forModule(moduleName)
     });
 
@@ -474,8 +475,6 @@ Application.prototype.loadModule = function(data) {
 
     var moduleConstructor = require('../moduleConstructor'),
         moduleInstance = moduleConstructor(this, moduleConf, slot);
-
-    this.fetchTmplHelpers(slot);
 
     moduleDescriptor.instance = moduleInstance;
 
@@ -628,17 +627,6 @@ Application.prototype.setInterval = function(func, delay) {
  * @param {Array} transitions
  */
 Application.prototype.transitionSort = function(transitions) {
-    //
-};
-
-/**
- * Собирает кастомные template helpers.
- * Вызывается после создания каждого нового moduleWrapper.
- * Для переопределения в конечных продуктах.
- *
- * @param {slot.Slot} slot
- */
-Application.prototype.fetchTmplHelpers = function(slot) {
     //
 };
 

@@ -1,11 +1,13 @@
 
 var async = require('async');
 var _ = require('lodash');
-var env = require('./env');
+var env = require('./../env');
+var templateHelpers = require('./templateHelpers');
 
 function Slot(app, params) {
     this.app = app;
     this._moduleId = params.moduleId;
+    this._moduleName = params.moduleName;
     this.templates = params.templates;
 
     this.timers = []; // Массив всех таймеров для текущей копии модуля
@@ -17,10 +19,53 @@ function Slot(app, params) {
 
     this.stage = this.STAGE_INITING;
 
+    this.initTemplates();
+
     this.initPlugins();
 
     app.emit('slotInit', this);
 }
+
+Slot.prototype.initTemplates = function() {
+    this._templatePartials = _.omit(this.templates, this._moduleName);
+    this._templateHelpers = templateHelpers(this);
+};
+
+Slot.prototype.extendTmplHelpers = function(helpersToAdd) {
+    _.extend(this._templateHelpers, helpersToAdd);
+    this._tmplOptions = null; // invalidate templateOptions
+};
+
+Slot.prototype.renderPartial = function(template, ctx) {
+    var tmpl = this.templates[template];
+
+    if (!tmpl) {
+        throw new Error('slot.renderPartial: partial "' + template + '" not found');
+    }
+
+    return tmpl(ctx, this.templateOptions());
+};
+
+Slot.prototype.hasPartial = function(name) {
+    return name in this._templatePartials;
+};
+
+Slot.prototype.templateOptions = function() {
+    if (!this._tmplOptions) {
+        var descriptor = this.app.getModuleDescriptorById(this._moduleId),
+            moduleConf = descriptor.moduleConf;
+
+        var options = {},
+            partials = moduleConf.partials || {},
+            helpers = moduleConf.helpers || {};
+
+        options.partials = _.defaults(partials, this._templatePartials);
+        options.helpers = _.defaults(helpers, this._templateHelpers);
+
+        return options;
+    }
+    return this._tmplOptions;
+};
 
 Slot.prototype.initPlugins = function() {
     if (Slot.pluginsInited) return;
