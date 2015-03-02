@@ -1,6 +1,7 @@
 
 var _ = require('lodash'),
     namer = require('./lib/namer'),
+    uaConditional = require('./lib/uaConditional'),
     env = require('./env');
 
 /**
