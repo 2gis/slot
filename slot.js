@@ -1,328 +1,320 @@
 
-var async = require('async'),
-    _ = require('lodash');
+var async = require('async');
+var _ = require('lodash');
+var env = require('./env');
 
-module.exports = function(app, params) {
-    var moduleId = params.moduleId,
-        timeouts = [], // Массив всех таймаутов для текущей копии модуля
-        requests = [], // Массив запросов к апи
-        intervals = []; // Массив всех интервалов для текущей копии модуля
+function Slot(app, params) {
+    this.app = app;
+    this._moduleId = params.moduleId;
+    this.templates = params.templates;
 
-    function loadModule(conf) {
-        // новый объект необязательно создавать
-        // сейчас нет и скорее всего не будет ситуации когда один и тот же конфиг передается на инициализацию разным
-        // слотам даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
-        conf.parentId = moduleId;
-        return app.loadModule(conf);
-    }
+    this.timers = []; // Массив всех таймеров для текущей копии модуля
+    this.requests = []; // Массив запросов к апи
 
-    function ensureFunction(f) {
-        return _.isFunction(f) ? f : _.noop;
-    }
+    this.modules = {};
+    this.config = app.config;
+    this.registry = app.registry;
 
-    /**
-     * @class slot.Slot
-     */
-    /**
-     * @lends slot.Slot#
-     */
-    var slot = {
-        STAGE_INITING: 1,
-        STAGE_INITED: 2,
-        STAGE_KILLED: 4,
-        STAGE_DISPOSED: 8,
-        STAGE_ALIVE: 3, // = STAGE_INITING | STAGE_INITED
-        STAGE_NOT_ALIVE: 12, // = STAGE_DISPOSED | STAGE_KILLED
+    this.stage = this.STAGE_INITING;
 
-        /**
-         * @type {int}
-         */
-        stage: 1,
+    this.initPlugins();
 
-        templates: params.templates,
-        modules: {},
-        config: app.config,
+    app.emit('slotInit', this);
+}
 
-        addTransition: _.bind(ensureFunction(app.addTransition), app),
-        runInQueue: _.bind(ensureFunction(app.runInQueue), app),
-        invoke: _.bind(app.invoke, app),
+Slot.prototype.initPlugins = function() {
+    if (Slot.pluginsInited) return;
 
-        /**
-         * Инициализирует модуль.
-         *
-         * Метод имеет два интерфейса:
-         * - Простой: на вход принимает 3 аргумента (название модуля, данные для инициализации, колбэк);
-         * - Расширенный: на взод принмает 2 аргумента (объект в формате {type: "название_модуля", data: {}} и колбэк).
-         *
-         * См. примеры.
-         *
-         * @example
-         * // Simple module init
-         * slot.init('moduleName');
-         *
-         * @example
-         * // Init module with some init data
-         * slot.init('moduleName', {
-         *     // Init data for module
-         * });
-         *
-         * @example
-         * // Init module with callback
-         * slot.init('moduleName', function () {}
-         *     // Some code here
-         * );
-         *
-         * @example
-         * // Init module with some init data and callback
-         * slot.init('moduleName', {
-         *     // Init data for module
-         * }, function () {
-         *     // Some code here
-         * );
-         *
-         * @example
-         * // Init module with some init data
-         * slot.init({
-         *     type: 'moduleName',
-         *     data: {} // Init data for module
-         * });
-         *
-         * @example
-         * // Init module with some init data and callback
-         * slot.init({
-         *     type: 'moduleName',
-         *     data: {} // Init data for module
-         * }, function () {
-         *     // Some code here
-         * );
-         *
-         * @param {string} name - Тип модуля, например firmCard.
-         * @param {Object} [data] - Данные для инициализации модуля, которые прилетят в инит модуля первым аргументом.
-         * @param {Function} [callback] - Колбек, вызываемый инитом модуля асинхронно, или враппером синхронно,
-         *                                если модуль синхронный и не имеет колбека в ините.
-         */
-        init: function(name, data, callback) {
-            // Если слот умер - ничего инитить нет смысла, потому что слот умирает вместе с родительским модулем
-            if (slot.stage & slot.STAGE_NOT_ALIVE) {
-                return;
-            }
+    // @TODO: переделать плагин onNextFrame
+    _.each(this.app.config['plugins'], function(name) {
+        Slot.prototype[name] = this.app[name];
+    }, this);
 
-            if (_.isObject(name)) { // Обработка расширенного интерфейса метода
-                callback = data;
+    Slot.pluginsInited = true;
+};
 
-                var moduleConf = name;
+var STAGE_INITING = Slot.prototype.STAGE_INITING = 1;
+var STAGE_INITED = Slot.prototype.STAGE_INITED = 2;
+var STAGE_KILLED = Slot.prototype.STAGE_KILLED = 4;
+var STAGE_DISPOSED = Slot.prototype.STAGE_DISPOSED = 8;
+var STAGE_ALIVE = Slot.prototype.STAGE_ALIVE = 3; // = STAGE_INITING | STAGE_INITED
+var STAGE_NOT_ALIVE = Slot.prototype.STAGE_NOT_ALIVE = 12; // = STAGE_DISPOSED | STAGE_KILLED
 
-                name = moduleConf.type;
-                data = moduleConf.data;
-            } else if (_.isFunction(data)) {
-                callback = data;
-                data = {};
-            }
+Slot.prototype.loadModule = function(conf) {
+    // новый объект необязательно создавать
+    // сейчас нет и скорее всего не будет ситуации когда один и тот же конфиг передается на инициализацию разным
+    // слотам даже в этом случае использование parentId далее происходит через копирование и опасности никакой нет
+    conf.parentId = this._moduleId;
+    return this.app.loadModule(conf);
+};
 
-            var module = loadModule({ type: name, data: data });
-
-            module.init(data, function(err) {
-                var moduleName = name;
-
-                if (err) {
-                    module.dispose();
-                } else {
-                    if (module.slot.stage == slot.STAGE_INITED) { // На случай, если суицид модуля
-                        var modules = slot.modules[moduleName];
-
-                        // Если модуль такого типа уже есть, то преобразуем в массив
-                        if (modules) {
-                            if (!_.isArray(modules)) { // Если сейчас только 1 инстанс, и ещё не преобразовано в массив
-                                slot.modules[moduleName] = [modules];
-                            }
-
-                            slot.modules[moduleName].push(module);
-                        } else {
-                            slot.modules[moduleName] = module;
-                        }
-                    }
-                }
-
-                if (callback) {
-                    callback(err, module);
-                }
-            });
-
-            return module;
-        },
-
-        /**
-         * Палаллельная нициализация массива модулей.
-         *
-         * @param {Array} modules - Массив описаний инициализируемых модулей.
-         * @param {Function} callback - Опциональный колбек, вызываемый после инициализации всех модулей.
-         */
-        initModules: function(modules, callback) {
-            async.map(modules, slot.init, callback || _.noop);
-        },
-
-        initModulesSeries: function(modules, callback) {
-            async.mapSeries(modules, slot.init, callback);
-        },
-
-        requireComponent: function(name, extraArgs) {
-            var component,
-                componentMeta = app.loadComponent(name);
-
-            if (componentMeta.emitAbortablesBy) {
-                component = app.newComponent(name, extraArgs);
-                component.on(componentMeta.emitAbortablesBy, function(req) {
-                    requests.push(req);
-                });
-                component.on('done', function(req) {
-                    requests = _.without(requests, req);
-                });
-            } else {
-                component = app.requireComponent(name, extraArgs);
-            }
-            return component;
-        },
-
-        clearRequests: function() {
-            _.each(requests, function(req) {
-                req.abort();
-            });
-            requests = [];
-        },
-
-        notify: _.bind(ensureFunction(app.notify), app, moduleId),
-
-        /**
-         * Рассылает сообщения всем потомкам.
-         */
-        broadcast: _.bind(ensureFunction(app.broadcast), app, moduleId),
-
-        queryModules: _.bind(ensureFunction(app.queryModules), app, moduleId),
-
-        block: _.bind(ensureFunction(app.block), app, moduleId),
-
-        /**
-         * @type {boolean}
-         */
-        isServer: app.isServer,
-
-        /**
-         * @type {boolean}
-         */
-        isClient: app.isClient,
-
-        domBound: _.bind(app.isBound, app),
-
-        rerender: _.bind(ensureFunction(app.rerender), app, moduleId),
-
-        rebind: function() {
-            if (slot.isClient) {
-                app.unbindEvents(moduleId);
-                app.bindEvents(moduleId);
-            }
-        },
-
-        element: _.bind(ensureFunction(app.element), app, moduleId),
-
-        bindEvents: _.bind(ensureFunction(app.bindEvents), app, moduleId),
-
-        mod: _.bind(ensureFunction(app.mod), app, moduleId),
-
-        /**
-         * Возвращает дочерний модуль по айдишнику.
-         */
-        moduleById: _.bind(ensureFunction(app.getChildModuleWrapperById), app, moduleId),
-
-        /**
-         * @returns {string} Айдишник модуля.
-         */
-        moduleId: function() {
-            return moduleId;
-        },
-
-        /**
-         * Устанавливает таймаут привязанный к модулю.
-         *
-         * @param {Function} func
-         * @param {int} delay
-         */
-        setTimeout: function(func, delay) {
-            if (slot.stage & slot.STAGE_NOT_ALIVE) {
-                return;
-            }
-
-            var timer = app.setTimeout(func, delay);
-
-            if (timer) {
-                timeouts.push(timer);
-            }
-
-            return timer;
-        },
-
-        /**
-         * Отменяет ранее установленные для данного модуля таймауты.
-         */
-        clearTimeouts: function() {
-            _.each(timeouts, clearTimeout);
-        },
-
-        /**
-         * Устанавливает интервал привязанный к модулю.
-         *
-         * @param {Function} func
-         * @param {int} delay
-         */
-        setInterval: function(func, delay) {
-            var interval = app.setInterval(func, delay);
-
-            if (interval) {
-                intervals.push(interval);
-            }
-
-            return interval;
-        },
-
-        /**
-         * Отменяет ранее установленные для данного модуля интервалы.
-         */
-        clearIntervals: function() {
-            _.each(intervals, clearInterval);
-        },
-
-        registry: app.registry,
-
-        raise: _.bind(app.raise, app),
-
-        onTransitionEnd: _.bind(ensureFunction(app.onTransitionEnd), app),
-
-        self: function() {
-            var descriptor = app.getModuleDescriptorById(moduleId);
-            return descriptor && descriptor.instance;
-        },
-
-        /**
-         * Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит.
-         *
-         * @param {Function} fn
-         * @returns {Function}
-         */
-        ifAlive: function(fn) {
-            return function() {
-                if (!(slot.stage & slot.STAGE_NOT_ALIVE)) {
-                    fn.apply(this, arguments);
-                }
-            };
-        },
-
-        cookie: _.bind(app.cookie, app)
+function proxy(method, passId) {
+    return function() {
+        var args = passId ? [this._moduleId].concat(_.toArray(arguments)) : arguments;
+        return this.app[method].apply(this.app, args);
     };
+}
 
-    _.each(app.config['plugins'], function(name) {
-        slot[name] = app[name];
+Slot.prototype.invoke = proxy('invoke');
+
+if (env.isClient) {
+    Slot.prototype.addTransition = proxy('addTransition');
+    Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
+    Slot.prototype.runInQueue = proxy('runInQueue');
+    Slot.prototype.block = proxy('block', true);
+    Slot.prototype.rerender = proxy('rerender', true);
+    Slot.prototype.bindEvents = proxy('bindEvents', true);
+}
+
+/**
+ * Инициализирует модуль.
+ *
+ * Метод имеет два интерфейса:
+ * - Простой: на вход принимает 3 аргумента (название модуля, данные для инициализации, колбэк);
+ * - Расширенный: на взод принмает 2 аргумента (объект в формате {type: "название_модуля", data: {}} и колбэк).
+ *
+ * См. примеры.
+ *
+ * @example
+ * // Simple module init
+ * slot.init('moduleName');
+ *
+ * @example
+ * // Init module with some init data
+ * slot.init('moduleName', {
+         *     // Init data for module
+         * });
+ *
+ * @example
+ * // Init module with callback
+ * slot.init('moduleName', function () {}
+ *     // Some code here
+ * );
+ *
+ * @example
+ * // Init module with some init data and callback
+ * slot.init('moduleName', {
+         *     // Init data for module
+         * }, function () {
+         *     // Some code here
+         * );
+         *
+         * @example
+ * // Init module with some init data
+ * slot.init({
+         *     type: 'moduleName',
+         *     data: {} // Init data for module
+         * });
+ *
+ * @example
+ * // Init module with some init data and callback
+ * slot.init({
+         *     type: 'moduleName',
+         *     data: {} // Init data for module
+         * }, function () {
+         *     // Some code here
+         * );
+         *
+ * @param {string} name - Тип модуля, например firmCard.
+ * @param {object} [data] - Данные для инициализации модуля, которые прилетят в инит модуля первым аргументом.
+ * @param {function} [callback] - Колбек, вызываемый инитом модуля асинхронно, или враппером синхронно,
+ *                                если модуль синхронный и не имеет колбека в ините.
+ */
+Slot.prototype.init = function(name, data, callback) {
+    var slot = this;
+
+    // Если слот умер - ничего инитить нет смысла, потому что слот умирает вместе с родительским модулем
+    if (slot.stage & STAGE_NOT_ALIVE) {
+        return;
+    }
+
+    if (_.isObject(name)) { // Обработка расширенного интерфейса метода
+        callback = data;
+
+        var moduleConf = name;
+
+        name = moduleConf.type;
+        data = moduleConf.data;
+    } else if (_.isFunction(data)) {
+        callback = data;
+        data = {};
+    }
+
+    var module = slot.loadModule({type: name, data: data});
+
+
+    module.init(data, function(err) {
+        var moduleName = name;
+
+        if (err) {
+            module.dispose();
+        } else {
+            if (module.slot.stage & STAGE_INITED) { // На случай, если суицид модуля
+                var modules = slot.modules[moduleName];
+
+                // Если модуль такого типа уже есть, то преобразуем в массив
+                if (modules) {
+                    if (!_.isArray(modules)) { // Если сейчас только 1 инстанс, и ещё не преобразовано в массив
+                        slot.modules[moduleName] = [modules];
+                    }
+
+                    slot.modules[moduleName].push(module);
+                } else {
+                    slot.modules[moduleName] = module;
+                }
+            }
+        }
+
+        if (callback) {
+            callback(err, module);
+        }
     });
 
-    app.emit('slotInit', slot);
-
-    return slot;
+    return module;
 };
+
+/**
+ * Палаллельная нициализация массива модулей.
+ *
+ * @param {Array} modules - Массив описаний инициализируемых модулей.
+ * @param {Function} callback - Опциональный колбек, вызываемый после инициализации всех модулей.
+ */
+Slot.prototype.initModules = function(modules, callback) {
+    async.map(modules, _.bind(this.init, this), callback || _.noop);
+};
+
+Slot.prototype.initModulesSeries = function(modules, callback) {
+    async.mapSeries(modules, _.bind(this.init, this), callback);
+};
+
+Slot.prototype.requireComponent = function(name, extraArgs) {
+    var slot = this,
+        app = slot.app;
+
+    var component,
+        componentMeta = app.loadComponent(name);
+
+    if (componentMeta.emitAbortablesBy) {
+        component = app.newComponent(name, extraArgs);
+        component.on(componentMeta.emitAbortablesBy, function(req) {
+            slot.requests.push(req);
+        });
+        component.on('done', function(req) {
+            slot.requests = _.without(slot.requests, req);
+        });
+    } else {
+        component = app.requireComponent(name, extraArgs);
+    }
+    return component;
+};
+
+Slot.prototype.clearRequests = function() {
+    _.each(this.requests, function(req) {
+        req.abort();
+    });
+    this.requests = [];
+};
+
+Slot.prototype.notify = proxy('notify', true);
+Slot.prototype.broadcast = proxy('broadcast', true);
+Slot.prototype.queryModules = proxy('queryModules', true);
+
+
+Slot.prototype.domBound = proxy('isBound');
+
+Slot.prototype.isServer = env.isServer;
+Slot.prototype.isClient = env.isClient;
+
+Slot.prototype.rebind = function() {
+    var app = this.app;
+
+    if (app.isClient) {
+        app.unbindEvents(this._moduleId);
+        app.bindEvents(this._moduleId);
+    }
+};
+
+Slot.prototype.element = proxy('element', true);
+Slot.prototype.mod = proxy('mod', true);
+
+/**
+ * Возвращает дочерний модуль по айдишнику.
+ */
+Slot.prototype.moduleById = proxy('getChildModuleWrapperById', true);
+
+/**
+ * @returns {string} Айдишник модуля.
+ */
+Slot.prototype.moduleId = function() {
+    return this._moduleId;
+};
+
+/**
+ * Устанавливает таймаут привязанный к модулю.
+ *
+ * @param {Function} func
+ * @param {int} delay
+ */
+Slot.prototype.setTimeout = function(func, delay) {
+    if (this.stage & STAGE_NOT_ALIVE) {
+        return;
+    }
+
+    var timer = this.app.setTimeout(func, delay);
+
+    if (timer) {
+        this.timers.push(timer);
+    }
+
+    return timer;
+};
+
+/**
+ * Отменяет ранее установленные для данного модуля таймауты.
+ */
+Slot.prototype.clearTimers = function() {
+    _.each(this.timers, clearTimeout);
+};
+
+/**
+ * Устанавливает интервал привязанный к модулю.
+ *
+ * @param {Function} func
+ * @param {int} delay
+ */
+Slot.prototype.setInterval = function(func, delay) {
+    var timer = this.app.setInterval(func, delay);
+
+    if (timer) {
+        this.timers.push(timer);
+    }
+
+    return timer;
+};
+
+Slot.prototype.raise = proxy('raise');
+
+Slot.prototype.self = function() {
+    var descriptor = this.app.getModuleDescriptorById(this._moduleId);
+    return descriptor && descriptor.instance;
+};
+
+/**
+ * Регистритует функцию и возвращает триггер на её исполнение, не исполняет если модуль уже убит.
+ *
+ * @param {Function} fn
+ * @returns {Function}
+ */
+Slot.prototype.ifAlive = function(fn) {
+    var slot = this;
+
+    return function() {
+        if (!(slot.stage & STAGE_NOT_ALIVE)) {
+            fn.apply(this, arguments);
+        }
+    };
+};
+
+Slot.prototype.cookie = proxy('cookie');
+
+module.exports = Slot;

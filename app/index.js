@@ -438,19 +438,19 @@ Application.prototype.loadModule = function(data) {
         moduleId = data.id || this._nextModuleId(parentId),
         moduleName = data.type;
 
-    var slotConstructor = require('../slot'),
+    var Slot = require('../slot'),
         moduleJs = this.requireModuleJs(moduleName);
 
-    var slot = this.invoke(slotConstructor, [this, {
+    var slot = new Slot(app, {
         moduleId: moduleId,
         templates: templateProvider.forModule(moduleName)
-    }]);
+    });
 
     if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
         throw new Error('Bad moduleJs: ' + moduleName);
     }
 
-    var moduleConf = this.invoke(moduleJs, [slot], slot.requireComponent);
+    var moduleConf = this.invoke(moduleJs, [slot], _.bind(slot.requireComponent, slot));
     moduleConf.uniqueId = moduleId;
     moduleConf.type = moduleName;
 
@@ -482,8 +482,7 @@ Application.prototype.loadModule = function(data) {
         if (!moduleInstance || slot.stage == slot.STAGE_KILLED) return;
         slot.stage = slot.STAGE_KILLED;
 
-        slot.clearTimeouts();
-        slot.clearIntervals();
+        slot.clearTimers();
         slot.clearRequests();
         if (app.isBound()) {
             app.unbindEvents(moduleId);
