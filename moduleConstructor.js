@@ -107,6 +107,25 @@ module.exports = function(app, moduleConf, slot, cte) {
             return _.map(mods, function(value, name) {
                 return namer.modificatorClass(name, value);
             }).join(' ');
+        },
+
+        /**
+         * Условный оператор для браузера
+         * Принимает строку вида 'IE8', 'IE<=10', 'Opera > 12', 'Firefox 35', 'Chrome' и т.д.
+         *
+         * @example
+         * {{#browser 'Safari'}} Safari {{else}} Other browser {{/browser}}
+         *
+         * @returns {string}
+         */
+        browser: function(conditional, options) {
+            var ua = slot.ua();
+
+            if (uaConditional(conditional, ua && ua.browser)) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
         }
     };
 
