@@ -6,8 +6,7 @@ var uaConditional = require('../lib/uaConditional');
 
 module.exports = function(slot) {
 
-    var templates = slot.templates,
-        templateEngine = env.get('handlebars');
+    var templateEngine = env.get('handlebars');
 
     // Кастомные хелперы
     return {
@@ -44,7 +43,7 @@ module.exports = function(slot) {
 
             for (var i = 0, len = arguments.length; i < len - 1; i++) {
                 partial = arguments[i];
-                tmpl = typeof partial == 'function' ? partial : templates[partial];
+                tmpl = typeof partial == 'function' ? partial : slot.templates[partial];
                 if (tmpl) break;
             }
 

@@ -16,8 +16,7 @@ var env = require('./env');
 module.exports = function(app, moduleConf, slot) {
     // register default partials and helpers for current module
 
-    var clientInited = false,
-        moduleWrapper;
+    var clientInited = false;
 
     function renderTag(tag, attrs, content) {
         // Собираем все HTML-аттрибуты в строку
@@ -30,7 +29,7 @@ module.exports = function(app, moduleConf, slot) {
         return '<' + tag + attributesString + '>' + content + '</' + tag + '>';
     }
 
-    moduleWrapper = {
+    var moduleWrapper = {
         /**
          * Initializes the module with the given params. Invokes callback when init process is ready.
          */
@@ -104,12 +103,12 @@ module.exports = function(app, moduleConf, slot) {
             }
 
             var moduleId = this.id,
-                moduleInstance = app.getModuleDescriptorById(moduleId),
+                moduleDescriptor = app.getModuleDescriptorById(moduleId),
                 template = moduleConf.type || moduleConf.template,
                 tag = moduleConf.tag || 'div',
                 attrs = {};
 
-            if (!moduleInstance) {
+            if (!moduleDescriptor) {
                 throw new Error('Module with id ' + moduleId + ' not found');
             }
 
@@ -117,7 +116,7 @@ module.exports = function(app, moduleConf, slot) {
                 attrs = _.isFunction(moduleConf.viewAttrs) ? moduleConf.viewAttrs() : moduleConf.viewAttrs;
             }
 
-            var mods = moduleInstance.mods || {},
+            var mods = moduleDescriptor.mods || {},
                 compiledTemplate = slot.templates[template],
                 compiledTemplateHTML = typeof compiledTemplate == 'function' ?
                     compiledTemplate(viewContext, slot.templateOptions()) :

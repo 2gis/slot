@@ -100,17 +100,6 @@ function proxy(method, passId) {
     };
 }
 
-Slot.prototype.invoke = proxy('invoke');
-
-if (env.isClient) {
-    Slot.prototype.addTransition = proxy('addTransition');
-    Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
-    Slot.prototype.runInQueue = proxy('runInQueue');
-    Slot.prototype.block = proxy('block', true);
-    Slot.prototype.rerender = proxy('rerender', true);
-    Slot.prototype.bindEvents = proxy('bindEvents', true);
-}
-
 /**
  * Инициализирует модуль.
  *
@@ -260,34 +249,47 @@ Slot.prototype.clearRequests = function() {
     this.requests = [];
 };
 
+if (env.isClient) {
+    Slot.prototype.addTransition = proxy('addTransition');
+    Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
+    Slot.prototype.runInQueue = proxy('runInQueue');
+    Slot.prototype.block = proxy('block', true);
+    Slot.prototype.rerender = proxy('rerender', true);
+    Slot.prototype.bindEvents = proxy('bindEvents', true);
+    Slot.prototype.unbindEvents = proxy('unbindEvents', true);
+}
+
+Slot.prototype.invoke = proxy('invoke');
 Slot.prototype.notify = proxy('notify', true);
 Slot.prototype.broadcast = proxy('broadcast', true);
 Slot.prototype.queryModules = proxy('queryModules', true);
+
 Slot.prototype.kill = proxy('killModule', true);
 Slot.prototype.remove = proxy('removeModule', true);
 Slot.prototype.dispose = proxy('disposeModule', true);
 
 Slot.prototype.domBound = proxy('isBound');
 
-Slot.prototype.isServer = env.isServer;
-Slot.prototype.isClient = env.isClient;
-
-Slot.prototype.rebind = function() {
-    var app = this.app;
-
-    if (app.isClient) {
-        app.unbindEvents(this._moduleId);
-        app.bindEvents(this._moduleId);
-    }
-};
-
 Slot.prototype.element = proxy('element', true);
 Slot.prototype.mod = proxy('mod', true);
+
+Slot.prototype.raise = proxy('raise');
+Slot.prototype.cookie = proxy('cookie');
 
 /**
  * Возвращает дочерний модуль по айдишнику.
  */
 Slot.prototype.moduleById = proxy('getChildModuleWrapperById', true);
+
+Slot.prototype.isServer = env.isServer;
+Slot.prototype.isClient = env.isClient;
+
+Slot.prototype.rebind = function() {
+    if (this.isClient) {
+        this.unbindEvents();
+        this.bindEvents();
+    }
+};
 
 /**
  * @returns {string} Айдишник модуля.
@@ -308,10 +310,7 @@ Slot.prototype.setTimeout = function(func, delay) {
     }
 
     var timer = this.app.setTimeout(func, delay);
-
-    if (timer) {
-        this.timers.push(timer);
-    }
+    this.timers.push(timer);
 
     return timer;
 };
@@ -331,15 +330,10 @@ Slot.prototype.clearTimers = function() {
  */
 Slot.prototype.setInterval = function(func, delay) {
     var timer = this.app.setInterval(func, delay);
-
-    if (timer) {
-        this.timers.push(timer);
-    }
+    this.timers.push(timer);
 
     return timer;
 };
-
-Slot.prototype.raise = proxy('raise');
 
 Slot.prototype.self = function() {
     var descriptor = this.app.getModuleDescriptorById(this._moduleId);
@@ -356,12 +350,10 @@ Slot.prototype.ifAlive = function(fn) {
     var slot = this;
 
     return function() {
-        if (!(slot.stage & STAGE_NOT_ALIVE)) {
+        if (slot.stage & STAGE_ALIVE) {
             fn.apply(this, arguments);
         }
     };
 };
-
-Slot.prototype.cookie = proxy('cookie');
 
 module.exports = Slot;
