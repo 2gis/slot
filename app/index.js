@@ -12,7 +12,7 @@ var modulesQuering = require('../lib/modulesQuering');
 var namer = require('../lib/namer');
 var config = require('../config');
 
-require('../lib/templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
+var templateHelpers = require('../lib/templateHelpers');
 
 var Registry = require('./registry');
 
@@ -41,6 +41,12 @@ function Application() {
             this[name] = require('slot/plugins/' + name)(this);
         }
     }, this);
+
+    var Handlebars = env.get('handlebars');
+
+    // Create isolated Handlebars environment
+    this.handlebars = Handlebars.create();
+    templateHelpers(this);
 }
 
 inherits(Application, AsyncEmitter);
@@ -444,7 +450,7 @@ Application.prototype.loadModule = function(data) {
     var slot = new Slot(app, {
         moduleId: moduleId,
         moduleName: moduleName,
-        templates: templateProvider.forModule(moduleName)
+        templates: templateProvider.forModule(moduleName, this.handlebars)
     });
 
     if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся

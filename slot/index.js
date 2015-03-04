@@ -28,7 +28,7 @@ function Slot(app, params) {
 
 Slot.prototype.initTemplates = function() {
     this._templatePartials = _.omit(this.templates, this._moduleName);
-    this._templateHelpers = templateHelpers(this);
+    this._templateHelpers = templateHelpers(this, this.app.handlebars);
 };
 
 Slot.prototype.extendTmplHelpers = function(helpersToAdd) {

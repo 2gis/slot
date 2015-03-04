@@ -2,11 +2,8 @@
 var _ = require('lodash');
 var env = require('../env');
 var namer = require('../lib/namer');
-var uaConditional = require('../lib/uaConditional');
 
-module.exports = function(slot) {
-
-    var templateEngine = env.get('handlebars');
+module.exports = function(slot, templateEngine) {
 
     // Кастомные хелперы
     return {
@@ -80,25 +77,6 @@ module.exports = function(slot) {
             return _.map(mods, function(value, name) {
                 return namer.modificatorClass(name, value);
             }).join(' ');
-        },
-
-        /**
-         * Условный оператор для браузера
-         * Принимает строку вида 'IE8', 'IE<=10', 'Opera > 12', 'Firefox 35', 'Chrome' и т.д.
-         *
-         * @example
-         * {{#browser 'Safari'}} Safari {{else}} Other browser {{/browser}}
-         *
-         * @returns {string}
-         */
-        browser: function(conditional, options) {
-            var ua = slot.ua();
-
-            if (uaConditional(conditional, ua && ua.browser)) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this);
-            }
         }
     };
 };
