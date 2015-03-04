@@ -14,7 +14,7 @@ var config = require('../config');
 
 var templateHelpers = require('../lib/templateHelpers');
 
-var Registry = require('./registry');
+var Registry = require('../lib/registry');
 
 function Application() {
     AsyncEmitter.call(this);
