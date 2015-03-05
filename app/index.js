@@ -12,7 +12,7 @@ var modulesQuering = require('../lib/modulesQuering');
 var namer = require('../lib/namer');
 var config = require('../config');
 
-require('../lib/templateHelpers'); // регистрирует хелперы сам, как только будет передан handlebars
+var templateHelpers = require('../lib/templateHelpers');
 
 var Registry = require('./registry');
 
@@ -41,6 +41,12 @@ function Application() {
             this[name] = require('slot/plugins/' + name)(this);
         }
     }, this);
+
+    var Handlebars = env.get('handlebars');
+
+    // Create isolated Handlebars environment
+    this.handlebars = Handlebars.create();
+    templateHelpers(this);
 }
 
 inherits(Application, AsyncEmitter);
@@ -438,19 +444,20 @@ Application.prototype.loadModule = function(data) {
         moduleId = data.id || this._nextModuleId(parentId),
         moduleName = data.type;
 
-    var slotConstructor = require('../slot'),
+    var Slot = require('../slot'),
         moduleJs = this.requireModuleJs(moduleName);
 
-    var slot = this.invoke(slotConstructor, [this, {
+    var slot = new Slot(app, {
         moduleId: moduleId,
-        templates: templateProvider.forModule(moduleName)
-    }]);
+        moduleName: moduleName,
+        templates: templateProvider.forModule(moduleName, this.handlebars)
+    });
 
     if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
         throw new Error('Bad moduleJs: ' + moduleName);
     }
 
-    var moduleConf = this.invoke(moduleJs, [slot], slot.requireComponent);
+    var moduleConf = this.invoke(moduleJs, [slot], _.bind(slot.requireComponent, slot));
     moduleConf.uniqueId = moduleId;
     moduleConf.type = moduleName;
 
@@ -475,89 +482,10 @@ Application.prototype.loadModule = function(data) {
     var moduleConstructor = require('../moduleConstructor'),
         moduleInstance = moduleConstructor(this, moduleConf, slot);
 
-    this.fetchTmplHelpers(slot);
-
-    // Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве
-    var kill = function() {
-        if (!moduleInstance || slot.stage == slot.STAGE_KILLED) return;
-        slot.stage = slot.STAGE_KILLED;
-
-        slot.clearTimeouts();
-        slot.clearIntervals();
-        slot.clearRequests();
-        if (app.isBound()) {
-            app.unbindEvents(moduleId);
-        }
-
-        // Убиваем ссылку на модуль из родительского slot.modules
-        var parentId = app._moduleDescriptors[moduleId].parentId;
-        if (parentId) {
-            var parent = app._moduleDescriptors[parentId];
-            var childrenOfParent = parent.slot.modules[moduleInstance.type];
-
-            if (_.isObject(childrenOfParent)) {
-                delete parent.slot.modules[moduleInstance.type];
-            } else if (_.isArray(childrenOfParent)) {
-                _.remove(childrenOfParent, function(child) { // Удаляем из массива элемент с таким id-шником
-                    return child.id() == moduleId;
-                });
-
-                if (childrenOfParent.length == 0) {
-                    delete parent.slot.modules[moduleInstance.type];
-                }
-            }
-        }
-
-        // Убиваем все дочерние модули
-        var children = app._moduleDescriptors[moduleId].children;
-        if (children) {
-            _.each(children, function(childId) {
-                app._moduleDescriptors[childId].instance.kill();
-            });
-        }
-    };
-
-    // Модуль удаляется из дом-дерева. Необходимо сначала его убить.
-    var remove = function() {
-        if (moduleConf.dispose) moduleConf.dispose();
-
-        if (slot.isClient) {
-            slot.block().remove();
-        }
-        slot.stage = slot.STAGE_DISPOSED;
-
-        var children = app._moduleDescriptors[moduleId].children;
-        if (children) {
-            _.each(children, function(childId) {
-                app._moduleDescriptors[childId].instance.remove();
-            });
-        }
-
-        app.emit('moduleDisposed', moduleDescriptor);
-
-        if (parentId) {
-            app._moduleDescriptors[parentId].children = _.without(app._moduleDescriptors[parentId].children, moduleId);
-            delete app._moduleDescriptors[parentId].slot.modules[moduleName];
-        }
-        delete app._moduleDescriptors[moduleId];
-        moduleInstance = moduleDescriptor = moduleConf = slot = null;
-    };
-
-    var dispose = function() {
-        if (moduleInstance) { // Могли вызвать повторно
-            moduleInstance.kill();
-            moduleInstance.remove();
-        }
-    };
-
     moduleDescriptor.instance = moduleInstance;
-    moduleInstance.kill = slot.kill = kill;
-    moduleInstance.remove = slot.remove = remove;
-    moduleInstance.dispose = slot.dispose = dispose;
-    moduleInstance.viewContext = moduleConf.viewContext;
 
     // На клиенте собираем модификаторы, расставленные при рендеринге на сервере.
-    if (slot.isClient) {
+    if (this.isClient) {
         slot.mod(this.getModificators(moduleInstance));
     }
 
@@ -569,6 +497,88 @@ Application.prototype.loadModule = function(data) {
     this.emit('moduleLoaded', moduleDescriptor);
 
     return moduleInstance;
+};
+
+/**
+ * Модуль убивается (анбиндинг, удаление асинхронных функций), но сохраняется в дом-дереве и дереве модулей
+ * @param moduleId
+ */
+Application.prototype.killModule = function(moduleId) {
+    var descriptor = this._moduleDescriptors[moduleId];
+    if (!descriptor) return;
+
+    var slot = descriptor.slot,
+        moduleInstance = descriptor.instance;
+
+    if (slot.stage == slot.STAGE_KILLED) return;
+    slot.stage = slot.STAGE_KILLED;
+
+    slot.clearTimers();
+    slot.clearRequests();
+    if (this.isBound()) {
+        this.unbindEvents(moduleId);
+    }
+
+    // Убиваем ссылку на модуль из родительского slot.modules
+    var parentId = descriptor.parentId;
+    if (parentId) {
+        var parent = this._moduleDescriptors[parentId];
+        var childrenOfParent = parent.slot.modules[moduleInstance.type];
+
+        if (_.isObject(childrenOfParent)) {
+            delete parent.slot.modules[moduleInstance.type];
+        } else if (_.isArray(childrenOfParent)) {
+            _.remove(childrenOfParent, function(child) { // Удаляем из массива элемент с таким id-шником
+                return child.id() == moduleId;
+            });
+
+            if (childrenOfParent.length == 0) {
+                delete parent.slot.modules[moduleInstance.type];
+            }
+        }
+    }
+
+    // Убиваем все дочерние модули
+    _.each(descriptor.children, function(childId) {
+        this.killModule(childId);
+    }, this);
+};
+
+/**
+ * Модуль окончательно удаляется (из дом-дерева и дерева модулей)
+ * @param moduleId
+ */
+Application.prototype.removeModule = function(moduleId) {
+    var descriptor = this._moduleDescriptors[moduleId];
+    if (!descriptor) return;
+
+    var moduleConf = descriptor.moduleConf,
+        slot = descriptor.slot,
+        parentId = descriptor.parentId;
+
+    if (moduleConf.dispose) moduleConf.dispose();
+
+    if (this.isClient) {
+        slot.block().remove();
+    }
+    slot.stage = slot.STAGE_DISPOSED;
+
+    _.each(descriptor.children, function(childId) {
+        this.removeModule(childId);
+    }, this);
+
+    this.emit('moduleDisposed', descriptor);
+
+    if (parentId) {
+        this._moduleDescriptors[parentId].children = _.without(this._moduleDescriptors[parentId].children, moduleId);
+        delete this._moduleDescriptors[parentId].slot.modules[descriptor.type];
+    }
+    delete this._moduleDescriptors[moduleId];
+};
+
+Application.prototype.disposeModule = function(moduleId) {
+    this.killModule(moduleId);
+    this.removeModule(moduleId);
 };
 
 /**
@@ -623,17 +633,6 @@ Application.prototype.setInterval = function(func, delay) {
  * @param {Array} transitions
  */
 Application.prototype.transitionSort = function(transitions) {
-    //
-};
-
-/**
- * Собирает кастомные template helpers.
- * Вызывается после создания каждого нового moduleWrapper.
- * Для переопределения в конечных продуктах.
- *
- * @param {slot.Slot} slot
- */
-Application.prototype.fetchTmplHelpers = function(slot) {
     //
 };
 

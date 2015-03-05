@@ -8,11 +8,11 @@ var Application = require('../app');
 
 module.exports = function() {
     var app = new Application();
-    var slotConstructor = require('../slot');
+    var Slot = require('../slot');
 
     return {
         app: app,
-        slot: slotConstructor(app, {
+        slot: new Slot(app, {
             moduleId: 'super_random_id'
         })
     };
