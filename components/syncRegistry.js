@@ -44,4 +44,4 @@ SyncRegistry.prototype.sync = function(key, value) {
  */
 SyncRegistry.prototype.read = function() {
     return this.data;
-}
+};
