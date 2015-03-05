@@ -79,8 +79,10 @@ Slot.prototype.initPlugins = function() {
 
     // @TODO: переделать плагин onNextFrame
     _.each(this.app.config['plugins'], function(name) {
-        Slot.prototype[name] = this.app[name];
-    }, this);
+        Slot.prototype[name] = function() {
+            return this.app[name].apply(this, arguments);
+        }
+    });
 
     Slot.pluginsInited = true;
 };
