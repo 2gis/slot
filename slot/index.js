@@ -4,6 +4,13 @@ var _ = require('lodash');
 var env = require('./../env');
 var templateHelpers = require('./templateHelpers');
 
+var STAGE_INITING = Slot.prototype.STAGE_INITING = 1;
+var STAGE_INITED = Slot.prototype.STAGE_INITED = 2;
+var STAGE_KILLED = Slot.prototype.STAGE_KILLED = 4;
+var STAGE_DISPOSED = Slot.prototype.STAGE_DISPOSED = 8;
+var STAGE_ALIVE = Slot.prototype.STAGE_ALIVE = 3; // = STAGE_INITING | STAGE_INITED
+var STAGE_NOT_ALIVE = Slot.prototype.STAGE_NOT_ALIVE = 12; // = STAGE_DISPOSED | STAGE_KILLED
+
 function Slot(app, params) {
     this.app = app;
     this._moduleId = params.moduleId;
@@ -77,13 +84,6 @@ Slot.prototype.initPlugins = function() {
 
     Slot.pluginsInited = true;
 };
-
-var STAGE_INITING = Slot.prototype.STAGE_INITING = 1;
-var STAGE_INITED = Slot.prototype.STAGE_INITED = 2;
-var STAGE_KILLED = Slot.prototype.STAGE_KILLED = 4;
-var STAGE_DISPOSED = Slot.prototype.STAGE_DISPOSED = 8;
-var STAGE_ALIVE = Slot.prototype.STAGE_ALIVE = 3; // = STAGE_INITING | STAGE_INITED
-var STAGE_NOT_ALIVE = Slot.prototype.STAGE_NOT_ALIVE = 12; // = STAGE_DISPOSED | STAGE_KILLED
 
 Slot.prototype.loadModule = function(conf) {
     // новый объект необязательно создавать
