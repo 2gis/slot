@@ -82,7 +82,7 @@ Slot.prototype.initPlugins = function() {
         Slot.prototype[name] = function() {
             return this.app[name].apply(this, arguments);
         }
-    }, this);
+    });
 
     Slot.pluginsInited = true;
 };
