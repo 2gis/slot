@@ -32,7 +32,7 @@ inherits(SyncRegistry, Registry);
  */
 SyncRegistry.prototype.sync = function(key, value) {
     if (env.isServer) {
-        return this.set(key, value);
+        return this.set(key, value).get(key);
     } else {
         return this.get(key, value);
     }
