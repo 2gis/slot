@@ -94,7 +94,7 @@ Slot.prototype.initPlugins = function() {
     _.each(this.app.config['plugins'], function(name) {
         Slot.prototype[name] = function() {
             return this.app[name].apply(this, arguments);
-        }
+        };
     });
 
     Slot.pluginsInited = true;
