@@ -30,7 +30,7 @@ StateApi.prototype.assign = function(newState, runFinalizer) {
 };
 
 StateApi.prototype.clear = function() {
-    this.assign();
+    this.assign(null, true);
 };
 
 StateApi.prototype.getState = function() {
