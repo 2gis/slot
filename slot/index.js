@@ -30,7 +30,6 @@ function Slot(app, params) {
     this.stage = this.STAGE_INITING;
 
     this.initTemplates();
-
     this.initPlugins();
 
     app.emit('slotInit', this);
@@ -88,16 +87,9 @@ Slot.prototype.templateOptions = function() {
 };
 
 Slot.prototype.initPlugins = function() {
-    if (Slot.pluginsInited) return;
-
-    // @TODO: переделать плагин onNextFrame
     _.each(this.app.config['plugins'], function(name) {
-        Slot.prototype[name] = function() {
-            return this.app[name].apply(this, arguments);
-        };
-    });
-
-    Slot.pluginsInited = true;
+        this[name] = this.app[name];
+    }, this);
 };
 
 Slot.prototype.loadModule = function(conf) {
