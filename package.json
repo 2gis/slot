@@ -35,7 +35,6 @@
     "ncp": "^2.0.0",
     "po2json": "0.2.3",
     "posix": "~1.0.3",
-    "prompt": "^0.2.14",
     "request": "~2.27.0",
     "reqwest": "git://github.com/2gis/reqwest",
     "setimmediate": "^1.0.2",

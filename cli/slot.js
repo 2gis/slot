@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 
+var ncp = require('ncp');
 var _ = require('lodash');
-var program = require('commander');
-var prompt = require('prompt');
+var path = require('path');
+var async = require('async');
 var extfs = require('extfs');
 var colors = require('colors');
+var program = require('commander');
 var templates = require('./templates');
 
 program
     .version('1.0.0')
     .usage('<command> [options]');
 
-function getSuccessInfo() {
+function getSuccessInfo(name) {
     return [
-        'Done. The app has been deployed to current working directory.',
+        'Application ' + name + ' has been deployed to current working directory.',
         'Now run:',
         '',
         '    npm install',
@@ -28,6 +30,17 @@ function getTemplatesInfo() {
     return templates.map(function(template) {
         return '    * '.red + template.name.grey + '\t' + template.description;
     }).join('\n');
+}
+
+function deployTemplate(template, destPath, callback) {
+    var commonPath = path.join(__dirname, '/templates/common');
+    var tmplPath = path.join(__dirname, '/templates', template.name, '/files');
+
+    async.series(_.compact([
+        _.partial(ncp, commonPath, destPath),
+        _.partial(ncp, tmplPath, destPath),
+        template.postInstall ? _.partial(template.postInstall, destPath) : null
+    ]), callback);
 }
 
 program.on('--help', function() {
@@ -46,12 +59,6 @@ program
     .action(function(templateName) {
         var destPath = process.cwd();
 
-        if (!extfs.isEmptySync(destPath)) {
-            console.error('Error:'.red + ' Current directory is not empty.');
-            console.error('Error:'.red + ' Please go to an empty dir and run again.');
-            return;
-        }
-
         var template = _.find(templates, {name: templateName});
         if (!template) {
             console.error('Error:'.red + ' no template named ' + templateName);
@@ -60,24 +67,18 @@ program
             return;
         }
 
-        if (!_.isEmpty(template.params)) {
-            console.log('Please answer the following questions:');
+        if (!extfs.isEmptySync(destPath)) {
+            console.error('Error:'.red + ' Current directory is not empty.');
+            console.error('Error:'.red + ' Please go to an empty dir and run again.');
+            return;
         }
 
-        prompt.message = '* '.red;
-        prompt.delimiter = '';
-        prompt.get({properties: template.params}, function(err, params) {
+        deployTemplate(template, destPath, function(err, res) {
             if (err) {
-                return;
+                return console.error('Error: '.red + err);
             }
 
-            template.deploy(destPath, params, function(err) {
-                if (err) {
-                    return console.error('Error: '.red + err);
-                }
-
-                console.log(getSuccessInfo());
-            });
+            console.log(getSuccessInfo(template.name));
         });
     });
 
