@@ -1,4 +1,3 @@
-
 var _ = require('lodash');
 var namer = require('./lib/namer');
 var env = require('./env');
@@ -14,17 +13,24 @@ var env = require('./env');
  * @param {slot.Slot} slot - Инстанс слота для этого модуля.
  */
 module.exports = function(app, moduleConf, slot) {
-    // register default partials and helpers for current module
-
     var clientInited = false;
 
-    function renderTag(tag, attrs, content) {
-        // Собираем все HTML-аттрибуты в строку
-        var attributesString = _.reduce(attrs, makeAttributes, '');
 
+    /**
+     * Генерирует HTML для заданного тега
+     *
+     * @param {string} tag Название тега
+     * @param  {Object} attrs Атрибуты тега
+     * @param {string} content Содержимое
+     * @returns {string} Строка с HTML заданного тега
+     */
+    function renderTag(tag, attrs, content) {
         function makeAttributes(memo, val, key) {
             return memo + ' ' + key + '="' + val + '"';
         }
+
+        // Собираем все HTML-аттрибуты в строку
+        var attributesString = _.reduce(attrs, makeAttributes, '');
 
         return '<' + tag + attributesString + '>' + content + '</' + tag + '>';
     }
