@@ -2,11 +2,10 @@
  * @module config
  */
 
-var env = require('./env'),
-    _ = require('lodash');
+var env = require('./env');
+var _ = require('lodash');
 
 var cfg = env.getConfig();
-
 module.exports = cfg;
 
 module.exports.group = function(name) {
