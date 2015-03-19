@@ -1,0 +1,29 @@
+<section class="todo__wrapper">
+    <header class="todo__header">
+        <h1 class="todo__headerTitle">todos</h1>
+        <form class="todo__add">
+            <input class="todo__addInput todo__input" placeholder="What needs to be done?" autofocus>
+        </form>
+    </header>
+    <section class="todo__main">
+        <input id="toggleAll" class="todo__toggleAll" type="checkbox">
+        <label for="toggleAll" class="todo__toggleAllLabel">Mark all as complete</label>
+        {{module "list"}}
+    </section>
+    <footer class="todo__footer{{#if hideFooter}} _hidden{{/if}}">
+        <span class="todo__remaining"><strong class="todo__remainingNumber">{{remainingCount}}</strong>
+            items left
+        </span>
+        <ul class="todo__filters">
+            {{#each filters}}
+                <li class="todo__filtersItem">
+                    <span class="todo__filtersItemLink{{#if active}} _selected{{/if}}" data-value="{{value}}">{{label}}</span>
+                </li>
+            {{/each}}
+        </ul>
+        <button class="todo__clearCompleted{{#unless completedCount}} _hidden{{/unless}}">Clear completed (<span class="todo__clearCompletedNumber">{{completedCount}}</span>)</button>
+    </footer>
+</section>
+<footer class="todo__info">
+    <p>Double-click to edit a todo</p>
+</footer>

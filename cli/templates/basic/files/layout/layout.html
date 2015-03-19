@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Slot Application</title>
+    <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+    {{{content}}}
+
+    <% if (release) { %>
+        <script src="/assets/app.js"></script>
+    <% } else { %>
+        <script src="/assets/vendor.js"></script>
+        <script src="/assets/config.js"></script>
+        <script src="/assets/templates.js"></script>
+        <script src="/assets/bundle.js"></script>
+    <% } %>
+
+    <script>
+        var data = {{{data}}};
+    </script>
+
+    <script>
+        require('app').init();
+    </script>
+</body>
+</html>
