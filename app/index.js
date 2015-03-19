@@ -1,3 +1,7 @@
+/**
+ * Базовый модуль приложения. Работает как на клиенте, так и на сервере
+ * @module app/Application
+ */
 
 var _ = require('lodash');
 var async = require('async');
@@ -11,11 +15,10 @@ var templateProvider = require('../lib/templateProvider');
 var modulesQuering = require('../lib/modulesQuering');
 var namer = require('../lib/namer');
 var config = require('../config');
-
 var templateHelpers = require('../lib/templateHelpers');
-
 var Registry = require('../lib/registry');
 
+module.exports = Application;
 function Application() {
     AsyncEmitter.call(this);
 
@@ -48,12 +51,17 @@ function Application() {
     this.handlebars = Handlebars.create();
     templateHelpers(this);
 }
-
 inherits(Application, AsyncEmitter);
 
 Application.prototype.isServer = env.isServer;
 Application.prototype.isClient = env.isClient;
 
+/**
+ *
+ * @param {string} parentId
+ * @return {string|*}
+ * @private
+ */
 Application.prototype._nextModuleId = function(parentId) {
     var key = parentId || 'root';
     if (!(key in this._ids)) {
@@ -290,10 +298,8 @@ Application.prototype.notify = function(moduleId, message) {
     }
 
     var currentModuleId = notifier.parentId,
+        needStop = false,
         retValue;
-
-    var needStop = false;
-
     var event = {
         sender: notifier,
         stop: function() {
@@ -302,7 +308,6 @@ Application.prototype.notify = function(moduleId, message) {
     };
 
     var currentDescriptor;
-
     while (currentModuleId) {
         currentDescriptor = this._moduleDescriptors[currentModuleId]; // Текущий модуль, у которого будем искать диспетчеры
 
@@ -699,5 +704,3 @@ if (DEBUG) {
         return this.modulesByType(type)[0];
     };
 }
-
-module.exports = Application;
