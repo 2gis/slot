@@ -5,7 +5,6 @@ var glob = require('flat-glob').sync;
 var through = require('through2');
 var async = require('async');
 var crypto = require('crypto');
-var path = require('path');
 var mkdirp = require('mkdirp');
 
 function mtime(stat) {
@@ -15,10 +14,10 @@ function mtime(stat) {
 function getMtimes(sources, cb) {
     async.map(sources, function(item, cb) {
         fs.stat(item, function(err, stat) {
-            cb(err, stat || 0);
+            cb(null, stat || 0);
         });
     }, function(err, stats) {
-        cb(err, !err && stats.map(mtime));
+        cb(null, stats.map(mtime));
     });
 }
 
@@ -27,8 +26,6 @@ function checkChanged(sources, dests, done) {
     var allFiles = sources.concat(dests);
 
     getMtimes(allFiles, function(err, mtimes) {
-        if (err) return done(err);
-
         var shasum = crypto.createHash('sha1');
         shasum.update(allFiles.join());
         var namesHash = shasum.digest('hex');
@@ -62,10 +59,12 @@ var cache = {
 };
 
 /**
- * Проверяет соответствие кэша фактическим файлам по сумме mtime исходником и имен пунктов назначения
+ * Сопоставляет одну группу файлов к другой и вызывает коллбэк makeStream с результатом соответствия
+ * хэш-суммы имен файлов к сохраненной хэш-сумме времен модификации файлов.
+ *
  * @param {String[]} srcs массив масок исходных файлов
  * @param {String[]} dests массив получаемых файлов
- * @param makeStream колбек возвращающий что-то типа типа gulp.src()
+ * @param makeStream коллбек возвращающий поток который обязан записать dests файлы при необходимости
  */
 module.exports = function(srcs, dests, makeStream) {
     var stream = through.obj();
@@ -77,8 +76,6 @@ module.exports = function(srcs, dests, makeStream) {
                 if (!needInvalidate) return;
 
                 checkChanged(srcs, dests, function(err, namesHash, changesHash) {
-                    if (err) return stream.emit('error', err);
-
                     cache.write(namesHash, changesHash);
                 });
             })
@@ -86,10 +83,6 @@ module.exports = function(srcs, dests, makeStream) {
     }
 
     checkChanged(srcs, dests, function(err, namesHash, changesHash) {
-        // если нет каких-то файлов - значит нужно инвалидировать
-        if (err) return finish(true);
-
-        // иначе инвалидируем только при необходимости
         cache.read(namesHash, function(err, data) {
             var needInvalidate = !!err || data != changesHash;
 
