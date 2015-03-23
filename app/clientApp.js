@@ -1,3 +1,8 @@
+/**
+ * Расширенная версия Application до методов специфичных клиентскому окружению
+ *
+ * @module app/ClientApplication
+ */
 
 var _ = require('lodash');
 var Application = require('./index');
@@ -6,6 +11,7 @@ var defer = require('../lib/defer');
 var inherits = require('inherits');
 require('./jquery.mod');
 
+module.exports = ClientApplication;
 function ClientApplication() {
     Application.call(this);
 
@@ -18,22 +24,6 @@ function ClientApplication() {
     this._queueAreRunning = false;
 }
 inherits(ClientApplication, Application);
-
-function moduleBlockId(moduleId) {
-    return '#module-' + moduleId;
-}
-
-function bind(selector, elementName, container, eventName, handler, on) {
-    var exceptions = ['scroll', 'block', 'error'], // Эти события нельзя подписывать как live, потому что они не всплывают
-        method = on ? 'on' : 'off',
-        selectorParam = elementName == 'block' ? null : selector;
-
-    if (_.contains(exceptions, eventName)) {
-        $(selector, container)[method](eventName, handler);
-    } else {
-        container[method](eventName, selectorParam, handler);
-    }
-}
 
 ClientApplication.prototype.bind = function() {
     this._stage = 'bind';
@@ -203,4 +193,18 @@ ClientApplication.prototype.unbindEvents = function(moduleId, elementName) {
     this.processEvents(moduleId, elementName, false);
 };
 
-module.exports = ClientApplication;
+function moduleBlockId(moduleId) {
+    return '#module-' + moduleId;
+}
+
+function bind(selector, elementName, container, eventName, handler, on) {
+    var exceptions = ['scroll', 'block', 'error'], // Эти события нельзя подписывать как live, потому что они не всплывают
+        method = on ? 'on' : 'off',
+        selectorParam = elementName == 'block' ? null : selector;
+
+    if (_.contains(exceptions, eventName)) {
+        $(selector, container)[method](eventName, handler);
+    } else {
+        container[method](eventName, selectorParam, handler);
+    }
+}

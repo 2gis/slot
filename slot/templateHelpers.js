@@ -1,11 +1,13 @@
+/**
+ * Модуль добавляет кастомные handlebars хелперы
+ * @module slot/templateHelpers
+ */
 
 var _ = require('lodash');
 var env = require('../env');
 var namer = require('../lib/namer');
 
 module.exports = function(slot, templateEngine) {
-
-    // Кастомные хелперы
     return {
         /**
          * Подключение модуля. Модуль должен быть проинициализирован.
@@ -32,7 +34,7 @@ module.exports = function(slot, templateEngine) {
             return html;
         },
 
-        // Подключение первого имеющегося (из списка) партиала
+        /** Подключение первого имеющегося (из списка) партиала */
         p: function() {
             var tmpl = null,
                 options = arguments[arguments.length - 1],

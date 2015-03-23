@@ -3,14 +3,12 @@
  */
 
 require('./lib/shim.js');
+var events = require('events');
 var _ = require('lodash');
 
-var rootPath = './',
-    buildPath,
-    events = require('events'),
-    _ = require('lodash');
-
-var isServer = typeof window == 'undefined';
+var isServer = typeof window == 'undefined',
+    rootPath = './',
+    buildPath;
 
 if (!isServer) {
     window.global = window;

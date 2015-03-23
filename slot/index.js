@@ -1,5 +1,7 @@
 /**
- * @class Slot
+ * @module Slot
+ * @type {Slot}
+ * @description
  */
 
 var async = require('async');
@@ -14,6 +16,7 @@ var STAGE_DISPOSED = Slot.prototype.STAGE_DISPOSED = 8;
 var STAGE_ALIVE = Slot.prototype.STAGE_ALIVE = 3; // = STAGE_INITING | STAGE_INITED
 var STAGE_NOT_ALIVE = Slot.prototype.STAGE_NOT_ALIVE = 12; // = STAGE_DISPOSED | STAGE_KILLED
 
+module.exports = Slot;
 function Slot(app, params) {
     this.app = app;
     this._moduleId = params.moduleId;
@@ -100,13 +103,6 @@ Slot.prototype.loadModule = function(conf) {
     return this.app.loadModule(conf);
 };
 
-function proxy(method, passId) {
-    return function() {
-        var args = passId ? [this._moduleId].concat(_.toArray(arguments)) : arguments;
-        return this.app[method].apply(this.app, args);
-    };
-}
-
 /**
  * Инициализирует 1 дочерний модуль.
  * После инициализации модуль доступен в шаблонах через хелпер module, если инициализация дочернего модуля происходит на этапе инициализации текущего.
@@ -149,7 +145,7 @@ function proxy(method, passId) {
  * @param {object} [data] - Данные для инициализации модуля, которые прилетят в инит модуля первым аргументом.
  * @param {function} [callback] - Колбек, вызываемый инитом модуля асинхронно, или враппером синхронно,
  *                                если модуль синхронный и не имеет колбека в ините.
- * @returns {object} Инстанс инициализированного (или инициализируемого) модуля
+ * @returns {object|undefined} Инстанс инициализированного (или инициализируемого) модуля
  */
 Slot.prototype.init = function(name, data, callback) {
     var slot = this;
@@ -253,7 +249,8 @@ Slot.prototype.initModulesSeries = function(modules, callback) {
  * @method requireComponent
  * @memberOf Slot#
  *
- * @param {string} componentName Имя компонента.
+ * @param {string} name Имя компонента.
+ * @param {array} [extraArgs] Дополнительные аргументы
  * @returns {object} Возвращает ссылку на компонент componentName.
  */
 Slot.prototype.requireComponent = function(name, extraArgs) {
@@ -283,38 +280,6 @@ Slot.prototype.clearRequests = function() {
     });
     this.requests = [];
 };
-
-if (env.isClient) {
-    Slot.prototype.addTransition = proxy('addTransition');
-    Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
-    Slot.prototype.runInQueue = proxy('runInQueue');
-
-    /**
-     * Метод, возвращающий jQuery-объект с корневым DOM-элементом текущего модуля.
-     * @example
-     * // Получить высоту модуля
-     * var height = slot.block().heigh;
-     *
-     * @method block
-     * @memberOf Slot#
-     * @returns {jQuery} Коллекция с одним DOM-элементом - блоком текущего модуля
-     */
-    Slot.prototype.block = proxy('block', true);
-
-    /**
-     * Перерисовывает модуль в браузере:
-     *  - удаляет все события со всех элементов;
-     *  - получает новый html;
-     *  - заменяет старый html на новый;
-     *  - заново добавляет все обработчики событий; вызывает метод bind модуля.
-     *
-     * @method rerender
-     * @memberOf Slot#
-     */
-    Slot.prototype.rerender = proxy('rerender', true);
-    Slot.prototype.bindEvents = proxy('bindEvents', true);
-    Slot.prototype.unbindEvents = proxy('unbindEvents', true);
-}
 
 /**
  * Вызывает func, с аргументами, состоящими из двух частей:
@@ -505,7 +470,7 @@ Slot.prototype.isServer = env.isServer;
 
 /**
  * Флаг, отвечающий на вопрос: происходит ли исполнение кода на клиенте в браузере?
- * @constant isClient
+ * @constant {boolean}
  * @memberOf Slot#
  */
 Slot.prototype.isClient = env.isClient;
@@ -534,7 +499,7 @@ Slot.prototype.moduleId = function() {
  * @memberOf Slot#
  * @param {function} func Функция для отложенного вызова
  * @param {int} delay Задержка выполнения функции в мс
- * @returns {int} id таймера
+ * @returns {int|undefined} id таймера или undefined если вызывается в состоянии STAGE_NOT_ALIVE
  */
 Slot.prototype.setTimeout = function(func, delay) {
     if (this.stage & STAGE_NOT_ALIVE) {
@@ -603,4 +568,49 @@ Slot.prototype.ifAlive = function(fn) {
     };
 };
 
-module.exports = Slot;
+if (env.isClient) {
+    Slot.prototype.addTransition = proxy('addTransition');
+    Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
+    Slot.prototype.runInQueue = proxy('runInQueue');
+
+    /**
+     * Метод, возвращающий jQuery-объект с корневым DOM-элементом текущего модуля.
+     * @example
+     * // Получить высоту модуля
+     * var height = slot.block().heigh;
+     *
+     * @method block
+     * @memberOf Slot#
+     * @returns {jQuery} Коллекция с одним DOM-элементом - блоком текущего модуля
+     */
+    Slot.prototype.block = proxy('block', true);
+
+    /**
+     * Перерисовывает модуль в браузере:
+     *  - удаляет все события со всех элементов;
+     *  - получает новый html;
+     *  - заменяет старый html на новый;
+     *  - заново добавляет все обработчики событий; вызывает метод bind модуля.
+     *
+     * @method rerender
+     * @memberOf Slot#
+     */
+    Slot.prototype.rerender = proxy('rerender', true);
+    Slot.prototype.bindEvents = proxy('bindEvents', true);
+    Slot.prototype.unbindEvents = proxy('unbindEvents', true);
+}
+
+/**
+ * Проксирует вызов метода из инстанса app
+ *
+ * @private
+ * @param {string} method
+ * @param {boolean} [passId]
+ * @returns {Function}
+ */
+function proxy(method, passId) {
+    return function() {
+        var args = !!passId ? [this._moduleId].concat(_.toArray(arguments)) : arguments;
+        return this.app[method].apply(this.app, args);
+    };
+}
