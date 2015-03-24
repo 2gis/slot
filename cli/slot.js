@@ -49,9 +49,9 @@ program.on('--help', function() {
 });
 
 program
-    .command('init <templateName>')
+    .command('init [templateName]')
     .description('Scaffolds out a Slot.js app using one of the templates')
-    .usage('<templateName>')
+    .usage('[templateName]')
     .on('--help', function() {
         console.log('  Available templates:\n');
         console.log(getTemplatesInfo());
@@ -59,6 +59,7 @@ program
     .action(function(templateName) {
         var destPath = process.cwd();
 
+        templateName = templateName || 'basic';
         var template = _.find(templates, {name: templateName});
         if (!template) {
             console.error('Error:'.red + ' no template named ' + templateName);
@@ -83,3 +84,8 @@ program
     });
 
 program.parse(process.argv);
+
+// Показываем помощь, если утилита запущена без параметров
+if (!process.argv.slice(2).length) {
+    program.help();
+}
