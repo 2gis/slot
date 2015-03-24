@@ -24,3 +24,25 @@ exports.components = function(names) {
         return 'slot/components/' + path.basename(component, '.js');
     });
 };
+
+/**
+ * Возвращает пути плагинов слота для браузерифая
+ * @param {string[]} [names] необходимые плагины, если не заданы - вернет все
+ */
+exports.plugins = function(names) {
+    var plugins = glob('plugins/*.js', {
+        cwd: env.slotPath
+    }).map(function(pluginPath) {
+        return path.basename(pluginPath, '.js');
+    });
+
+    if (names) {
+        plugins = plugins.filter(function(plugin) {
+            return names.indexOf(plugin) != -1;
+        });
+    }
+
+    return plugins.map(function(pluginName) {
+        return path.join('slot/plugins', pluginName);
+    });
+};

@@ -3,9 +3,9 @@ var template = require('gulp-template');
 
 gulp.task('layout', function() {
     var layoutStream = gulp.src('layout/layout.html')
-        .pipe(template({release: gulp.pot.release}));
+        .pipe(template({release: pot.release}));
 
-    var templatify = gulp.pot.snippet('templatify');
+    var templatify = pot.snippet('templatify');
 
     return templatify(layoutStream, {
         namespace: 'this'

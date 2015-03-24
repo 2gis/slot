@@ -16,32 +16,44 @@ function createBundler() {
         cache: {},
         packageCache: {},
         fullPaths: true,
-        debug: !gulp.pot.release
+        debug: !pot.release
     });
 
-    if (!gulp.pot.release) {
+    if (!pot.release) {
         bundler = watchify(bundler);
     }
 
-    glob([
-        glob(['./modules/*/*.js']).filter(gulp.pot.isSameFolder),
-        glob(['./components/*/*.js']).filter(gulp.pot.isSameFolder),
-        glob(['./helpers/blocks/*/*.js']).filter(gulp.pot.isSameFolder)
-    ]).forEach(function(entry) {
+    // Файлы приложения
+    var entries = glob([
+        glob(['./plugins/*.js']),
+        glob(['./modules/*/*.js']).filter(pot.isSameFolder),
+        glob(['./components/*/*.js']).filter(pot.isSameFolder),
+        glob(['./helpers/blocks/*/*.js']).filter(pot.isSameFolder)
+    ]);
+
+    // Встроенные в слот компоненты и плагины
+    entries = entries.concat(pot.introspection.components());
+
+    // TODO: заюзать pot.introspection.plugins, когда он зарелизится
+    entries = entries.concat([
+        'slot/plugins/fpsMeter',
+        'slot/plugins/onNextFrame',
+        'slot/plugins/ua'
+    ]);
+
+    // Добавляем всё в бандл
+    entries.forEach(function(entry) {
         bundler.require(entry);
     });
 
-    gulp.pot.introspection.components().forEach(function(component) {
-        bundler.require(component);
-    });
-
+    // Добавляем точку входа
     bundler.require('./client.js', {expose: 'app'});
 
     // Обеспечиваем работу инжектора в релизной сборке. Преобразование сделано
     // глобальным, так как в противном случае browserify последних версий обрабатывает
     // не все требуемые файлы.
-    if (gulp.pot.release) {
-        bundler.transform(gulp.pot.lib('injector').injectStream, {global: true});
+    if (pot.release) {
+        bundler.transform(pot.lib('injector').injectStream, {global: true});
     }
 
     return bundler;
@@ -55,7 +67,7 @@ function vendorStream() {
 function configStream() {
     var paths = ['config/base.js'];
 
-    if (gulp.pot.release) {
+    if (pot.release) {
         paths.push('config/production.js');
     }
 
@@ -71,7 +83,7 @@ function configStream() {
 }
 
 function templateStream() {
-    return gulp.pot.recipes.templates.compile()
+    return pot.recipes.templates.compile()
         .pipe(concat('templates.js'));
 }
 
@@ -102,7 +114,7 @@ gulp.task('js.bundle', function() {
 });
 
 gulp.task('js.release', function() {
-    var allJs = gulp.pot.esconcat(
+    var allJs = pot.esconcat(
         vendorStream(),
         configStream(),
         templateStream(),
@@ -116,7 +128,7 @@ gulp.task('js.release', function() {
 });
 
 var jsTasks = [];
-if (!gulp.pot.release) {
+if (!pot.release) {
     jsTasks = [
         'js.config',
         'js.vendor',

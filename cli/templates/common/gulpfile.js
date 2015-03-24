@@ -1,12 +1,14 @@
-var gulp = require('gulp');
-
 var del = require('del');
+var gulp = require('gulp');
 var requireDir = require('require-dir');
 var runSequence = require('run-sequence');
 
+// Инициализируем pot и записываем его в глобальную область
 var args = require('yargs').argv;
-gulp.pot = require('slot/gulpy/pot')(args);
+global.pot = require('slot/gulpy/pot')(args);
+pot.projectPath = __dirname;
 
+// Загружаем все таски
 requireDir('./tasks');
 
 gulp.task('clean', function(cb) {
