@@ -1,4 +1,6 @@
-#Slot — изоморфный JavaScript-фреймворк
+[![Slot](https://raw.githubusercontent.com/2gis/artwork/master/slot/logo-multi.png)](http://github.com/2gis/slot)
+
+JavaScript фреймворк, позволяющий быстро и просто создавать модульные изоморфные приложения.
 
 Slot позволяет проинициализировать приложение на сервере, передать клиенту собранную верстку и, при завершении инициализации на клиенте, привязать события к DOM-нодам.
 
@@ -11,12 +13,12 @@ $ npm install -g slot
 ```
 
 ###### Создайте пустую папку:
-```
-$ mkdir ./mynewapp && cd ./mynewapp
+```bash
+$ mkdir ./myApp && cd ./myApp
 ```
 
 ###### Разверните в папке базовую структуру приложения:
-```
+```bash
 $ slot init
 ```
 
