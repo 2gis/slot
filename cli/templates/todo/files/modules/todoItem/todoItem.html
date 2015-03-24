@@ -1,0 +1,8 @@
+<div class="todoItem__view">
+    <input class="todoItem__toggleCompleted" type="checkbox"{{#if completed}} checked{{/if}}>
+    <label class="todoItem__title">{{title}}</label>
+    <button class="todoItem__remove"></button>
+</div>
+<form class="todoItem__editTodo">
+    <input class="todoItem__editTodoInput todo__input" value="{{title}}">
+</form>

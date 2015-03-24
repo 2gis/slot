@@ -27,7 +27,8 @@ var files = [
     '!docs/**/*.js',
     '!smokesignals/index.js',
     '!**/node_modules/**/*',
-    '!coverage/**/*.js'
+    '!coverage/**/*.js',
+    '!cli/templates/**/*.js'
 ];
 
 verbose.setMessages('lint.jscs', {
