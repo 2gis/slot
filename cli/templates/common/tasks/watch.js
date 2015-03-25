@@ -9,7 +9,7 @@ gulp.task('watch', function() {
         runSequence('js.config', 'server');
     });
 
-    gulp.watch(gulp.pot.recipes.templates.globs(), function() {
+    gulp.watch(pot.recipes.templates.globs(), function() {
         runSequence('js.templates', 'server');
     });
 

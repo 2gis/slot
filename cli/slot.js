@@ -1,17 +1,22 @@
 #!/usr/bin/env node
 
+var fs = require('fs');
 var ncp = require('ncp');
 var _ = require('lodash');
 var path = require('path');
 var async = require('async');
 var extfs = require('extfs');
 var colors = require('colors');
+var glob = require('glob').sync;
 var program = require('commander');
-var templates = require('./templates');
 
-program
-    .version('1.0.0')
-    .usage('<command> [options]');
+function requireTemplates() {
+    var paths = glob(path.join(__dirname, 'templates/*/index.js'));
+
+    return paths.map(function(path) {
+        return require(path);
+    });
+}
 
 function getSuccessInfo(name) {
     return [
@@ -26,7 +31,7 @@ function getSuccessInfo(name) {
     ].join('\n');
 }
 
-function getTemplatesInfo() {
+function getTemplatesInfo(templates) {
     return templates.map(function(template) {
         return '    * '.red + template.name.grey + '\t' + template.description;
     }).join('\n');
@@ -37,33 +42,36 @@ function deployTemplate(template, destPath, callback) {
     var tmplPath = path.join(__dirname, '/templates', template.name, '/files');
 
     async.series(_.compact([
-        _.partial(ncp, commonPath, destPath),
+        template.type == 'app' ? _.partial(ncp, commonPath, destPath) : null,
         _.partial(ncp, tmplPath, destPath),
         template.postInstall ? _.partial(template.postInstall, destPath) : null
     ]), callback);
 }
 
-program.on('--help', function() {
-    console.log('  Available templates:\n');
-    console.log(getTemplatesInfo());
-});
+program
+    .version('0.0.1')
+    .usage('<command> [options]');
 
 program
-    .command('init <templateName>')
+    .command('init [templateName]')
     .description('Scaffolds out a Slot.js app using one of the templates')
-    .usage('<templateName>')
+    .usage('[templateName]')
     .on('--help', function() {
-        console.log('  Available templates:\n');
-        console.log(getTemplatesInfo());
+        var appTemplates = _.filter(requireTemplates(), {type: 'app'});
+
+        console.log('  Available application templates::\n');
+        console.log(getTemplatesInfo(appTemplates));
     })
     .action(function(templateName) {
         var destPath = process.cwd();
+        var templates = _.filter(requireTemplates(), {type: 'app'});
 
+        templateName = templateName || 'basic';
         var template = _.find(templates, {name: templateName});
         if (!template) {
             console.error('Error:'.red + ' no template named ' + templateName);
             console.error('Available templates:');
-            console.error(getTemplatesInfo());
+            console.error(getTemplatesInfo(templates));
             return;
         }
 
@@ -82,4 +90,35 @@ program
         });
     });
 
+program
+    .command('addmodule <moduleName>')
+    .description('Adds a new module to the existing Slot app')
+    .usage('<moduleName>')
+    .action(function(moduleName) {
+        var appPath = process.cwd();
+        if (!fs.existsSync(path.join(appPath, '/modules'))) {
+            console.error('Error:'.red + ' Modules folder not found in ' + appPath);
+            console.error('Error:'.red + ' Is it a Slot application?');
+            return;
+        }
+
+        var modulePath = path.join(appPath, '/modules', moduleName);
+        if (fs.existsSync(modulePath)) {
+            console.error('Error:'.red + ' Module ' + moduleName + ' already exists');
+            return;
+        }
+
+        fs.mkdirSync(modulePath);
+
+        var moduleTemplate = _.find(requireTemplates(), {name: 'module'});
+        deployTemplate(moduleTemplate, modulePath, function() {
+            console.log('Module files added to ' + modulePath);
+        });
+    });
+
 program.parse(process.argv);
+
+// Показываем помощь, если утилита запущена без параметров
+if (!process.argv.slice(2).length) {
+    program.help();
+}

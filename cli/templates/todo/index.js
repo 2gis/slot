@@ -1,8 +1,5 @@
-var path = require('path');
-var del = require('del');
-var ncp = require('ncp').ncp;
-
 module.exports = {
     name: 'todo',
+    type: 'app',
     description: 'TODO list. Example Slot application'
 };
