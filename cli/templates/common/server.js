@@ -4,7 +4,7 @@ var handlebars = require('handlebars');
 var cookieParser = require('cookie-parser');
 
 var env = require('slot/env');
-var App = require('slot/app');
+var createApp = require('./app');
 
 var rootPath = __dirname;
 var staticPath = path.join(rootPath, 'build/public');
@@ -12,7 +12,6 @@ var staticPath = path.join(rootPath, 'build/public');
 // Настройка окружения слота
 env.setRootPath(rootPath);
 env.mergeConfig([env.requirePrivate('config')]);
-env.setup({handlebars: handlebars});
 
 // Загружаем шаблон для лэйаута
 var templateProvider = require('slot/lib/templateProvider');
@@ -25,12 +24,13 @@ server.use(cookieParser());
 server.use(express.static(staticPath));
 
 server.get('/*', function(req, res) {
-    var app = new App();
+    var app = createApp();
 
-    // Записываем юзер-агент в свойство .ua, так как слот ожидает его там увидеть
-    req.ua = req.get('User-Agent');
+    var initData = {
+        url: req.url
+    };
 
-    app.init(req, function(err, mainModule) {
+    app.init(initData, function(err, mainModule) {
         if (err) {
             return console.error(err.name + ': ' + err.message, err.stack);
         }

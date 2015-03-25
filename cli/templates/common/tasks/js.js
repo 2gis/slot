@@ -32,14 +32,10 @@ function createBundler() {
     ]);
 
     // Встроенные в слот компоненты и плагины
-    entries = entries.concat(pot.introspection.components());
-
-    // TODO: заюзать pot.introspection.plugins, когда он зарелизится
-    entries = entries.concat([
-        'slot/plugins/fpsMeter',
-        'slot/plugins/onNextFrame',
-        'slot/plugins/ua'
-    ]);
+    entries = entries.concat(
+        pot.introspection.components(),
+        pot.introspection.plugins()
+    );
 
     // Добавляем всё в бандл
     entries.forEach(function(entry) {
