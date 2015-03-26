@@ -145,7 +145,7 @@ AppState.prototype.parse = function(url, callback) {
     // создаем временный стэйт для нужд парсера
     var stateApi = new FinalStateApi();
     stateApi.parse = parse;
-    stateApi.addUriAlias = this.addUriAlias.bind(this);
+    stateApi.addUriAlias = _.bind(this.addUriAlias, this);
 
     this.emitSeries('parse', stateApi, function() {
         // когда все добавили алиасы которые хотели финально парсим строку в стэйт
