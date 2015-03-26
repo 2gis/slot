@@ -1,23 +1,20 @@
 exports.init = function() {
-    var handlebars = require('handlebars');
-
-    var App = require('slot/app/clientApp');
+    var createApp = require('./app');
     var env = require('slot/env');
 
-    env.setup({handlebars: handlebars});
+    // Загружаем конфиг, переданный в глобальной переменной config
     env.mergeConfig([window.config]);
 
-    var app = new App();
+    // Создаём приложение
+    var app = createApp();
+
+    // Инициализируем syncRegistry данными, переданными в глобальной переменной data
     var syncRegistry = app.requireComponent('syncRegistry');
-    syncRegistry.load(data);
+    syncRegistry.setup(window.data);
 
     $(function() {
         var initData = {
-            url: decodeURIComponent(document.location.hash),
-            host: document.location.hostname,
-            protocol: document.location.protocol.slice(0, -1),
-            port: document.location.port ? document.location.port : 80,
-            ua: navigator.userAgent
+            url: decodeURIComponent(document.location.pathname)
         };
 
         app.init(initData, function(err) {
