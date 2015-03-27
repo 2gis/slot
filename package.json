@@ -40,7 +40,8 @@
     "setimmediate": "^1.0.2",
     "ua-parser-js": "~0.6.2",
     "winston": "~0.7.2",
-    "wrench": "~1.5.8"
+    "wrench": "~1.5.8",
+    "yargs": "^3.6.0"
   },
   "optionalDependencies": {
     "posix": "~1.0.3",

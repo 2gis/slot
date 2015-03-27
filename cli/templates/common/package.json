@@ -28,7 +28,6 @@
     "through2": "^0.6.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^2.4.0",
-    "yargs": "^3.5.3"
+    "watchify": "^2.4.0"
   }
 }
