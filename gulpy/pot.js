@@ -4,12 +4,13 @@
  */
 
 var _ = require('lodash');
+var args = require('yargs').argv;
 var path = require('path');
 var requireDir = require('./lib/requireDir');
 var es = require('event-stream');
 var fs = require('fs');
 
-module.exports = function(args) {
+module.exports = function(gulp) {
     var pot;
 
     /**
@@ -160,6 +161,7 @@ module.exports = function(args) {
             }
         },
         args: args,
+        gulp: gulp,
         release: !!args.release, // shortcut for some args
         projectRequire: projectRequire,
         isSameFolder: isSameFolder,

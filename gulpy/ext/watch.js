@@ -1,5 +1,4 @@
 
-var gulp = require('gulp');
 var events = require('events');
 var glob = require('flat-glob').sync;
 var globule = require('globule');
@@ -29,23 +28,27 @@ function watch(patterns, opts, cb) {
     return emitter;
 }
 
-module.exports = function(glob, opt, fn) {
-    if (typeof opt == 'function' || Array.isArray(opt)) {
-        fn = opt;
-        opt = null;
-    }
-    opt = opt || {};
-    opt.persistent = true;
-    opt.ignoreInitial = true;
-    opt.interval = process.env['WATCH_INTERVAL'] || 900;
-    opt.binaryInterval = process.env['WATCH_BIN_INTERVAL'] || 2500;
+module.exports = function(pot) {
+    var gulp = pot.gulp;
 
-    // array of tasks given
-    if (Array.isArray(fn)) {
-        return watch(glob, opt, function() {
-            gulp.start.apply(gulp, fn);
-        });
-    }
+    return function(glob, opt, fn) {
+        if (typeof opt == 'function' || Array.isArray(opt)) {
+            fn = opt;
+            opt = null;
+        }
+        opt = opt || {};
+        opt.persistent = true;
+        opt.ignoreInitial = true;
+        opt.interval = process.env['WATCH_INTERVAL'] || 900;
+        opt.binaryInterval = process.env['WATCH_BIN_INTERVAL'] || 2500;
 
-    return watch(glob, opt, fn);
+        // array of tasks given
+        if (Array.isArray(fn)) {
+            return watch(glob, opt, function() {
+                gulp.start.apply(gulp, fn);
+            });
+        }
+
+        return watch(glob, opt, fn);
+    };
 };
