@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var gulp = require('gulp');
 var less = require('gulp-less');
 var csso = require('gulp-csso');
@@ -8,11 +9,12 @@ var concat = require('gulp-concat');
 var glob = require('flat-glob').sync;
 
 gulp.task('css', function() {
-    var files = glob([
+    var files = glob(_.compact([
         'layout/layout.less',
         glob(['helpers/blocks/**/*.less']).filter(pot.isSameFolder),
-        glob(['modules/**/*.less']).filter(pot.isSameFolder)
-    ]);
+        glob(['modules/**/*.less']).filter(pot.isSameFolder),
+        pot.release ? null : 'node_modules/makeup/dist/makeup.css'
+    ]));
 
     return gulp.src(files)
         .pipe(concat('app.css'))
