@@ -161,9 +161,6 @@ module.exports = function(args) {
         },
         args: args,
         release: !!args.release, // shortcut for some args
-        willBeWatch: !!_.find(args['_'], function(item) {
-            return item.indexOf('watch') != -1 || item == 'dev';
-        }),
         projectRequire: projectRequire,
         isSameFolder: isSameFolder,
         modulesFilter: modulesFilter,
