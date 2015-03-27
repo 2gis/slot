@@ -19,6 +19,8 @@ function StateTracker(app) {
 inherits(StateTracker, EventEmitter);
 
 StateTracker.prototype.resolveURL = function(url) {
+    if (this.disabled) return;
+
     url = url || decodeURIComponent(document.location.pathname);
 
     if (!history.emulate) { // если у нас не hash url, добавляем query string чтобы не потерялась
@@ -37,6 +39,8 @@ StateTracker.prototype.resolveURL = function(url) {
  * @returns {boolean}
  */
 StateTracker.prototype.add = function(method, newState, url) {
+    if (this.disabled) return;
+
     var stop = false;
     var event = {
         method: method,
@@ -81,7 +85,13 @@ StateTracker.prototype.bind = function() {
     var self = this;
 
     $(window).on('popstate', function() {
-        self.applyState();
+        if (!this.disabled) {
+            self.applyState();
+        }
     });
     return true;
+};
+
+StateTracker.prototype.disable = function() {
+    this.disabled = true;
 };

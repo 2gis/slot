@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var concat = require('gulp-concat');
@@ -26,12 +27,14 @@ function createBundler() {
     }
 
     // Файлы приложения
-    var entries = glob([
+    var entries = glob(_.compact([
         glob(['./plugins/*.js']),
         glob(['./modules/*/*.js']).filter(pot.isSameFolder),
         glob(['./components/*/*.js']).filter(pot.isSameFolder),
-        glob(['./helpers/blocks/*/*.js']).filter(pot.isSameFolder)
-    ]);
+        glob(['./helpers/blocks/*/*.js']).filter(pot.isSameFolder),
+        pot.release ? null : './modules/**/data/*.js',
+        pot.release ? null : './build/private/manifest.js'
+    ]));
 
     // Встроенные в слот компоненты и плагины
     entries = entries.concat(
@@ -58,7 +61,10 @@ function createBundler() {
 }
 
 function vendorStream() {
-    return gulp.src('vendor/**/*.js')
+    return gulp.src(_.compact([
+            'vendor/jquery.js',
+            pot.release ? null : 'vendor/makeup.js'
+        ]))
         .pipe(concat('vendor.js'));
 }
 
@@ -111,7 +117,7 @@ gulp.task('js.templates', function() {
         .pipe(gulp.dest('build/public/assets'));
 });
 
-gulp.task('js.bundle', function() {
+gulp.task('js.bundle', ['manifest'], function() {
     return bundleStream()
         .pipe(gulp.dest('build/public/assets'));
 });

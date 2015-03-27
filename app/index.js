@@ -92,6 +92,25 @@ Application.prototype.isBound = function() {
 
 Application.prototype.require = env.require;
 
+Application.prototype.resolveDevPage = function(url) {
+    var name;
+
+    if (config.devPages) {
+        var slug = _.compact(url.split('/'))[0];
+        var devPageConfig = config.devPages[slug];
+
+        if (devPageConfig) {
+            name = devPageConfig.module;
+            if (devPageConfig.history === false) {
+                var stateTracker = this.requireComponent('stateTracker');
+                stateTracker.disable();
+            }
+        }
+    }
+
+    return name;
+};
+
 /**
  * Возвращает рутовый модуль.
  * Названеи берется из конфига приложения, ключ 'mainModule' - строка.
@@ -115,7 +134,7 @@ Application.prototype.resolveEntryPoint = function(req) {
         name = this[name](req);
     }
 
-    return this.loadModule({type: name});
+    return name;
 };
 
 /**
@@ -157,6 +176,8 @@ Application.prototype.init = function(req, callback) {
         }
     }
 
+    var mainModuleName = this.resolveDevPage(this.registry.get('url'));
+
     this.emit('initStart', {
         waitFor: addBeforeInitTask
     });
@@ -165,7 +186,10 @@ Application.prototype.init = function(req, callback) {
         if (err) callback(err);
 
         try {
-            var mainModule = self.mainModule = self.resolveEntryPoint(req);
+            if (!mainModuleName) {
+                mainModuleName = self.resolveEntryPoint(req);
+            }
+            var mainModule = self.mainModule = self.loadModule({type: mainModuleName});
             mainModule.init(req, function(err) {
                 self.emit('initEnd', mainModule);
                 callback(err, mainModule);
