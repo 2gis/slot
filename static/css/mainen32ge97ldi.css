@@ -542,99 +542,6 @@ Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiac
 .xml .hljs-cdata {
   opacity: 0.5;
 }
-.benefits {
-  min-width: 970px;
-  max-width: 970px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 120px 0 45px;
-}
-.benefits__header {
-  margin: 0 0 75px;
-  text-align: center;
-  font: 48px/50px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
-  color: #2d3235;
-}
-.benefits__list {
-  margin: 0;
-  padding: 0;
-  text-indent: 0;
-  list-style: none;
-  list-style-position: outside;
-  margin: 0 -10px;
-  font-size: 0;
-}
-.benefits__listItem {
-  display: inline-block;
-  vertical-align: top;
-  margin-bottom: 70px;
-  padding: 0 40px;
-  box-sizing: border-box;
-  width: 50%;
-}
-.benefits__listItemIcon {
-  position: relative;
-  margin: 0 auto 42px;
-  width: 78px;
-  height: 78px;
-  border-radius: 39px;
-  background: #c5c3c3;
-}
-.benefits__listItemIcon:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-      -ms-transform: translateX(-50%) translateY(-50%);
-          transform: translateX(-50%) translateY(-50%);
-}
-.benefits__listItemIcon._box:after {
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -268px;
-  width: 53px;
-  height: 51px;
-  background-repeat: no-repeat;
-}
-.benefits__listItemIcon._module:after {
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -480px;
-  width: 42px;
-  height: 42px;
-  background-repeat: no-repeat;
-}
-.benefits__listItemIcon._seo:after {
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -329px;
-  width: 52px;
-  height: 28px;
-  background-repeat: no-repeat;
-}
-.benefits__listItemIcon._isomorphyc:after {
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -425px;
-  width: 48px;
-  height: 45px;
-  background-repeat: no-repeat;
-}
-.benefits__listItemContentHeader {
-  margin: 0 0 8px;
-  font: 24px/24px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
-  color: #2d3235;
-}
-.benefits__listItemContentText {
-  margin: 0;
-  font: 14px/24px Helvetica, Arial, sans-serif;
-  color: #2d3235;
-}
-.benefits__listItemContentText a {
-  color: #07a5da;
-  text-decoration: none;
-}
-.benefits__listItemContentText a:hover {
-  color: #7b7978;
-}
 .footer {
   padding: 120px 0;
   box-sizing: border-box;
@@ -686,164 +593,97 @@ Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiac
 .footer__buttonsItem._github:active {
   background: #6cbf57;
 }
-.header {
+.benefits {
   min-width: 970px;
   max-width: 970px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 35px;
-  padding-bottom: 35px;
+  padding: 120px 0 45px;
 }
-.header__logo {
-  display: block;
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -192px;
-  width: 154px;
-  height: 66px;
-  background-repeat: no-repeat;
-}
-.header__project {
-  margin-bottom: 105px;
-  text-align: center;
-}
-.header__projectIcon {
-  margin: 15px auto 50px;
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -367px;
-  width: 48px;
-  height: 48px;
-  background-repeat: no-repeat;
-}
-.header__projectLogo {
-  margin: 0 auto 35px;
-  background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -70px;
-  width: 156px;
-  height: 51px;
-  background-repeat: no-repeat;
-}
-.header__projectDesc {
-  margin: 0;
-  font: 22px/28px Helvetica, Arial, sans-serif;
-  color: #fff;
-}
-.requires {
-  min-width: 970px;
-  max-width: 970px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 120px 0;
-  overflow: hidden;
-}
-.requires__header {
-  margin: 0 0 70px;
+.benefits__header {
+  margin: 0 0 75px;
   text-align: center;
   font: 48px/50px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
   color: #2d3235;
 }
-.requires__list {
+.benefits__list {
   margin: 0;
   padding: 0;
   text-indent: 0;
   list-style: none;
   list-style-position: outside;
+  margin: 0 -10px;
   font-size: 0;
 }
-.requires__listItem {
+.benefits__listItem {
   display: inline-block;
   vertical-align: top;
-  padding: 0 30px;
+  margin-bottom: 70px;
+  padding: 0 40px;
   box-sizing: border-box;
-  width: 33.33%;
-  white-space: nowrap;
+  width: 50%;
 }
-.requires__listItemType {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 20px;
+.benefits__listItemIcon {
+  position: relative;
+  margin: 0 auto 42px;
   width: 78px;
   height: 78px;
-  background: #6cbf57;
   border-radius: 39px;
-  font: 24px/80px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
-  color: #fff;
-  text-align: center;
-  font-weight: 700;
+  background: #c5c3c3;
 }
-.requires__listItemContent {
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 220px;
-  font: 24px/30px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
-  color: #2d3235;
-  white-space: normal;
+.benefits__listItemIcon:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+      -ms-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
 }
-.shortInfo {
-  min-width: 970px;
-  max-width: 970px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 90px 0;
-}
-.shortInfo:before,
-.shortInfo:after {
-  display: table;
-  content: "";
-}
-.shortInfo:after {
-  clear: both;
-}
-.lt-ie8 .shortInfo {
-  zoom: 1;
-}
-.shortInfo__logos {
-  float: left;
-  padding-top: 10px;
-  width: 470px;
-  text-align: left;
-}
-.shortInfo__logosItem {
-  display: inline-block;
-  vertical-align: middle;
-}
-.shortInfo__logosItem._slot {
-  margin-right: 10px;
+.benefits__listItemIcon._box:after {
   background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -131px;
-  width: 156px;
+  background-position: -10px -318px;
+  width: 53px;
   height: 51px;
   background-repeat: no-repeat;
 }
-.shortInfo__logosItem._makeup {
-  margin-left: 10px;
+.benefits__listItemIcon._module:after {
   background-image: url('../img/svg-sprite/sprite.svg');
-  background-position: -10px -10px;
-  width: 260px;
-  height: 50px;
+  background-position: -10px -475px;
+  width: 42px;
+  height: 42px;
   background-repeat: no-repeat;
 }
-.shortInfo__content {
-  float: right;
-  padding-left: 70px;
-  width: 430px;
+.benefits__listItemIcon._seo:after {
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -379px;
+  width: 52px;
+  height: 28px;
+  background-repeat: no-repeat;
 }
-.shortInfo__contentHeader {
-  margin: 0 0 4px;
-  font: 24px/28px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
+.benefits__listItemIcon._isomorphyc:after {
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -268px;
+  width: 55px;
+  height: 40px;
+  background-repeat: no-repeat;
+}
+.benefits__listItemContentHeader {
+  margin: 0 0 8px;
+  font: 24px/24px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
   color: #2d3235;
 }
-.shortInfo__contentText {
+.benefits__listItemContentText {
+  margin: 0;
   font: 14px/24px Helvetica, Arial, sans-serif;
   color: #2d3235;
 }
-.shortInfo__contentText a {
+.benefits__listItemContentText a {
   color: #07a5da;
   text-decoration: none;
 }
-.shortInfo__contentText a:hover {
+.benefits__listItemContentText a:hover {
   color: #7b7978;
 }
 .textBlock {
@@ -973,4 +813,164 @@ Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiac
   padding: 0 30px 30px;
   box-sizing: border-box;
   width: 485px;
+}
+.shortInfo {
+  min-width: 970px;
+  max-width: 970px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 90px 0;
+}
+.shortInfo:before,
+.shortInfo:after {
+  display: table;
+  content: "";
+}
+.shortInfo:after {
+  clear: both;
+}
+.lt-ie8 .shortInfo {
+  zoom: 1;
+}
+.shortInfo__logos {
+  float: left;
+  padding-top: 10px;
+  width: 470px;
+  text-align: left;
+}
+.shortInfo__logosItem {
+  display: inline-block;
+  vertical-align: middle;
+}
+.shortInfo__logosItem._slot {
+  margin-right: 10px;
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -131px;
+  width: 156px;
+  height: 51px;
+  background-repeat: no-repeat;
+}
+.shortInfo__logosItem._makeup {
+  margin-left: 10px;
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -10px;
+  width: 260px;
+  height: 50px;
+  background-repeat: no-repeat;
+}
+.shortInfo__content {
+  float: right;
+  padding-left: 70px;
+  width: 430px;
+}
+.shortInfo__contentHeader {
+  margin: 0 0 4px;
+  font: 24px/28px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
+  color: #2d3235;
+}
+.shortInfo__contentText {
+  font: 14px/24px Helvetica, Arial, sans-serif;
+  color: #2d3235;
+}
+.shortInfo__contentText a {
+  color: #07a5da;
+  text-decoration: none;
+}
+.shortInfo__contentText a:hover {
+  color: #7b7978;
+}
+.header {
+  min-width: 970px;
+  max-width: 970px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 35px;
+  padding-bottom: 35px;
+}
+.header__logo {
+  display: block;
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -192px;
+  width: 154px;
+  height: 66px;
+  background-repeat: no-repeat;
+}
+.header__project {
+  margin-bottom: 105px;
+  text-align: center;
+}
+.header__projectIcon {
+  margin: 15px auto 50px;
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -417px;
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+}
+.header__projectLogo {
+  margin: 0 auto 35px;
+  background-image: url('../img/svg-sprite/sprite.svg');
+  background-position: -10px -70px;
+  width: 156px;
+  height: 51px;
+  background-repeat: no-repeat;
+}
+.header__projectDesc {
+  margin: 0;
+  font: 22px/28px Helvetica, Arial, sans-serif;
+  color: #fff;
+}
+.requires {
+  min-width: 970px;
+  max-width: 970px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 120px 0;
+  overflow: hidden;
+}
+.requires__header {
+  margin: 0 0 70px;
+  text-align: center;
+  font: 48px/50px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
+  color: #2d3235;
+}
+.requires__list {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  list-style: none;
+  list-style-position: outside;
+  font-size: 0;
+}
+.requires__listItem {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 30px;
+  box-sizing: border-box;
+  width: 33.33%;
+  white-space: nowrap;
+}
+.requires__listItemType {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 20px;
+  width: 78px;
+  height: 78px;
+  background: #6cbf57;
+  border-radius: 39px;
+  font: 24px/80px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+.requires__listItemContent {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 220px;
+  font: 24px/30px 'SuisseCondNoConflict', 'Arial Narrow', Helvetica, Arial, sans-serif;
+  color: #2d3235;
+  white-space: normal;
 }
