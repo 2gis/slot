@@ -10,7 +10,26 @@ module.exports = function(slot) {
     var list = {
         init: function(data, callback) {
             model = data;
-            model.todos = [];
+
+            // Заполняем начальными данными
+            model.todos = [{
+                title: 'Чай',
+                completed: true,
+                id: 0
+            }, {
+                title: 'Сахар',
+                completed: false,
+                id: 1
+            }, {
+                title: 'Конфетки',
+                completed: false,
+                id: 2
+            }];
+
+            // Инитим модули
+            _.each(model.todos, function(todo) {
+                todo.module = slot.init('todoItem', todo);
+            });
 
             callback();
         },
