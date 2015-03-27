@@ -21,6 +21,9 @@ gulp.task('build', [
     'assets'
 ]);
 
+// Объединяем все watch-таски в одну
+gulp.task('watch', pot.watchTasks(gulp.tasks));
+
 gulp.task('dev', function(cb) {
     runSequence('build', 'server', 'watch', cb);
 });

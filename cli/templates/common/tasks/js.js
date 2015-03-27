@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var wrapper = require('gulp-wrapper');
@@ -7,6 +8,7 @@ var watchify = require('watchify');
 var buffer = require('vinyl-buffer');
 var glob = require('flat-glob').sync;
 var browserify = require('browserify');
+var runSequence = require('run-sequence').use(gulp);
 var source = require('vinyl-source-stream');
 
 var bundler = createBundler();
@@ -85,6 +87,11 @@ function templateStream() {
 
 function bundleStream() {
     return bundler.bundle()
+        .on('error', function(err) {
+            gutil.log(gutil.colors.red('Browserify error:'), err.toString());
+            gutil.beep();
+            this.emit('end');
+        })
         .pipe(source('bundle.js'))
         .pipe(buffer());
 }
@@ -119,7 +126,13 @@ gulp.task('js.release', function() {
 
     return allJs
         .pipe(concat('app.js'))
-        .pipe(uglify())
+        .pipe(uglify({
+            compress: {
+                global_defs: {
+                    DEBUG: false
+                }
+            }
+        }))
         .pipe(gulp.dest('build/public/assets'));
 });
 
@@ -136,4 +149,18 @@ if (!pot.release) {
 }
 gulp.task('js', jsTasks);
 
-exports.bundler = bundler;
+gulp.task('js.watch', function() {
+    gulp.watch('vendor/**/*.js', ['js.vendor']);
+
+    gulp.watch('config/**/*.js', function() {
+        runSequence('js.config', 'server');
+    });
+
+    gulp.watch(pot.recipes.templates.globs(), function() {
+        runSequence('js.templates', 'server');
+    });
+
+    bundler.on('update', function() {
+        runSequence('js.bundle', 'server');
+    });
+});

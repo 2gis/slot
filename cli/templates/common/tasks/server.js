@@ -23,3 +23,7 @@ process.on('exit', function() {
         server.kill();
     }
 });
+
+gulp.task('server.watch', function() {
+    gulp.watch('server.js', ['server']);
+});

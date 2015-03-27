@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var template = require('gulp-template');
+var runSequence = require('run-sequence').use(gulp);
 
 gulp.task('layout', function() {
     var layoutStream = gulp.src('layout/layout.html')
@@ -10,4 +11,10 @@ gulp.task('layout', function() {
     return templatify(layoutStream, {
         namespace: 'this'
     }, 'jst_layouts');
+});
+
+gulp.task('layout.watch', function() {
+    gulp.watch('layout/layout.html', function() {
+        runSequence('layout', 'server');
+    });
 });
