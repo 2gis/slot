@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var template = require('gulp-template');
-var runSequence = require('run-sequence');
+var runSequence = require('run-sequence').use(gulp);
 
 gulp.task('layout', function() {
     var layoutStream = gulp.src('layout/layout.html')

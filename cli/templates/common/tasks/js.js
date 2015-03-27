@@ -8,7 +8,7 @@ var watchify = require('watchify');
 var buffer = require('vinyl-buffer');
 var glob = require('flat-glob').sync;
 var browserify = require('browserify');
-var runSequence = require('run-sequence');
+var runSequence = require('run-sequence').use(gulp);
 var source = require('vinyl-source-stream');
 
 var bundler = createBundler();
