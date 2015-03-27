@@ -6,7 +6,7 @@ module.exports = function(slot) {
 
         viewContext: function() {
             return {
-                message: 'Hello world!'
+                message: 'Welcome to Slot!'
             };
         }
     };
