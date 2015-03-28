@@ -17,7 +17,7 @@
         <ul class="todo__filters">
             {{#each filters}}
                 <li class="todo__filtersItem">
-                    <span class="todo__filtersItemLink{{#if active}} _selected{{/if}}" data-value="{{value}}">{{label}}</span>
+                    <a href="/filter/{{value}}" class="todo__filtersItemLink{{#if active}} _selected{{/if}}" data-value="{{value}}">{{label}}</a>
                 </li>
             {{/each}}
         </ul>

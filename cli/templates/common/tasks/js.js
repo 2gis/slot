@@ -122,6 +122,11 @@ gulp.task('js.bundle', ['manifest'], function() {
         .pipe(gulp.dest('build/public/assets'));
 });
 
+gulp.task('js.rebundle', function() {
+    return bundleStream()
+        .pipe(gulp.dest('build/public/assets'));
+});
+
 gulp.task('js.release', function() {
     var allJs = pot.esconcat(
         vendorStream(),
@@ -167,6 +172,6 @@ gulp.task('js.watch', function() {
     });
 
     bundler.on('update', function() {
-        runSequence('js.bundle', 'server');
+        runSequence('js.rebundle', 'server');
     });
 });

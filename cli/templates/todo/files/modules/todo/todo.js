@@ -3,16 +3,34 @@
  */
 var _ = require('lodash');
 
-module.exports = function(slot) {
+module.exports = function(slot, $appState) {
     var model = {},
         viewModel = require('./viewModel.js');
 
     var config = slot.config;
 
+    function highlightFilterLink(type) {
+        slot.element('filtersItemLink')
+            .mod({selected: false});
+
+        slot.element('filtersItemLink')
+            .filter('[data-value="' + type + '"]')
+            .mod({selected: true});
+    }
+
     var todo = {
         init: function(data, callback) {
+            var filterState = $appState.get('filter');
+            var filterType = filterState ? filterState.type : 'all';
+
+            model.activeFilter = filterType;
+
             // подключаем модуль списка задач
             slot.init('list', model, callback);
+        },
+
+        clientInit: function() {
+            highlightFilterLink(model.activeFilter);
         },
 
         viewContext: function() {
@@ -56,12 +74,14 @@ module.exports = function(slot) {
 
             // ссылки внизу: "All", "Active", "Completed"
             filtersItemLink: {
-                click: function() {
-                    slot.element('filtersItemLink').mod({selected: false});
-                    $(this).mod({selected: true});
+                click: function(e) {
+                    $appState.set('filter', {
+                        type: $(this).data('value')
+                    });
 
-                    var filter = $(this).data('value');
-                    slot.broadcast('list:filter', filter);
+                    $appState.push();
+
+                    e.preventDefault();
                 }
             }
         },
@@ -85,6 +105,16 @@ module.exports = function(slot) {
                 }
 
                 slot.element('footer').mod({hidden: hideFooter});
+            }
+        },
+
+        changeState: function(diff) {
+            if ('filter' in diff) {
+                var type = diff.filter.type;
+
+                highlightFilterLink(type);
+
+                slot.broadcast('list:filter', type);
             }
         }
     };
