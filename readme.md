@@ -2,6 +2,8 @@
 
 JavaScript фреймворк, позволяющий быстро и просто создавать модульные изоморфные приложения.
 
+[![Join the chat at https://gitter.im/2gis/slot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/2gis/slot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Особенности
 
 ### Изоморфность
