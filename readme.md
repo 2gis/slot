@@ -4,6 +4,8 @@ JavaScript фреймворк, позволяющий быстро и прост
 
 ## Особенности
 
+[![Join the chat at https://gitter.im/2gis/slot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/2gis/slot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### Изоморфность
 Вы пишете код приложения на одном языке, как на сервере, так и на клиенте.
 
