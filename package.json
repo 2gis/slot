@@ -11,7 +11,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "async.emitter": "^1.1.0",
-    "chokidar": "~0.8.2",
+    "chokidar": "^1.0.0-rc5",
     "colors": "^1.0.3",
     "commander": "^2.7.1",
     "deep-equal": "^0.2.1",
@@ -23,7 +23,7 @@
     "globule": "^0.2.0",
     "gulp-concat": "~2.2.0",
     "gulp-declare": "~0.2.0",
-    "gulp-handlebars": "git://github.com/anru/gulp-handlebars.git#gulpfriendly",
+    "gulp-handlebars": "^4.0.0",
     "gulp-modified": "~0.9.0",
     "gulp-remember": "~0.2.0",
     "gulp-util": "~2.2.16",
@@ -34,18 +34,15 @@
     "mkdirp": "~0.5.0",
     "ncp": "^2.0.0",
     "po2json": "0.2.3",
-    "posix": "~1.0.3",
     "request": "~2.27.0",
     "reqwest": "git://github.com/2gis/reqwest",
     "setimmediate": "^1.0.2",
     "ua-parser-js": "~0.6.2",
-    "winston": "~0.7.2",
     "wrench": "~1.5.8",
     "yargs": "^3.6.0"
   },
   "optionalDependencies": {
-    "posix": "~1.0.3",
-    "winston-graylog2": "git+ssh://git@github.com:krivchun/winston-graylog2.git"
+    "posix": "^2.0.0"
   },
   "scripts": {
     "test": "gulp test",
@@ -59,7 +56,7 @@
     "gulp-jscs": "git://github.com/anru/gulp-jscs.git",
     "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "~1.6.3",
-    "gulp-mocha": "~0.5.1",
+    "gulp-mocha": "^2.0.1",
     "jshint-stylish": "~0.2.0",
     "require-dir": "~0.1.0",
     "rimraf": "~2.2.8",
@@ -70,7 +67,6 @@
   "browser": {
     "jquery-deferred": false,
     "request": false,
-    "fs": false,
-    "./logger": false
+    "fs": false
   }
 }
