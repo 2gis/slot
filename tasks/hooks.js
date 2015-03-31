@@ -40,7 +40,7 @@ gulp.task('hooks.clear', function(cb) {
 gulp.task('hooks.run', function(cb) {
     runSequence(
         'cover.init',
-        'test',
+        'test.run',
         'cover.report',
         'lint',
         cb

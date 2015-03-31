@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
+var coveralls = require('gulp-coveralls');
 
 var coverable = [
     '*.js',
@@ -19,4 +20,9 @@ gulp.task('cover.report', function() {
             dir: './coverage',
             reporters: [ 'lcov', 'text']
         }));
+});
+
+gulp.task('cover.send', function() {
+    return gulp.src('./coverage/lcov.info')
+        .pipe(coveralls());
 });
