@@ -4,6 +4,7 @@ JavaScript фреймворк, позволяющий быстро и прост
 
 [![Join the chat at https://gitter.im/2gis/slot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/2gis/slot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/2gis/slot.svg?branch=master)](https://travis-ci.org/2gis/slot)
+[![Coverage Status](https://coveralls.io/repos/2gis/slot/badge.svg?branch=master)](https://coveralls.io/r/2gis/slot?branch=master)
 [![Dependency Status](https://gemnasium.com/2gis/slot.svg)](https://gemnasium.com/2gis/slot)
 
 ## Особенности
