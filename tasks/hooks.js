@@ -1,7 +1,7 @@
 var fs = require('fs');
 var gulp = require('gulp');
 var rimraf = require('rimraf');
-var runSequence = require('run-sequence');
+var runSequence = require('run-sequence').use(gulp);
 
 var HOOKS = 'git-hooks/hooks.sh';
 var PRE_PUSH = '.git/hooks/pre-push';

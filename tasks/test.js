@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var verbose = require('./utils/verbose');
-var runSequence = require('run-sequence');
+var runSequence = require('run-sequence').use(gulp);
 
 verbose.setMessages('test', {
     start: 'Запускаю тесты, тыдыщ',
