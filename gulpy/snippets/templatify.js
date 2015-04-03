@@ -10,20 +10,22 @@ var handlebarsify = require('../plugins/handlebarsify');
 
 const DEST = 'build/private/';
 
-function templatify(streamOrPaths, declOpts, name) {
-    name = name || declOpts.namespace;
+function templatify(streamOrPaths, opts, name) {
+    name = name || opts.namespace;
 
     var stream = streamOrPaths.pipe ? streamOrPaths : gulp.src(streamOrPaths);
 
-    var renamer = declOpts.parentBased ?
-        _.partial(renamers.parentBased, declOpts.parentBased)
+    var renamer = opts.parentBased ?
+        _.partial(renamers.parentBased, opts.parentBased)
         : renamers.basename;
+
+    var handlebarsOpts = _.omit(opts, 'parentBased', 'namespace');
 
     return stream
         .pipe(modified('js'))
-        .pipe(handlebarsify())
+        .pipe(handlebarsify(handlebarsOpts))
         .pipe(declare({
-            namespace: declOpts.namespace,
+            namespace: opts.namespace,
             processName: renamer
         }))
         .pipe(remember('templates.' + name))
