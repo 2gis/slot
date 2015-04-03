@@ -3,10 +3,49 @@
   "version": "0.10.1",
   "homepage": "https://github.com/2gis/slot",
   "repository": "git@github.com:2gis/slot.git",
+  "bugs": "https://github.com/2gis/slot/issues",
   "description": "Flexible framework for complex JS applications",
+  "contributors": [
+    {
+      "name": "Alexander Biryukov",
+      "email": "a.biryukov@2gis.ru",
+      "url": "https://github.com/fobos"
+    },
+    {
+      "name": "Andrey Rublev",
+      "email": "a.rublev@2gis.ru",
+      "url": "https://github.com/anru"
+    },
+    {
+      "name": "Dmitry Kuznetsov",
+      "email": "dm.kuznecov@2gis.ru",
+      "url": "https://github.com/diokuz"
+    },
+    {
+      "name": "Alexey Fedosov",
+      "email": "a.fedosov@2gis.ru"
+    },
+    {
+      "name": "Oleg Vorobyov",
+      "email": "o.vorobyov@2Gis.ru"
+    },
+    {
+      "name": "Olga Vostretsova",
+      "email": "o.vostretsova@2gis.ru"
+    }
+  ],
+  "keywords": [
+    "isomorphic",
+    "framework",
+    "bem",
+    "express"
+  ],
   "main": "index.js",
   "bin": {
     "slot": "./cli/slot.js"
+  },
+  "directories":{
+    "doc": "docs"
   },
   "dependencies": {
     "async": "^0.9.0",
@@ -48,7 +87,7 @@
     "test": "gulp test",
     "postinstall": "node ./scripts/postinstall.js"
   },
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "devDependencies": {
     "chai": "~1.9.2",
     "gulp": "^3.8.11",
@@ -64,6 +103,9 @@
     "run-sequence": "1.0.1",
     "sinon": "~1.10.3",
     "through2": "~0.6.3"
+  },
+  "engines": {
+    "node": ">=0.10"
   },
   "browser": {
     "jquery-deferred": false,
