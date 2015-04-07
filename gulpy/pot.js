@@ -107,7 +107,7 @@ module.exports = function(gulp) {
     }
 
     function normalizeStreams(arr) {
-        return _.compact(_.flatten(arr, true));
+        return _.compact(_.flatten(arr));
     }
 
     function esmerge() {
