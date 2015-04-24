@@ -1,7 +1,6 @@
 /**
  * @module Slot
  * @type {Slot}
- * @description
  */
 
 var async = require('async');
@@ -53,7 +52,7 @@ Slot.prototype.extendTmplHelpers = function(helpersToAdd) {
  * Заменить в DOM-дереве html нужно вручную. Рекомендуется использовать вместо rerender везде, где это возможно.
  *
  * @method renderPartial
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {string} partialName Имя файла шаблона, на основе которого будет получен html
  * @param {object} viewContext Контекст с данными, которыми будет заполнен шаблон для получения html
  * @returns {HTML}
@@ -108,7 +107,7 @@ Slot.prototype.loadModule = function(conf) {
  * После инициализации модуль доступен в шаблонах через хелпер module, если инициализация дочернего модуля происходит на этапе инициализации текущего.
  *
  * @method init
- * @memberOf Slot#
+ * @memberof module:Slot
  *
  * @example
  * // Simple module init
@@ -214,6 +213,9 @@ Slot.prototype.init = function(name, data, callback) {
  *    // pass
  * }];
  *
+ * @method initModules
+ * @memberof module:Slot
+ *
  * @param {array} modules - Массив описаний инициализируемых модулей.
  * @param {function} [callback] - Колбек, вызываемый после инициализации всех модулей, либо сразу после любой ошибки в любом из модулей.
  */
@@ -224,7 +226,7 @@ Slot.prototype.initModules = function(modules, callback) {
 /**
  * Последовательная инициализация массива дочерних модулей.
  * @method initModulesSeries
- * @memberOf Slot#
+ * @memberof module:Slot
  * @example
  * // Init module with some init data and callback
  * slot.initModules([{
@@ -247,7 +249,7 @@ Slot.prototype.initModulesSeries = function(modules, callback) {
 /**
  * Получение ссылки на компонент. Сам компонент инициализируется вместе с приложением и является синглтоном.
  * @method requireComponent
- * @memberOf Slot#
+ * @memberof module:Slot
  *
  * @param {string} name Имя компонента.
  * @param {array} [extraArgs] Дополнительные аргументы
@@ -294,7 +296,7 @@ Slot.prototype.clearRequests = function() {
  * // "Простые" аргументы будут переданы в первый и четвёртый аргументы функции соответственно, а во второй и третий аргументы будут автоматически переданы компоненты api и request.
  *
  * @method invoke
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {function} func Функция, в аргументах которых есть переменные, начинающиеся с $, в которые надо передать ссылки на компоненты.
  * @param {array} arguments Массив аргументов, передаваемых как есть в те аргументы функции, имена которых не начинаются с $.
  * @returns {function} Результат вызова функции func с подставленными аргументами и компонентами.
@@ -312,7 +314,7 @@ Slot.prototype.invoke = proxy('invoke');
  * slot.notify('newsPicked', 168, options, someData);
  *
  * @method notify
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {String} message Название сообщения
  * @param {*} [body] Тело сообщения
  * @returns {*} Первое не-undefined возвращаемое значение в иерархической цепочке обработчиков (обычно это ближайший предок)
@@ -355,7 +357,7 @@ Slot.prototype.notify = proxy('notify', true);
  * slot.broadcast('dataViewer frame:last firmCard[type=*][::getPosition(3)=1]');
  *
  * @method broadcast
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {String} selector правило, на основе которого будет произведена выборка модулей-потомков;
  *      interfaceMethod - метод, который будет вызван у каждого модуля-потомка из выборки. Выборка всегда делается относительно текущего модуля,
  *      строго вниз по иерархии, будто модулей-предков текущего модуля, и других модулей-потомков этих предков, не существует.
@@ -371,7 +373,7 @@ Slot.prototype.queryModules = proxy('queryModules', true);
  * Метод бывает полезен, когда удаление модуля происходит анимировано: модуль отключается от фреймворка, но визуально ещё доступен.
  *
  * @method kill
- * @memberOf Slot#
+ * @memberof module:Slot
  */
 Slot.prototype.kill = proxy('killModule', true);
 Slot.prototype.remove = proxy('removeModule', true);
@@ -380,7 +382,7 @@ Slot.prototype.remove = proxy('removeModule', true);
  * Рекурсивно для текущего модуля и всех его потомков вызывает kill; удаляет html-представление из DOM-дерева.
  *
  * @method dispose
- * @memberOf Slot#
+ * @memberof module:Slot
  */
 Slot.prototype.dispose = proxy('disposeModule', true);
 
@@ -393,7 +395,7 @@ Slot.prototype.domBound = proxy('isBound');
  * slot.element('closeButton').offset().top;
  *
  * @method element
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {string} elementName Название элемента, описанного в разделе elements текущего модуля
  * @returns {jQuery} Коллекция всех найденных внутри модуля DOM-элементов, соответствующих селектору элемента
  */
@@ -412,7 +414,7 @@ Slot.prototype.element = proxy('element', true);
  * var mods = slot.mod();
  *
  * @method mod
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {object|string} [mods|modName] Объект с новыми значениями модификаторов, либо название модификатора
  * @param {*} [modValue] Значение модификатора modName
  * @returns {object} mods Имена и значения всех выставленных модификаторов в формате ключ-значение
@@ -426,7 +428,7 @@ Slot.prototype.mod = proxy('mod', true);
  * if (!result) slot.raise(404);
  *
  * @method raise
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {*} value - Объект исключения.
  */
 Slot.prototype.raise = proxy('raise');
@@ -444,7 +446,7 @@ Slot.prototype.raise = proxy('raise');
  * });
  *
  * @method cookie
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {string} name Имя куки
  * @param {string} [value] Значение куки. Без значения работает как геттер.
  * @param {object} [options] Параметры выставления куки.
@@ -455,7 +457,7 @@ Slot.prototype.cookie = proxy('cookie');
 /**
  * Возвращает дочерний модуль по id.
  * @method moduleById
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {string} id Идентификатор дочернего модуля.
  * @returns {object} module Инстанс дочернего модуля с идентификатором равным id.
  */
@@ -464,14 +466,14 @@ Slot.prototype.moduleById = proxy('getChildModuleWrapperById', true);
 /**
  * Флаг, отвечающий на вопрос: происходит ли исполнение кода на сервере?
  * @constant isServer
- * @memberOf Slot#
+ * @memberof module:Slot
  */
 Slot.prototype.isServer = env.isServer;
 
 /**
  * Флаг, отвечающий на вопрос: происходит ли исполнение кода на клиенте в браузере?
- * @constant {boolean}
- * @memberOf Slot#
+ * @constant isClient
+ * @memberof module:Slot
  */
 Slot.prototype.isClient = env.isClient;
 
@@ -485,7 +487,7 @@ Slot.prototype.rebind = function() {
 /**
  * Возвращает id текущего модуля, вызывается без аргументов. Используйте {@link Slot#self} для получения ссылки на инстанс модуля.
  * @method moduleId
- * @memberOf Slot#
+ * @memberof module:Slot
  * @returns {string} id текущего модуля
  */
 Slot.prototype.moduleId = function() {
@@ -496,7 +498,7 @@ Slot.prototype.moduleId = function() {
  * Устанавливает таймаут привязанный к модулю. Автоматически удаляется в момент смерти модуля.
  *
  * @method setTimeout
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {function} func Функция для отложенного вызова
  * @param {int} delay Задержка выполнения функции в мс
  * @returns {int|undefined} id таймера или undefined если вызывается в состоянии STAGE_NOT_ALIVE
@@ -516,7 +518,7 @@ Slot.prototype.setTimeout = function(func, delay) {
  * Устанавливает интервал привязанный к модулю. Автоматически удаляется в момент смерти модуля.
  *
  * @method setInterval
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {function} func Функция для отложенного вызова
  * @param {int} delay Интервал выполнения функции в мс
  * @returns {int} id таймера
@@ -541,7 +543,7 @@ Slot.prototype.clearTimers = function() {
  * Возвращает ссылку на инстанс текущего модуля.
  *
  * @method self
- * @memberOf Slot#
+ * @memberof module:Slot
  * @returns {object} instance ссылка на инстанс текущего модуля
  */
 Slot.prototype.self = function() {
@@ -554,7 +556,7 @@ Slot.prototype.self = function() {
  * и не приводит ни к чему, если модуль мёртв. Удобно для оборачивания колбеков ajax-запросов и defferred.
  *
  * @method ifAlive
- * @memberOf Slot#
+ * @memberof module:Slot
  * @param {Function} fn Функция, которую нужно выполнить при вызове обёртки если модуль жив
  * @returns {Function} Функция-обёртка переданной функции
  */
@@ -580,7 +582,7 @@ if (env.isClient) {
      * var height = slot.block().heigh;
      *
      * @method block
-     * @memberOf Slot#
+     * @memberof module:Slot
      * @returns {jQuery} Коллекция с одним DOM-элементом - блоком текущего модуля
      */
     Slot.prototype.block = proxy('block', true);
@@ -593,7 +595,7 @@ if (env.isClient) {
      *  - заново добавляет все обработчики событий; вызывает метод bind модуля.
      *
      * @method rerender
-     * @memberOf Slot#
+     * @memberof module:Slot
      */
     Slot.prototype.rerender = proxy('rerender', true);
     Slot.prototype.bindEvents = proxy('bindEvents', true);
