@@ -153,7 +153,7 @@ Pattern.prototype.inject = function(data, encode) {
     var self = this;
 
     var str = this.pattern.replace(paramReG, function(match, name) {
-        var value = data[name] || '';
+        var value = data[name] != null ? data[name] : '';
         var validator = self.validatorFor(name);
 
         if (validator && validator.toUrl) {
