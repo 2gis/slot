@@ -140,7 +140,7 @@ exports.parse = function(patterns, str, aliases) {
                 partIndex = _.indexOf(parts, part);
 
             if (partStr.indexOf('/') != -1) {
-                var newParts = _.map(_.compact(partStr.split('/')), mkPart);
+                var newParts = _.map(_.compact(partStr.split('/', 100)), mkPart);
                 allParts.push.apply(allParts, newParts);
 
                 var spliceArgs = [partIndex, 1].concat(newParts);
