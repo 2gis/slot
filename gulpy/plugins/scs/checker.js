@@ -53,7 +53,7 @@ module.exports = function(filename, contents, options) {
 
         // space after :
         spaceAfterColon: function(line, spaceAfterColonRequired) {
-            if (line.match(/:(?=before|after|nth|first|last|only|hover|active|focus|disabled|not|checked|-ms-|-moz-|-webkit-|empty|blank|placeholder|-o-prefocus|selection)/g)) {
+            if (line.match(/:(?=before|after|nth|first|last|only|link|hover|active|visited|focus|disabled|not|checked|-ms-|-moz-|-webkit-|empty|blank|placeholder|-o-prefocus|selection)/g)) {
                 return true;
             }
 
