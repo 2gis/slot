@@ -92,10 +92,17 @@ Application.prototype.isBound = function() {
 
 Application.prototype.require = env.require;
 
+/**
+ * Определяет название стартового модуля для загрузки
+ * для девелоперского окружения из url.
+ *
+ * @param {String} url
+ * @return {String} Название модуля для загрузки
+ */
 Application.prototype.resolveDevPage = function(url) {
     var name;
 
-    if (config.devPages) {
+    if (_.isString(url) && config.devPages) {
         var slug = _.compact(url.split('/'))[0];
         var devPageConfig = config.devPages[slug];
 
