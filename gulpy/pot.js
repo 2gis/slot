@@ -14,19 +14,29 @@ module.exports = function(gulp) {
     var pot;
 
     /**
-     * Возвращает dirname - название каталога в котором лежит данный файл, basename - название самого файла без расширения
+     * Возвращает dirname - название каталога в котором лежит данный файл,
+     * basename - название самого файла без расширения
+     * moduleName - название папки вслед за папкой modules/
      * @param {string} filepath
-     * @returns {{dirname: String, basename: String}}
+     * @returns {{dirname: String, basename: String, [moduleName]: String}}
      */
     function getPathBases(filepath) {
         var dirname = path.dirname(filepath).split('/');
         dirname = dirname[dirname.length - 1];
         var basename = path.basename(filepath, path.extname(filepath));
+        var parts = /modules\/([a-zA-Z0-9-_]*)/.exec(filepath);
+        var moduleName = parts && parts[1];
 
-        return {
+        var out = {
             dirname: dirname,
             basename: basename
         };
+
+        if (moduleName) {
+            out.moduleName = moduleName;
+        }
+
+        return out;
     }
 
     /**
@@ -48,16 +58,17 @@ module.exports = function(gulp) {
     function modulesFilter(filepath) {
         if (!pot.flags) throw new Error("You must define flags to run modulesFilter");
         var bases = getPathBases(filepath);
+        var moduleName = bases.moduleName;
 
-        if (_.contains(pot.config.blackListModules, bases.basename)) {
+        if (moduleName && _.contains(pot.config.blackListModules, moduleName)) {
             return false;
         }
 
-        if (pot.config.whiteListModules && pot.config.whiteListModules.length && !_.contains(pot.config.whiteListModules, bases.basename)) {
+        if (moduleName && pot.config.whiteListModules && pot.config.whiteListModules.length && !_.contains(pot.config.whiteListModules, moduleName)) {
             return false;
         }
 
-        return bases.dirname == bases.basename;
+        return bases.dirname == bases.basename; // isSameFolder, работает не только на модули, но и на блоки и хелперы
     }
 
     function lib(name) {
