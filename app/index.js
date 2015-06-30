@@ -716,11 +716,11 @@ Application.prototype.cookie = function(key, value, params) {
     }
 };
 
-Application.prototype.removeCookie = function(key) {
+Application.prototype.removeCookie = function(key, params) {
     if (this.isClient) {
-        return $.removeCookie(key);
+        return $.removeCookie(key, params);
     } else {
-        this.emit('removeCookie', key);
+        this.emit('removeCookie', key, params);
     }
 };
 
