@@ -1,5 +1,6 @@
 
 var _ = require('lodash');
+var serializer = require('./serializer');
 
 /**
  * Применяем доводчик fromUrl валидаторов для распарсеного кусочка урла
@@ -85,6 +86,8 @@ function markDirty(parts) {
  *     {Pattern} [pattern] связанный pattern с помощью которого был разобран данный кусок урла
  */
 exports.parse = function(patterns, str, aliases) {
+    str = serializer.decode(str);
+
     var parts = str ? [mkPart(str)] : [];
 
     function doParse() {

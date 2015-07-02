@@ -5,6 +5,7 @@ describe("uri/pattern", function() {
 
     var Pattern = require('./../pattern'),
         d1,d2;
+    var slashCode = '%2F';
 
     function newPattern(pattern) {
         return new Pattern(pattern);
@@ -45,7 +46,7 @@ describe("uri/pattern", function() {
 
     describe("#match", function() {
         it("правильно сопостовляет себя строке", function() {
-            var r1 = newPattern('query/:query::s/:id').match('query/пиво 5\xA61:new/23');
+            var r1 = newPattern('query/:query::s/:id').match('query/пиво 5' + slashCode + '1:new/23');
             assert(r1);
             delete r1.string;
             assert.deepEqual(r1, {
@@ -60,7 +61,7 @@ describe("uri/pattern", function() {
         });
 
         it("правильно сопостовляет себя строке с дефисом", function() {
-            var r1 = newPattern('query-firms/:query::s/:id').match('query-firms/пиво 5\xA61:new/23');
+            var r1 = newPattern('query-firms/:query::s/:id').match('query-firms/пиво 5' + slashCode + '1:new/23');
             assert(r1);
             delete r1.string;
             assert.deepEqual(r1, {
@@ -83,7 +84,7 @@ describe("uri/pattern", function() {
                 id: '456dgfdsghdfgh'
             });
 
-            assert.equal(decodeURIComponent(r1), 'query/пиво 5\xA61:new/456dgfdsghdfgh');
+            assert.equal(decodeURIComponent(r1), 'query/пиво 5/1:new/456dgfdsghdfgh');
         });
 
         it("правильно сериализует с пропущенным именем филиала", function() {
