@@ -234,4 +234,42 @@ describe('Namer', function() {
         });
     });
 
+    describe('.parseElementClass', function() {
+        it('Правильно вычисляет модуль и элемент для className == ""', function() {
+            var className = '';
+
+            assert.deepEqual(namer.parseElementClass(className), undefined);
+        });
+
+        it('Правильно вычисляет модуль и элемент для className == "   "', function() {
+            var className = '    ';
+
+            assert.deepEqual(namer.parseElementClass(className), undefined);
+        });
+
+        it('Правильно вычисляет модуль и элемент для className == "otherClass"', function() {
+            var className = 'otherClass';
+
+            assert.deepEqual(namer.parseElementClass(className), undefined);
+        });
+
+        it('Правильно вычисляет модуль и элемент для className == "module_element "', function() {
+            var className = 'module_element ';
+
+            assert.deepEqual(namer.parseElementClass(className), undefined);
+        });
+
+        it('Правильно вычисляет модуль и элемент для className == "module__element"', function() {
+            var className = 'module__element';
+
+            assert.deepEqual(namer.parseElementClass(className), { block: 'module', element: 'element' });
+        });
+
+        it('Правильно вычисляет модуль и элемент для className == " otherClass module__element "', function() {
+            var className = ' otherClass module__element ';
+
+            assert.deepEqual(namer.parseElementClass(className), { block: 'module', element: 'element' });
+        });
+    });
+
 });
