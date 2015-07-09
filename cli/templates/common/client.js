@@ -14,7 +14,7 @@ exports.init = function() {
 
     $(function() {
         var initData = {
-            url: decodeURIComponent(document.location.pathname)
+            url: document.location.pathname
         };
 
         app.init(initData, function(err) {

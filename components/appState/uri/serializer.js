@@ -3,13 +3,14 @@
  */
 
 var _ = require('lodash');
+var slashCode = '%2F';
 
 /**
  * Экранирует урл
  * @param {string} x
  * @returns {string}
  */
-function encode(x) {
+function encodeUrlPart(x) {
     if (x == null) throw new Error("null value for serialization");
 
     // encodeURI не трогает ~!@#$&*()=:/,;?+'
@@ -23,6 +24,19 @@ function encode(x) {
 }
 
 /**
+ * Умно кодирует строку, не трогая закодированный слэш
+ * moscow/search/пи,в%2Fо -> moscow/search/пи%2Cв%2Fо
+ *
+ * @param x
+ * @returns {string}
+ */
+function encode(x) {
+    if (x == null) throw new Error("null value for serialization");
+
+    return _.map(x.split(slashCode), encodeUrlPart).join(slashCode);
+}
+
+/**
  * экранирует слэши
  * @param {string} x
  * @returns {string}
@@ -30,7 +44,7 @@ function encode(x) {
 function encodeSlashes(x) {
     if (x == null) throw new Error("null value for serialization");
 
-    return String(x).replace(/\//g, '\xA6');
+    return String(x).replace(/\//g, slashCode);
 }
 
 /**
@@ -49,15 +63,20 @@ function encodeComponent(x) {
  * @returns {string}
  */
 function decodeSlashes(str) {
-    return str.replace(/\xA6/g, '/');
+    return str.replace(new RegExp(slashCode, 'g'), '/').replace(/\xA6/g, '/');
 }
 
 /**
- * @param {string} str
+ * Умно декодирует строку, не трогая декодированный слэш
+ * moscow/search/пи%2Cв%2Fо -> moscow/search/пи,в%2Fо
+ *
+ * @param string
  * @returns {string}
  */
-function decode(str) {
-    return decodeURIComponent(str);
+function decode(string) {
+    return _.map(string.split('/'), function(part) {
+        return replaceAll('/', slashCode, decodeURIComponent(part));
+    }).join('/');
 }
 
 /**
@@ -65,7 +84,11 @@ function decode(str) {
  * @returns {string}
  */
 function decodeComponent(str) {
-    return decodeSlashes(decode(str));
+    return decodeSlashes(decodeURIComponent(str));
+}
+
+function replaceAll(search, replace, string) {
+    return (string || '').split(search).join(replace);
 }
 
 
