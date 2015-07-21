@@ -3,12 +3,12 @@
  * Расширение platform для пота
  */
 
-module.exports = function(pot) {
-    var names = ['phone', 'tablet', 'ie8', 'ie9'];
+var _ = require('lodash');
 
+module.exports = function(pot) {
+    var names = ['phone', 'tablet', 'ie8', 'ie9', 'museum'];
     var platform = {};
 
-    var targets = [];
     names.map(function(name) {
         if (pot.args[name]) {
             platform[name] = true;
@@ -30,12 +30,7 @@ module.exports = function(pot) {
         platform.ie8 = platform.ie9 = true;
     }
 
-    for (var key in platform) {
-        if (!platform.hasOwnProperty(key)) continue;
-
-        targets.push(key);
-    }
-    platform.targets = targets;
+    platform.targets = _.keys(platform);
 
     Object.defineProperty(platform, 'ie', {
         get: function() {
