@@ -68,7 +68,7 @@ exports.setRootPath = function(path) {
 };
 
 /**
- * @memberOf module:env
+ * @memberof module:env
  *
  * @returns {string}
  */
@@ -112,7 +112,7 @@ function requireFromBuild(path) {
 /**
  * Запрашивает модуль относительно папки, куда складываются собираемые приватные файлы.
  *
- * @memberOf module:env
+ * @memberof module:env
  *
  * @param {string} path
  * @returns {*}
