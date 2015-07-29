@@ -91,7 +91,7 @@ module.exports = function(app) {
      * @return {Boolean}
      */
     function matchUA(configUa, realUa) {
-        var configBrowser = configUa || {};
+        var configBrowser = configUa;
         var realBrowser = realUa.browser || {};
         var configOs = configUa.os || {};
         var realOs = realUa.os || {};
@@ -112,11 +112,21 @@ module.exports = function(app) {
         return true;
     }
 
-    function museum(ua) {
-        var browsers = app.config['museum.list'];
+    function getFlags(ua) {
+        var flagList = app.config.group('userAgentFlags');
 
-        return !!_.find(browsers, function(browser) {
-            return matchUA(browser, ua);
+        return _.mapValues(flagList, function(condition) {
+            if (_.isArray(condition)) {
+                return !!_.find(condition, function(rule) {
+                    return matchUA(rule, ua);
+                });
+            }
+
+            if (_.isFunction(condition)) {
+                return !!condition(ua);
+            }
+
+            return !!condition;
         });
     }
 
@@ -149,14 +159,13 @@ module.exports = function(app) {
         };
 
         _.extend(result, {
-            isMuseum: museum(result),
             isDesktop: isDesktop,
             isPhone: isPhone,
             isTablet: isTablet,
             isMobile: isMobile,
             isIE: isIE,
             osName: osName
-        });
+        }, getFlags(result));
 
         return result;
     }
