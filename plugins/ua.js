@@ -46,10 +46,10 @@ module.exports = function(app) {
         return 'desktop';
     }
     /**
-     * Проверяет, матчится ли версия браузера/операционки на значение из музейного конфига
+     * Проверяет, матчится ли версия браузера/операционки на правило из конфига
      * @param  {String} configVersion      - значение из конфига
      * @param  {Number|String} realVersion - реальная версия
-     * @return {Boolean}                   - true, если версия подходит под музейную
+     * @return {Boolean}                   - true, если версия подходит под правило
      *
      * @example
      * // returns true
@@ -85,7 +85,7 @@ module.exports = function(app) {
     }
 
     /**
-     * Проверяет, подходит ли user-agent под значение из музейного конфига
+     * Проверяет, подходит ли user-agent под правило из конфига
      * @param  {Object} configUa - значение из конфига
      * @param  {Object} realUa   - реальный юзер-агент
      * @return {Boolean}
@@ -112,6 +112,11 @@ module.exports = function(app) {
         return true;
     }
 
+    /**
+     * Возвращает флаги и их значения, вычисленные по правилам из конфига
+     * @param  {Object} ua
+     * @return {Object}
+     */
     function getFlags(ua) {
         var flagList = app.config.group('userAgentFlags');
 
