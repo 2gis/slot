@@ -46,29 +46,6 @@ module.exports = function(app) {
         return 'desktop';
     }
 
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    function museum(ua) { // @TODO вынести в конфиг
-        var browser = ua.browser,
-            os = ua.os;
-
-        return (browser.name == 'Chrome' && browser.major < 21) ||
-            (browser.name == 'IE' && browser.major < 9) ||
-            (browser.name == 'Firefox' && browser.major < 29) ||
-            (browser.name == 'Mozilla') ||
-            (os.name == 'Windows' && os.version == '95') || // Если поставит нормальный браузер? Вы издеваетесь?
-            (browser.name == 'Opera' && browser.major < 12) ||
-            (browser.name == 'Opera Mini') ||
-            (browser.name == 'Safari' && os.name == 'Android' && browser.major < 4 && parseInt(os.version, 10) < 4) ||
-            (browser.name == 'Mobile Safari' && os.name == 'Android' && parseInt(os.version, 10) < 4) ||
-            (browser.name == 'Safari' && os.name == 'Android' && parseInt(os.version, 10) < 4) ||
-            (os.name == 'iOS' && browser.major < 7) ||
-            (os.name == 'Mac OS X' && browser.name == 'Safari' && browser.major < 6) || // Олдовая сафари
-            (os.name == 'Windows' && browser.name == 'Safari');
-    }
-
     function getUAFromRegistry() {
         return app.registry.has('ua') ? app.registry.get('ua').ua : '';
     }
@@ -98,7 +75,6 @@ module.exports = function(app) {
         };
 
         _.extend(result, {
-            isMuseum: museum(result),
             isDesktop: isDesktop,
             isPhone: isPhone,
             isTablet: isTablet,
