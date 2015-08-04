@@ -6,7 +6,7 @@
 var _ = require('lodash');
 
 module.exports = function(pot) {
-    var names = ['phone', 'tablet', 'ie8', 'ie9', 'museum'];
+    var names = ['phone', 'tablet', 'ie8', 'ie9'];
     var platform = {};
 
     names.map(function(name) {
