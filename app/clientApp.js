@@ -161,16 +161,21 @@ ClientApplication.prototype.processEvents = function(moduleId, elementName, on) 
 
     // Пробегаемся по ассоциативному массиву элементов, заданном в модуле
     _.each(elements, function(eventsConfig, elementName) {
-        var selector = eventsConfig.selector || '.' + namer.elementClass(descriptor.moduleConf.block || descriptor.type, elementName),
-            containerId = moduleBlockId(moduleId);
+        var selector = eventsConfig.selector ||
+            '.' + namer.elementClass(descriptor.moduleConf.block || descriptor.type, elementName);
+        var container = this.block(moduleId);
 
         // Выбираем все значения из объекта, за исключением селектора
         var handlers = _.omit(eventsConfig, 'selector');
 
         _.each(handlers, function(handler, eventName) {
-            bind(selector, elementName, $(containerId), eventName, handler, on);
-        });
-    });
+            if (_.isFunction(this.customBindElementEvents)) {
+                this.customBindElementEvents(selector, elementName, container, eventName, handler, on);
+            } else {
+                this._bindElementEvents(selector, elementName, container, eventName, handler, on);
+            }
+        }, this);
+    }, this);
 
     if (on) {
         descriptor.instance.clientInit();
@@ -193,11 +198,17 @@ ClientApplication.prototype.unbindEvents = function(moduleId, elementName) {
     this.processEvents(moduleId, elementName, false);
 };
 
-function moduleBlockId(moduleId) {
-    return '#module-' + moduleId;
-}
-
-function bind(selector, elementName, container, eventName, handler, on) {
+/**
+ * Attach or detach a handler to an event for the elements
+ * You can declare function called "customBindElementEvents" to provide your binding events logic
+ * @param  {String}   selector    A selector string to filter the descendants of the selected element that trigger the event
+ * @param  {String}   elementName The name of element in BEM-style
+ * @param  {Object}   container   Selected jQuery element that trigger the event
+ * @param  {String}   eventName   One or more space-separated event types, such as "click"
+ * @param  {Function} handler     A handler to triggering event
+ * @param  {Boolean}  on          If this param is truthy, then attach handler. Otherwise detach handler
+ */
+ClientApplication.prototype._bindElementEvents = function(selector, elementName, container, eventName, handler, on) {
     var exceptions = ['scroll', 'block', 'error'], // Эти события нельзя подписывать как live, потому что они не всплывают
         method = on ? 'on' : 'off',
         selectorParam = elementName == 'block' ? null : selector;
@@ -207,4 +218,8 @@ function bind(selector, elementName, container, eventName, handler, on) {
     } else {
         container[method](eventName, selectorParam, handler);
     }
+};
+
+function moduleBlockId(moduleId) {
+    return '#module-' + moduleId;
 }
