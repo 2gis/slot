@@ -161,16 +161,17 @@ ClientApplication.prototype.processEvents = function(moduleId, elementName, on) 
 
     // Пробегаемся по ассоциативному массиву элементов, заданном в модуле
     _.each(elements, function(eventsConfig, elementName) {
-        var selector = eventsConfig.selector || '.' + namer.elementClass(descriptor.moduleConf.block || descriptor.type, elementName),
-            containerId = moduleBlockId(moduleId);
+        var selector = eventsConfig.selector ||
+            '.' + namer.elementClass(descriptor.moduleConf.block || descriptor.type, elementName);
+        var containerId = moduleBlockId(moduleId);
 
         // Выбираем все значения из объекта, за исключением селектора
         var handlers = _.omit(eventsConfig, 'selector');
 
         _.each(handlers, function(handler, eventName) {
-            bind(selector, elementName, $(containerId), eventName, handler, on);
-        });
-    });
+            this.bindElementEvents(selector, elementName, $(containerId), eventName, handler, on);
+        }, this);
+    }, this);
 
     if (on) {
         descriptor.instance.clientInit();
@@ -193,11 +194,7 @@ ClientApplication.prototype.unbindEvents = function(moduleId, elementName) {
     this.processEvents(moduleId, elementName, false);
 };
 
-function moduleBlockId(moduleId) {
-    return '#module-' + moduleId;
-}
-
-function bind(selector, elementName, container, eventName, handler, on) {
+ClientApplication.prototype.bindElementEvents = function(selector, elementName, container, eventName, handler, on) {
     var exceptions = ['scroll', 'block', 'error'], // Эти события нельзя подписывать как live, потому что они не всплывают
         method = on ? 'on' : 'off',
         selectorParam = elementName == 'block' ? null : selector;
@@ -207,4 +204,8 @@ function bind(selector, elementName, container, eventName, handler, on) {
     } else {
         container[method](eventName, selectorParam, handler);
     }
+}
+
+function moduleBlockId(moduleId) {
+    return '#module-' + moduleId;
 }
