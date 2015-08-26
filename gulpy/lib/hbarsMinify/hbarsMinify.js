@@ -21,6 +21,7 @@ function dumpAst(ast, visitor) {
         return node.original;
     }
 
+    // Список типов фрагментов скомпилированного handlebars-шаблона, и связанных с ними обработчиков-минификаторов
     var visitors = {
         'content': function(node) {
             return node.string;
@@ -102,10 +103,15 @@ function dumpAst(ast, visitor) {
     return accept(ast);
 }
 
-exports.ast = function(ast) {
-    var headingSpace = /^\s+</,
-        trailingSpace = />\s+$/,
-        tagCounter = 0;
+/**
+ * Принимает скомпилированный handlebars-шаблон в виде объекта, и возвращает его же, но минифицированный
+ */
+exports.minify = function(ast) {
+    var headingSpace = /^\s+/;
+    var trailingSpace = /\s+$/;
+    var tagHeadingSpace = /^\s+</;
+    var tagTrailingSpace = />\s+$/;
+    var tagCounter = 0;
 
     function tagWeight(string) {
         var cc = 0;
@@ -126,12 +132,12 @@ exports.ast = function(ast) {
 
             tagCounter += tagWeight(content);
 
-            if (headingSpace.test(content)) {
+            if (tagHeadingSpace.test(content)) {
                 node.string = node.string.trimLeft();
             }
 
             if (tagCounter == 0) {
-                if (trailingSpace.test(content)) {
+                if (tagTrailingSpace.test(content)) {
                     node.string = node.string.trimRight();
                 }
 
@@ -141,13 +147,21 @@ exports.ast = function(ast) {
             }
 
             node.string = node.string.replace(/\\(\s+)/g, ' ');
+            node.string = node.string.replace(headingSpace, ' ');
+            node.string = node.string.replace(trailingSpace, ' ');
         }
     }
 
     return dumpAst(ast, accept);
 };
 
+/**
+ * Принимает handlebars-шаблон в виде строки, и возвращает его же, но минифицированный
+ */
 exports.template = function(template) {
+    // Скомпилированный шаблон (Объект в формате handlebars)
+    // Минифицируются отдельно фрагменты шаблона
     var ast = handlebars.parse(template);
-    return exports.ast(ast);
+
+    return exports.minify(ast);
 };
