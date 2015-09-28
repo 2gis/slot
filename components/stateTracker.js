@@ -83,9 +83,8 @@ StateTracker.prototype.bind = function() {
     if (typeof window == 'undefined') return false;
 
     var self = this;
-
     $(window).on('popstate', function() {
-        if (!this.disabled) {
+        if (!self.disabled) {
             self.applyState();
         }
     });
