@@ -81,7 +81,7 @@
     "yargs": "^3.6.0"
   },
   "optionalDependencies": {
-    "posix": "^2.0.0"
+    "posix": "^4.0.0"
   },
   "scripts": {
     "test": "gulp test",
