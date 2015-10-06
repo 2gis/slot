@@ -1,13 +1,16 @@
-
 var gulp = require('gulp');
 var requireDir = require('require-dir');
+var colors = require('colors/safe');
 
 requireDir('./tasks');
 
 var exitCode = 0;
 
-function errHandler() {
+function errHandler(msg) {
     exitCode = 1;
+    if (msg) {
+        console.log(colors.bgRed(msg));
+    }
     process.stdout.write('\u0007'); // beep sound if possible
 }
 

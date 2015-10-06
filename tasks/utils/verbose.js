@@ -23,7 +23,7 @@ exports.setMessages = function(name, meggases) {
 };
 
 /**
- * Вклюсить режим показа текстов
+ * Включить режим показа текстов
  */
 exports.enable = function() {
     gulp.on('task_start', function(task) {

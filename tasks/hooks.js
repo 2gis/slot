@@ -43,6 +43,7 @@ gulp.task('hooks.run', function(cb) {
         'test.run',
         'cover.report',
         'lint',
+        // 'eslint',
         cb
     );
 });
