@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var namer = require('./lib/namer');
-var env = require('./env');
 
 /**
  * Конструктор модулей. Создаёт инстанс модуля, обвешивая его конфиг всякими методами.

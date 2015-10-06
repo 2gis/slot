@@ -3,7 +3,6 @@
  */
 
 var env = require('./env');
-var _ = require('lodash');
 
 var cfg = env.getConfig();
 module.exports = cfg;

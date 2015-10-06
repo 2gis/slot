@@ -74,7 +74,7 @@ module.exports = function(filename, contents, options) {
             if (start2 == -1) start2 = 1 / 0;
             if (start3 == -1) start3 = 1 / 0;
 
-            start = Math.min(start1, start2, start3);
+            var start = Math.min(start1, start2, start3);
 
             if (start != -1) {
                 line = line.substr(0, start);
