@@ -1,0 +1,9 @@
+# node_modules ignored by default
+
+cli/templates/
+coverage/
+i18n/tasks/extractors/
+
+# remove and fix after (or during) test refactoring
+tests/
+**/tests/

@@ -1,6 +1,4 @@
-
 var events = require('events');
-var glob = require('flat-glob').sync;
 var globule = require('globule');
 var chokidar = require('chokidar');
 

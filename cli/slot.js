@@ -6,7 +6,6 @@ var _ = require('lodash');
 var path = require('path');
 var async = require('async');
 var extfs = require('extfs');
-var colors = require('colors');
 var glob = require('glob').sync;
 var program = require('commander');
 

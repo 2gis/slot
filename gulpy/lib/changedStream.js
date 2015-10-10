@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var glob = require('flat-glob').sync;

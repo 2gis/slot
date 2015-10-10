@@ -6,7 +6,6 @@
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var env = require('slot/env');
 
 module.exports = StateTracker;
 function StateTracker(app) {

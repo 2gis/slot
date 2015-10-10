@@ -93,8 +93,7 @@ module.exports = function(app) {
         end: function(percentile) {
             if (!app.isClient) return;
 
-            var str = '',
-                norm = [],
+            var norm = [],
                 sum = 0;
 
             if (!getRaf()) return;

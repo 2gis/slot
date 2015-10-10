@@ -4,7 +4,6 @@
  */
 
 var _ = require('lodash');
-var env = require('../env');
 var namer = require('../lib/namer');
 
 module.exports = function(slot, templateEngine) {
