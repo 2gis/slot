@@ -63,6 +63,8 @@ describe('app', function() {
             };
             appIntance.init(data, _.noop);
             assert(appIntance.cookie('a') == '1', 'Переданные cookie должны были записаться');
+            appIntance.cookie('b', '2');
+            assert(appIntance.cookie('b') == '2', 'Установленная cookie должна была записаться');
         });
 
         it('Вызывается callback после инициализации', function() {

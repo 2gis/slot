@@ -707,6 +707,7 @@ Application.prototype.cookie = function(key, value, params) {
                 params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000);
             }
 
+            this.cookies[key] = value;
             this.emit('cookie', key, value, params);
         } else {
             value = this.cookies[key]; // Извлечь значение куки key на сервере из запроса клиента
