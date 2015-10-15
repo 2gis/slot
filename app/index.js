@@ -721,6 +721,7 @@ Application.prototype.removeCookie = function(key, params) {
     if (this.isClient) {
         return $.removeCookie(key, params);
     } else {
+        delete this.cookies[key];
         this.emit('removeCookie', key, params);
     }
 };

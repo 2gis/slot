@@ -55,7 +55,7 @@ describe('app', function() {
                 'Переданные данные должны были записаться в registry');
         });
 
-        it('Данные записались в cookie', function() {
+        it('Данные записываются и удаляются из cookie', function() {
             var data = {
                 cookies: {
                     a: '1'
@@ -65,6 +65,9 @@ describe('app', function() {
             assert(appIntance.cookie('a') == '1', 'Переданные cookie должны были записаться');
             appIntance.cookie('b', '2');
             assert(appIntance.cookie('b') == '2', 'Установленная cookie должна была записаться');
+
+            appIntance.removeCookie('b');
+            assert(appIntance.cookie('b') === undefined, 'Cookie должна была удалиться');
         });
 
         it('Вызывается callback после инициализации', function() {
