@@ -37,7 +37,7 @@ function AppState(app, $stateTracker) {
     if (this instanceof AppState) {
         AsyncEmitter.call(this);
         setStateApi();
-        FinalStateApi.call(this);
+        FinalStateApi.call(this, this.app);
         this.app = app;
 
         // выставляем дефолтный компаратор
@@ -143,7 +143,7 @@ AppState.prototype.parse = function(url, callback) {
     }
 
     // создаем временный стэйт для нужд парсера
-    var stateApi = new FinalStateApi();
+    var stateApi = new FinalStateApi(this.app);
     stateApi.parse = parse;
     stateApi.addUriAlias = _.bind(this.addUriAlias, this);
 
