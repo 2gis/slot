@@ -21,7 +21,9 @@ describe('app', function() {
 
     describe(' plugins', function() {
         it('Подключает только те плагины, которые указаны в конфиге', function() {
-            appIntance.config.plugins = ['ua'];
+            var env = require('../env');
+            var appConfig = env.getConfig();
+            appConfig.plugins = ['ua'];
             app = new Application();
             appIntance = app;
 
