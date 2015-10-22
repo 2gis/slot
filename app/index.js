@@ -27,7 +27,12 @@ function Application() {
 
     this.modules = {};
     this.components = {};
-    this.config = config;
+    /**
+     * It's extremely important to realize that each app instance
+     * should work with its own set of settings.
+     * Otherwise, one instance may affect to another one.
+     */
+    this.config = _.cloneDeep(config);
 
     this.registry = new Registry();
 
