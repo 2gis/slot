@@ -1,4 +1,3 @@
-
 var through = require('through2');
 
 /**
@@ -8,7 +7,7 @@ var through = require('through2');
  * @returns {string|null}
  */
 function getInjectCode(src) {
-    var injector = require('slot/lib/injector');
+    var injector = require('../../lib/injector');
     var args = injector.getArgs(src.toString());
     var writeInject = args && args.length && args.some(function(arg) {
         return arg.charAt(0) == '$';

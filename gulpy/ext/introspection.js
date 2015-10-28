@@ -1,6 +1,5 @@
-
 var glob = require('glob').sync;
-var env = require('slot/env');
+var env = require('../../env');
 var path = require('path');
 
 /**
