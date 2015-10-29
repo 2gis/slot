@@ -11,8 +11,11 @@ verbose.setMessages('test', {
 gulp.task('test.run', function() {
     return gulp.src([
             'tests/unitTestConfig.js',
-            '**/*.spec.js'
-        ], {read: false})
+            '**/*.spec.js',
+            '!node_modules/**'
+        ], {
+            read: false
+        })
         .pipe(mocha({
             globals: ['DEBUG']
         }));
