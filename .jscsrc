@@ -61,10 +61,16 @@
     "disallowMixedSpacesAndTabs": true,
     "disallowTrailingWhitespace": true,
     "disallowKeywordsOnNewLine": ["else"],
-    "validateJSDoc": {
-        //"checkParamNames": true,
-        //"checkRedundantParams": true,
-        "requireParamTypes": false
-    },
+// Тemporarily disable
+//    "jsDoc": {
+//        "checkParamExistence": true,
+//        "checkParamNames": true,
+//        "checkRedundantParams": true
+//        "requireParamTypes": true,
+//        "checkReturnTypes": true,
+//        "checkRedundantReturns": true,
+//        "requireReturnTypes": true
+//        "requireNewlineAfterDescription": true
+//    },
     "requireSpaceAfterLineComment": true
 }
