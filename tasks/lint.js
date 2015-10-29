@@ -26,7 +26,7 @@ var files = [
     '**/*.js',
     '!docs/**/*.js',
     '!smokesignals/index.js',
-    '!**/node_modules/**/*',
+    '!node_modules/**',
     '!coverage/**/*.js',
     '!cli/templates/**/*.js'
 ];
