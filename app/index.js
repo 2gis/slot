@@ -40,15 +40,7 @@ function Application() {
     this.queryModules = modulesQuering(this._moduleDescriptors);
 
     // setup plugins
-    var plugins = config['plugins'] || [];
-    _.each(plugins, function(name) {
-        // Сначала ищем плагин у пользователя, затем внутри слота
-        try {
-            this[name] = this.require('plugins/' + name)(this);
-        } catch (e) {
-            this[name] = require('slot/plugins/' + name)(this);
-        }
-    }, this);
+    this._setupPlugins(this.config['plugins']);
 
     var Handlebars = env.get('handlebars');
 
@@ -60,21 +52,6 @@ inherits(Application, AsyncEmitter);
 
 Application.prototype.isServer = env.isServer;
 Application.prototype.isClient = env.isClient;
-
-/**
- *
- * @param {string} parentId
- * @return {string|*}
- * @private
- */
-Application.prototype._nextModuleId = function(parentId) {
-    var key = parentId || 'root';
-    if (!(key in this._ids)) {
-        this._ids[key] = 1;
-    }
-    var nextId = this._ids[key]++;
-    return _.compact([parentId, nextId]).join('-');
-};
 
 /**
  * Получить модификаторы.
@@ -372,22 +349,12 @@ Application.prototype.notify = function(moduleId, message) {
 };
 
 /**
- * Загрузка компонента. Сначала пытается найти компонент в приложении, затем в слоте
- * @param  {String} name имя подключаемого компонента
- * @return {Object} module.exports подключаемого файла модуля
+ * Load a component. Seek the component in end-user application then seek it in the framework
+ *
+ * @param  {String} name Component name
+ * @return {Object} module.exports of the module
  */
-Application.prototype.loadComponent = function(name) {
-    var component;
-
-    // Сначала пытаемся загрузить из приложения, если там нет - из слота
-    try {
-        component = this.require('components/' + name + '/' + name);
-    } catch (e) {
-        component = require('slot/components/' + name);
-    }
-
-    return component;
-};
+Application.prototype.loadComponent = _(lookupRequire).partial('components').memoize().value();
 
 Application.prototype.newComponent = function(name, extraArgs) {
     extraArgs = extraArgs || [];
@@ -741,4 +708,62 @@ if (DEBUG) {
     Application.prototype.findModule = function(type) {
         return this.modulesByType(type)[0];
     };
+}
+
+/**
+ *
+ * @param {string} parentId
+ * @return {string|*}
+ * @private
+ */
+Application.prototype._nextModuleId = function(parentId) {
+    var key = parentId || 'root';
+    if (!(key in this._ids)) {
+        this._ids[key] = 1;
+    }
+    var nextId = this._ids[key]++;
+    return _.compact([parentId, nextId]).join('-');
+};
+
+/**
+ * Setup plugins.
+ *
+ * @param {Array} plugins list of plugins
+ * @private
+ */
+Application.prototype._setupPlugins = function(plugins) {
+    _.each(plugins, function(name) {
+        var pluginModule = lookupRequire('plugins', name);
+
+        try {
+            this[name] = pluginModule(this);
+        } catch (e) {
+            throw new Error('Error invoke plugin "' + name + '": ' + e.message);
+        }
+    }, this);
+};
+
+/**
+ * Requires some specific entity by its location and name.
+ * Seeks the entity in end-user application then seeks it in the framework.
+ *
+ * @param {string} location The entity location
+ * @param {string} name Module name to load
+ * @return {*}
+ */
+function lookupRequire(location, name) {
+    var modulePath = location + '/' + name;
+    var res;
+
+    try { // Require from end-user app
+        res = env.require(modulePath + '/' + name);
+    } catch (e) { // Require from framework
+        if (env.isClient) { // Require via browserify in end-user app
+            res = require('slot/' + modulePath);
+        } else {
+            res = require('../' + modulePath);
+        }
+    }
+
+    return res;
 }

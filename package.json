@@ -86,8 +86,7 @@
   "scripts": {
     "test": "gulp test",
     "lint": "npm run -s lint:hook; exit 0",
-    "lint:hook": "eslint --color --cache .",
-    "postinstall": "node ./scripts/postinstall.js"
+    "lint:hook": "eslint --color --cache ."
   },
   "license": "BSD-2-Clause",
   "devDependencies": {
