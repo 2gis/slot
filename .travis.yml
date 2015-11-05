@@ -12,5 +12,5 @@ node_js:
   - "0.10"
   - "0.12"
   - "4.2" # Latest LTS
-  - "node"
+#  - "node" # temporarily disable for 5.0.0 adaptation
   - "iojs"
