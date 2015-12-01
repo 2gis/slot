@@ -131,13 +131,13 @@ AppState.prototype.parse = function(url, callback) {
         aliases = this.uriAliases;
 
     function parse() {
-        return parser.parse(patterns, url, aliases);
+        return parser.parse(patterns, url, aliases, stateConf.get('queryParamName'));
     }
 
     function parseAndInject() {
         var state = {};
         var slugEntries = parse();
-        stateConf.invokeInjectors(slugEntries, state, self);
+        stateConf.invokeInjectors(slugEntries, state);
 
         return state;
     }

@@ -6,6 +6,7 @@
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var stuff = require('../lib/stuff');
 
 module.exports = StateTracker;
 function StateTracker(app) {
@@ -23,7 +24,12 @@ StateTracker.prototype.resolveURL = function(url) {
     url = url || document.location.pathname;
 
     if (!history.emulate) { // если у нас не hash url, добавляем query string чтобы не потерялась
-        url += location.search;
+        var urlParse = require('url-parse');
+        var newLocation = urlParse(url, true);
+        var currentLocation = urlParse(location.href, true);
+
+        var search = stuff.state2uri(_.extend(currentLocation.query, newLocation.query));
+        url = newLocation.pathname + (search ? '?' + search : '');
     }
 
     return url;

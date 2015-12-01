@@ -1,5 +1,6 @@
 
 var _ = require('lodash');
+var urlParse = require('url-parse');
 var serializer = require('./serializer');
 
 /**
@@ -79,14 +80,22 @@ function markDirty(parts) {
  * @param {Pattern[]} patterns
  * @param {String} str
  * @param {Array} [aliases]
+ * @param {String} [queryParamName] - name parameter in query for state
  * @returns {Array} разобранная строка в виде массива, каждый элемент которой объект следующего вида:
  *     {string} slug
  *     {object} params разобранные параметры
  *     {number} index где нашли в строке заданный кусок
  *     {Pattern} [pattern] связанный pattern с помощью которого был разобран данный кусок урла
  */
-exports.parse = function(patterns, str, aliases) {
+exports.parse = function(patterns, str, aliases, queryParamName) {
     str = serializer.decode(str);
+    str = '/' + _.compact(str.split('/')).join('/');
+
+    var parsedUrl = urlParse(str, true);
+    str = parsedUrl.pathname;
+    if (queryParamName && parsedUrl.query[queryParamName]) {
+        str += '/' + parsedUrl.query[queryParamName];
+    }
 
     var parts = str ? [mkPart(str)] : [];
 
