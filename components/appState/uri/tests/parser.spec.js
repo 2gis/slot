@@ -139,4 +139,38 @@ describe("UriParser", function() {
         assert.deepEqual(state.params, expectedState);
         assert.equal(state.slug, 'booklet');
     });
+
+    it("в правильном порядке парсит строку #4 со стейтом в GET-параметрах", function() {
+        var patterns = [
+            newDef('query/:query'),
+            newDef('filials/:firmId'),
+            newDef('geo/:id')
+        ];
+
+        var getParamName = 'queryState';
+        var state = parser.parse(patterns, 'filials/2?' + getParamName + '=geo/4/query/5', [], getParamName);
+
+        assert.equal(state.length, 3);
+
+        assert.equal(state[0].slug, 'filials');
+        assert.equal(state[1].slug, 'geo');
+        assert.equal(state[2].slug, 'query');
+    });
+
+    it("наличие или отсутсвие слэша в начале не влияет на результат", function() {
+        var patterns = [
+            newDef('geo/:id'),
+            newDef('filials/:firmId'),
+            newDef('query/:query')
+        ];
+
+        var state = parser.parse(patterns, 'filials/2/geo/4/query/5');
+        var state2 = parser.parse(patterns, 'filials/2/geo/4/query/5');
+
+        assert.equal(state.length, state2.length);
+
+        assert.equal(state[0].slug, state[0].slug);
+        assert.equal(state[1].slug, state[1].slug);
+        assert.equal(state[2].slug, state[2].slug);
+    });
 });

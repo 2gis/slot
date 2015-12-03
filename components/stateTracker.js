@@ -24,12 +24,7 @@ StateTracker.prototype.resolveURL = function(url) {
     url = url || document.location.pathname;
 
     if (!history.emulate) { // если у нас не hash url, добавляем query string чтобы не потерялась
-        var urlParse = require('url-parse');
-        var newLocation = urlParse(url, true);
-        var currentLocation = urlParse(location.href, true);
-
-        var search = stuff.state2uri(_.extend(currentLocation.query, newLocation.query));
-        url = newLocation.pathname + (search ? '?' + search : '');
+        url = stuff.extendQuery(location.href, url);
     }
 
     return url;

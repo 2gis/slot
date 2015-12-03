@@ -11,12 +11,17 @@ function inject(entry, state) {
     return state[entry.slug];
 }
 
-function makeConf(patterns) {
+var queryParamName = 'queryState';
+function makeConf(patterns, queryParamsList) {
     var structured = {};
     _.each(patterns, function(p) {
         structured[p] = inject;
     });
-    return new StateConf({urls: structured});
+    return new StateConf({
+        urls: structured,
+        queryParamName: queryParamName,
+        queryParamsList: queryParamsList
+    });
 }
 
 describe("UrlResolver", function() {
@@ -38,6 +43,32 @@ describe("UrlResolver", function() {
         };
 
         assert.equal(decodeURIComponent(resolver(conf, state)), 'search/пиво/inbuild/13');
+    });
+
+    it("правильно преобразует стэйт в строку c GET-параметрами", function() {
+        var conf = makeConf([
+            'zoom/:zoom',
+            'center/:lat,:lon',
+            'inbuild/:house'
+        ], ['zoom', 'center']);
+
+        var state = {
+            search: {
+                query: 'пиво'
+            },
+            inbuild: {
+                house: 13
+            },
+            zoom: {
+                zoom: 15
+            },
+            center: {
+                lat: 12,
+                lon: 10
+            }
+        };
+
+        assert.equal(decodeURIComponent(resolver(conf, state)), 'inbuild/13?' + queryParamName + '=zoom/15/center/12,10');
     });
 
     it("правильно алиасит кириллицу", function() {
