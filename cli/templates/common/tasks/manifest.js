@@ -1,5 +1,3 @@
-
-var _ = require('lodash');
 var gulp = require('gulp');
 var through = require('through2');
 var path = require('path');
