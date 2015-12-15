@@ -89,6 +89,7 @@ AppState.prototype.setComparator = function(comparator) {
 AppState.prototype.configure = function(stateConf) {
     if (stateConf instanceof StateConf) {
         this.stateConf = stateConf;
+        this.stateTracker.init(this.stateConf.get('queryParamName'));
     } else {
         this.stateConf = new StateConf(stateConf);
     }
