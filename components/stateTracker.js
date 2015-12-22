@@ -6,6 +6,7 @@
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var stuff = require('../lib/stuff');
 
 module.exports = StateTracker;
 function StateTracker(app) {
@@ -17,13 +18,18 @@ function StateTracker(app) {
 }
 inherits(StateTracker, EventEmitter);
 
+StateTracker.prototype.init = function(forcedRenewParam) {
+    this.forcedRenewParam = forcedRenewParam;
+    return this;
+};
+
 StateTracker.prototype.resolveURL = function(url) {
     if (this.disabled) return;
 
     url = url || document.location.pathname;
 
     if (!history.emulate) { // если у нас не hash url, добавляем query string чтобы не потерялась
-        url += location.search;
+        url = stuff.extendQuery(location.href, url, this.forcedRenewParam);
     }
 
     return url;

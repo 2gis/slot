@@ -89,6 +89,7 @@ AppState.prototype.setComparator = function(comparator) {
 AppState.prototype.configure = function(stateConf) {
     if (stateConf instanceof StateConf) {
         this.stateConf = stateConf;
+        this.stateTracker.init(this.stateConf.get('queryParamName'));
     } else {
         this.stateConf = new StateConf(stateConf);
     }
@@ -131,13 +132,13 @@ AppState.prototype.parse = function(url, callback) {
         aliases = this.uriAliases;
 
     function parse() {
-        return parser.parse(patterns, url, aliases);
+        return parser.parse(patterns, url, aliases, stateConf.get('queryParamName'));
     }
 
     function parseAndInject() {
         var state = {};
         var slugEntries = parse();
-        stateConf.invokeInjectors(slugEntries, state, self);
+        stateConf.invokeInjectors(slugEntries, state);
 
         return state;
     }

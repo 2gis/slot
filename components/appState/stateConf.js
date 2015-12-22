@@ -3,6 +3,7 @@ var _ = require('lodash');
 var Pattern = require('./uri/pattern');
 var stuff = require('../../lib/stuff');
 var expandString = require('../../lib/expandString');
+var helpers = require('./uri/helpers');
 
 /**
  * адаптер для конфига, содержит методы которые, оперируя над конфигом, разрешают некоторые потребности стэйта
@@ -144,9 +145,8 @@ StateConf.prototype.injectInArray = function(key, entry, state) {
  * Вызывает инжектор для заданного распарсенного кусочка урла
  * @param {object} entry
  * @param {object} state
- * @param {object} api
  */
-StateConf.prototype.invokeInjector = function(entry, state, api) {
+StateConf.prototype.invokeInjector = function(entry, state) {
     var injector = entry.injector;
     if (injector) {
         if (typeof injector == 'string') {
@@ -157,9 +157,9 @@ StateConf.prototype.invokeInjector = function(entry, state, api) {
             throw new TypeError("Invalid injector for state:" + injector);
         }
 
-        var valueKeyPair = entry.injector.call(this, entry, state, api);
+        var valueKeyPair = entry.injector.call(this, entry, state);
         if (this.conf.onEntryInjected) {
-            this.conf.onEntryInjected.call(this, valueKeyPair[0], valueKeyPair[1], api);
+            this.conf.onEntryInjected.call(this, valueKeyPair[0], valueKeyPair[1]);
         }
         return valueKeyPair;
     }
@@ -169,13 +169,12 @@ StateConf.prototype.invokeInjector = function(entry, state, api) {
  * Вызывает инжекторы для распарсенных кусочков урла
  * @param {object[]} entries
  * @param {object} state
- * @param {object} api
  */
-StateConf.prototype.invokeInjectors = function(entries, state, api) {
+StateConf.prototype.invokeInjectors = function(entries, state) {
     var injectList = [];
 
     _.each(entries, function(entry) {
-        var valueKeyPair = this.invokeInjector(entry, state, api);
+        var valueKeyPair = this.invokeInjector(entry, state);
         if (valueKeyPair) {
             injectList.push(valueKeyPair);
         }
@@ -273,8 +272,8 @@ StateConf.prototype.permalink = function(type, params, domain, strict) {
         throw new PermalinkNotFound(type, lastCheckData, urlPattern, params);
     }
 
-    domain = domain || '';
-    return domain + lastPattern.inject(params);
+    var uri = lastPattern.inject(params);
+    return (domain || '') + helpers.transform(uri, this);
 };
 
 module.exports = StateConf;
