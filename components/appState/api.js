@@ -4,17 +4,18 @@ var deepEqual = require('deep-equal');
 
 function StateApi() {
     // накапливаемый стэйт приложения
-    this.state = {};
-    // сохраняет изменения замещенные неявными, временными значениями
-    this.implicitChanges = {};
+    this.state = {
+        // сохраняет изменения замещенные неявными, временными значениями
+        implicitChanges: {},
 
-    /**
-     * implicitSet наследует поведение toggle но при этом,
-     * этот toggle не должен изменять implicitChanges,
-     * для этого вводим флажок.
-     * @type {boolean}
-     */
-    this.implicitChangesLocked = false;
+        /**
+         * implicitSet наследует поведение toggle но при этом,
+         * этот toggle не должен изменять implicitChanges,
+         * для этого вводим флажок.
+         * @type {boolean}
+         */
+        implicitChangesLocked: false
+    };
 }
 
 /**
@@ -48,13 +49,13 @@ StateApi.prototype.get = function(name) {
 StateApi.prototype.del = function(name) {
     // да, это медленнее чем присвоение в undefined, но позволяет держать стэйт в чистоте не оставляя
     // мусорных ключей
-    if (!this.implicitChangesLocked) delete this.implicitChanges[name];
+    if (!this.state.implicitChangesLocked) delete this.state.implicitChanges[name];
 
     delete this.state[name];
 };
 
 StateApi.prototype.set = function(name, value) {
-    if (!this.implicitChangesLocked) delete this.implicitChanges[name];
+    if (!this.state.implicitChangesLocked) delete this.state.implicitChanges[name];
 
     this.state[name] = value;
 };
@@ -77,10 +78,10 @@ StateApi.prototype.toggle = function(name, value) {
  * @param {*} value
  */
 StateApi.prototype.implicitSet = function(name, value) {
-    this.implicitChanges[name] = this.state[name];
-    this.implicitChangesLocked = true;
+    this.state.implicitChanges[name] = this.state[name];
+    this.state.implicitChangesLocked = true;
     this.toggle(name, value);
-    this.implicitChangesLocked = false;
+    this.state.implicitChangesLocked = false;
 };
 
 /**
@@ -88,13 +89,13 @@ StateApi.prototype.implicitSet = function(name, value) {
  * @param {String} name
  */
 StateApi.prototype.implicitRestore = function(name) {
-    var value = this.implicitChanges[name];
+    var value = this.state.implicitChanges[name];
     if (value === undefined) {
         delete this.state[name];
     } else {
-        this.state[name] = this.implicitChanges[name];
+        this.state[name] = this.state.implicitChanges[name];
     }
-    delete this.implicitChanges[name];
+    delete this.state.implicitChanges[name];
 };
 
 /**
