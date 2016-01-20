@@ -461,7 +461,7 @@ Application.prototype.loadModule = function(data) {
         templates: templateProvider.forModule(moduleName, this.handlebars)
     });
 
-    if (!_.isFunction(moduleJs)) { // если возвращает не функцию — ругаемся
+    if (!_.isFunction(moduleJs)) {
         throw new Error('Bad moduleJs: ' + moduleName);
     }
 

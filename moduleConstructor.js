@@ -170,6 +170,11 @@ module.exports = function(app, moduleConf, slot) {
         type: moduleConf.type
     };
 
+    // @RAT start
+    moduleWrapper.renderLegacy = moduleWrapper.render;
+    moduleWrapper.render = moduleConf.render || moduleWrapper.renderLegacy;
+    // @RAT end
+
     if (app.isClient) {
         moduleWrapper.block = _.bind(app.block, app, moduleConf.uniqueId);
         moduleWrapper.bindEvents = _.bind(app.bindEvents, app, moduleConf.uniqueId);
