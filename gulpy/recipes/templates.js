@@ -24,10 +24,10 @@ exports.globs = function() {
     return modulesPaths.concat(helpersPaths);
 };
 
-exports.compile = function() {
+exports.compile = function(outputPath) {
     return es.merge(
-        modules.compile(),
-        helpers.compile()
+        modules.compile(null, outputPath),
+        helpers.compile(null, outputPath)
     );
 };
 
