@@ -10,14 +10,15 @@ var handlebarsify = require('../plugins/handlebarsify');
 
 const DEST = 'build/private/';
 
-function templatify(streamOrPaths, declOpts, name) {
+function templatify(streamOrPaths, declOpts, name, outputPath) {
     name = name || declOpts.namespace;
+    outputPath = outputPath || DEST;
 
     var stream = streamOrPaths.pipe ? streamOrPaths : gulp.src(streamOrPaths);
 
     var renamer = declOpts.parentBased ?
-        _.partial(renamers.parentBased, declOpts.parentBased)
-        : renamers.basename;
+        _.partial(renamers.parentBased, declOpts.parentBased) :
+        renamers.basename;
 
     return stream
         .pipe(modified('js'))
@@ -28,7 +29,7 @@ function templatify(streamOrPaths, declOpts, name) {
         }))
         .pipe(remember('templates.' + name))
         .pipe(concat(name + '.js'))
-        .pipe(gulp.dest(DEST));
+        .pipe(gulp.dest(outputPath));
 }
 
 module.exports = templatify;
