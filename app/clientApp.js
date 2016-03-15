@@ -9,6 +9,7 @@ var Application = require('./index');
 var namer = require('../lib/namer');
 var defer = require('../lib/defer');
 var inherits = require('inherits');
+var morphdom = require('morphdom');
 require('./jquery.mod');
 
 module.exports = ClientApplication;
@@ -115,6 +116,29 @@ ClientApplication.prototype.rerender = function(moduleId) {
     $(moduleBlockId(moduleId)).replaceWith(html);
 
     this.bindEvents(moduleId);
+};
+
+
+/**
+ * Morphs current module DOM to new rendered html.
+ * Like .rerender(), but without killing node and
+ * unbinding/binding events.
+ *
+ * @param {string} moduleId
+ */
+ClientApplication.prototype.morph = function(moduleId) {
+    var blockNode = $(moduleBlockId(moduleId))[0];
+
+    if (blockNode) {
+        var descriptor = this.getModuleDescriptorById(moduleId);
+        var html = descriptor.instance.render();
+
+        morphdom(blockNode, html, {
+            getNodeKey: function() {
+                return null;
+            }
+        });
+    }
 };
 
 /**

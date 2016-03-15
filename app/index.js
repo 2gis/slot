@@ -533,16 +533,16 @@ Application.prototype.killModule = function(moduleId) {
         var parent = this._moduleDescriptors[parentId];
         var childrenOfParent = parent.slot.modules[moduleInstance.type];
 
-        if (_.isObject(childrenOfParent)) {
-            delete parent.slot.modules[moduleInstance.type];
-        } else if (_.isArray(childrenOfParent)) {
+        if (_.isArray(childrenOfParent)) {
             _.remove(childrenOfParent, function(child) { // Удаляем из массива элемент с таким id-шником
-                return child.id() == moduleId;
+                return child.id == moduleId;
             });
 
             if (childrenOfParent.length == 0) {
                 delete parent.slot.modules[moduleInstance.type];
             }
+        } else {
+            delete parent.slot.modules[moduleInstance.type];
         }
     }
 
@@ -556,7 +556,7 @@ Application.prototype.killModule = function(moduleId) {
  * Модуль окончательно удаляется (из дом-дерева и дерева модулей)
  * @param moduleId
  */
-Application.prototype.removeModule = function(moduleId) {
+Application.prototype.removeModule = function(moduleId, options) {
     var descriptor = this._moduleDescriptors[moduleId];
     if (!descriptor) return;
 
@@ -566,7 +566,7 @@ Application.prototype.removeModule = function(moduleId) {
 
     if (moduleConf.dispose) moduleConf.dispose();
 
-    if (this.isClient) {
+    if (this.isClient && !_.get(options, 'keepDOM')) {
         slot.block().remove();
     }
     slot.stage = slot.STAGE_DISPOSED;
@@ -579,14 +579,13 @@ Application.prototype.removeModule = function(moduleId) {
 
     if (parentId) {
         this._moduleDescriptors[parentId].children = _.without(this._moduleDescriptors[parentId].children, moduleId);
-        delete this._moduleDescriptors[parentId].slot.modules[descriptor.type];
     }
     delete this._moduleDescriptors[moduleId];
 };
 
-Application.prototype.disposeModule = function(moduleId) {
+Application.prototype.disposeModule = function(moduleId, options) {
     this.killModule(moduleId);
-    this.removeModule(moduleId);
+    this.removeModule(moduleId, options);
 };
 
 /**

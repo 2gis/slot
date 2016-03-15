@@ -30,9 +30,7 @@ if (typeof $ != 'undefined') {
         // нет модификаторов для установки -> просто возращаем mods первого элемента
         if (!mods) {
             // если mods не установлен, парсим и устанавливаем его из className
-            return firstEl.mods || (
-                    firstEl.mods = namer.parseMods(firstEl.className)
-                );
+            return namer.parseMods(firstEl.className);
         }
 
         this.each(function(index, el) {
@@ -76,7 +74,7 @@ if (typeof $ != 'undefined') {
             el.className = classNames.join(' ');
         });
 
-        return firstEl.mods;
+        return namer.parseMods(firstEl.className);
     };
 
     /**
