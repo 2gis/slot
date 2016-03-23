@@ -6,7 +6,7 @@ var gulpif = require('gulp-if');
 var gutil = require('gulp-util');
 var concat = require('gulp-concat');
 
-var glob = require('flat-glob').sync;
+var glob = require('glob-flat').sync;
 
 gulp.task('css', function() {
     var files = glob(_.compact([

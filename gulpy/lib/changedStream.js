@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var glob = require('flat-glob').sync;
+var glob = require('glob-flat').sync;
 var through = require('through2');
 var async = require('async');
 var crypto = require('crypto');

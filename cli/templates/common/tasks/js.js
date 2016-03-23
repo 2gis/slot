@@ -7,7 +7,7 @@ var wrapper = require('gulp-wrapper');
 
 var watchify = require('watchify');
 var buffer = require('vinyl-buffer');
-var glob = require('flat-glob').sync;
+var glob = require('glob-flat').sync;
 var browserify = require('browserify');
 var runSequence = require('run-sequence').use(gulp);
 var source = require('vinyl-source-stream');
