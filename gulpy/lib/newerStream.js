@@ -1,7 +1,7 @@
 
 var _ = require('lodash');
 var fs = require('fs');
-var glob = require('flat-glob').sync;
+var glob = require('glob-flat').sync;
 var through = require('through2');
 var async = require('async');
 

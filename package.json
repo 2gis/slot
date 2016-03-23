@@ -57,7 +57,7 @@
     "del": "^1.1.1",
     "event-stream": "~3.0.16",
     "extfs": "0.0.7",
-    "flat-glob": "0.0.1",
+    "glob-flat": "^1.0.0",
     "glob": "^4.3.4",
     "globule": "^0.2.0",
     "gulp-concat": "~2.2.0",

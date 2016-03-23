@@ -176,7 +176,7 @@ module.exports = function(gulp) {
         // @TODO: будем ли менять место положение конфигов для сборки в приложении?
         get config() {
             var baseCfg = pot.projectRequire('config/build');
-            var glob = require('flat-glob').sync;
+            var glob = require('glob-flat').sync;
 
             var extPattern = path.join(pot.projectPath, './config/build/*.js');
             var localsPattern = path.join(pot.projectPath, './config/build/*.local.js');
