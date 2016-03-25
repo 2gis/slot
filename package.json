@@ -1,6 +1,6 @@
 {
   "name": "slot",
-  "version": "0.14",
+  "version": "0.13.3",
   "homepage": "https://github.com/2gis/slot",
   "repository": "git@github.com:2gis/slot.git",
   "bugs": "https://github.com/2gis/slot/issues",
@@ -73,6 +73,8 @@
     "mkdirp": "~0.5.0",
     "ncp": "^2.0.0",
     "po2json": "0.2.3",
+    "request": "~2.27.0",
+    "reqwest": "git://github.com/2gis/reqwest",
     "setimmediate": "^1.0.2",
     "ua-parser-js": "~0.7.9",
     "url-parse": "~1.0.5",
