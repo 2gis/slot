@@ -598,6 +598,7 @@ if (env.isClient) {
      * @memberof module:Slot
      */
     Slot.prototype.rerender = proxy('rerender', true);
+    Slot.prototype.morph = proxy('morph', true);
     Slot.prototype.bindEvents = proxy('bindEvents', true);
     Slot.prototype.unbindEvents = proxy('unbindEvents', true);
 }
