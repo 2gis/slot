@@ -6,7 +6,7 @@ var save = require('../plugins/save');
 var globs = 'l10n/*/**/*.po';
 
 function compile(options) {
-    return gulp.src(globs)
+    return gulp.src(options.globPath || globs)
         .pipe(po2json(options))
         .pipe(save());
 }
