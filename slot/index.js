@@ -278,7 +278,11 @@ Slot.prototype.requireComponent = function(name, extraArgs) {
 
 Slot.prototype.clearRequests = function() {
     _.each(this.requests, function(req) {
-        req.abort();
+        if (_.isFunction(req.abort)) {
+            req.abort();
+        } else if (_.isFunction(req.cancel)) {
+            req.cancel();
+        }
     });
     this.requests = [];
 };
