@@ -1,7 +1,8 @@
-module.exports = function(pot) {
+module.exports = function(pot, globPath) {
     return function() {
         return pot.recipes.po2json.compile({
-            debug: pot.args['i18n-debug']
+            debug: pot.args['i18n-debug'],
+            globPath: globPath
         });
     };
 };
