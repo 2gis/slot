@@ -49,7 +49,7 @@ StateTracker.prototype.add = function(method, newState, url) {
     var stop = false;
     var event = {
         method: method,
-        state: newState,
+        state: _.extend({}, newState || {}, {isFromHistory: false}),
         url: url,
         title: typeof document != 'undefined' ? document.title : null,
         cancel: function() {
@@ -90,6 +90,7 @@ StateTracker.prototype.bind = function() {
     var self = this;
     $(window).on('popstate', function() {
         if (!self.disabled) {
+            _.extend(history.state || {}, {isFromHistory: true});
             self.applyState();
         }
     });
