@@ -1,6 +1,6 @@
 {
   "name": "slot",
-  "version": "0.13.7",
+  "version": "0.13.8",
   "homepage": "https://github.com/2gis/slot",
   "repository": "git@github.com:2gis/slot.git",
   "bugs": "https://github.com/2gis/slot/issues",
@@ -71,7 +71,7 @@
     "jquery-deferred": "~0.3.0",
     "lodash": "^3.10.1",
     "mkdirp": "~0.5.0",
-    "morphdom": "^1.1.2",
+    "morphdom": "1.4.0",
     "ncp": "^2.0.0",
     "po2json": "0.2.3",
     "request": "~2.27.0",
