@@ -23,10 +23,7 @@ var FinalStateApi = null;
  *
  * Далее при пуше или реплейсе компаратор сравнивает wantedState и actualState и применяет полученный diff.
  * После этого считается что UI обновился и actualState становится равным wantedState.
- *
- * Насчет prevState, сейчас есть костыль, и actualState обновляется _перед_ применения diff'а,
- * а иметь предыдущий стэйт на момент применения diff'а хочется. Поэтому есть prevState который на момент применения
- * diff'а реально равен предыдущему стэйту (а не текущему как actualState).
+ * prevState остается равен actualState'у, который был до применения diff'а.
  *
  * @param {Application} app
  * @param {StateTracker} $stateTracker компонент трэкающий стэйт
@@ -106,6 +103,8 @@ AppState.prototype.bind = function(stateTracker) {
         self.assign(_.cloneDeep(newState)); // нужно если мы навигируем по истории
         self.emit('beforestatechange');
 
+        self.prevState = self.actualState;
+
         var diff = self.comparator(self.actualState, newState);
         if (DEBUG && stuff.logEnabledFor('history')) {
             var displayAction = self.lastAddType || 'popstate';
@@ -121,7 +120,6 @@ AppState.prototype.bind = function(stateTracker) {
         // @TODO: но, т.к. в changeState'ах мы делаем state.replace'ы, придется завести отдельную переменную prevState
         self.actualState = _.cloneDeep(newState); // update actual state AFTER emit statechange
         self.emit('statechange', diff, newState); // apply state
-        self.prevState = self.actualState;
     });
 };
 
