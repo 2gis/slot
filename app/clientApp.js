@@ -87,6 +87,10 @@ ClientApplication.prototype.runTransitions = function(callback) {
     }
 };
 
+ClientApplication.prototype.clearTransitions = function() {
+    this.transitions = [];
+};
+
 /**
  * Когда стейт изменился - вызвалось поведение (transition), в конце которого вызывается наша функция.
  *
