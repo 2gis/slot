@@ -13,6 +13,7 @@ var helpers = require('./uri/helpers');
 function StateConf(conf) {
     this.conf = conf;
     this.patterns = this.compile();
+    this.seoPatternsCache = {};
 }
 
 /**
@@ -79,7 +80,6 @@ StateConf.prototype.compile = function() {
         _.each(expandString(urlPattern), function(finalPattern) {
             var pattern = new Pattern(finalPattern, validatorsMap);
             pattern.injector = injector;
-
             list.push(pattern);
         });
     });
@@ -200,7 +200,7 @@ StateConf.prototype.invokeInjectors = function(entries, state) {
 };
 
 /**
- * Ищет сруди uri-паттернов тот, который подходит под задданый стэйт-тип и данные
+ * Ищет сруди uri-паттернов тот, который подходит под заданный стэйт-тип и данные
  * @param {string} type
  * @param {object} data
  * @returns {Pattern|null}
@@ -246,29 +246,32 @@ StateConf.PermalinkNotFound = StateConf.prototype.PermalinkNotFound = PermalinkN
  * @throws {StateConf.PermalinkNotFound} бросается если ссылку не удалось сформировать из-за неподходящих параметров
  * @return {string} Вернет null если данного типа нет в конфиге seoUrls
  */
+
 StateConf.prototype.permalink = function(type, params, domain, strict) {
-    if (!this.conf.seoUrls || !(type in this.conf.seoUrls)) {
+    var urlPattern = this.conf.seoUrls && this.conf.seoUrls[type];
+    if (!urlPattern) {
         return null;
     }
 
-    var urlPattern = this.conf.seoUrls[type];
-    var validatorsMap = this.conf.validatorsMap;
+    var patterns = this.seoPatternsCache[type];
+    if (!patterns) {
+        var validatorsMap = this.conf.validatorsMap;
+        patterns = _.map(expandString(urlPattern), function(finalPattern) {
+            return new Pattern(finalPattern, validatorsMap);
+        });
+        this.seoPatternsCache[type] = patterns;
+    }
 
-    var lastCheckData,
-        lastPattern;
+    params = _.defaults(params, this.conf.seoDefaults);
 
-    _.defaults(params, this.conf.seoDefaults);
-
-    _.some(expandString(urlPattern), function(finalPattern) {
-        lastPattern = new Pattern(finalPattern, validatorsMap);
-        lastCheckData = lastPattern.checkData(params);
-
+    var lastCheckData;
+    var lastPattern = _.find(patterns, function(pattern) {
+        lastCheckData = pattern.checkData(params);
         if (!lastCheckData) return true;
     });
 
     if (lastCheckData) {
         if (!strict) return '';
-
         throw new PermalinkNotFound(type, lastCheckData, urlPattern, params);
     }
 
