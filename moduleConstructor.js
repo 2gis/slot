@@ -85,6 +85,12 @@ module.exports = function(app, moduleConf, slot) {
             }
         },
 
+        unbind: function() {
+            if (moduleConf.unbind) {
+                moduleConf.unbind();
+            }
+        },
+
         changeState: function() {
             if (moduleConf.changeState) {
                 moduleConf.changeState.apply(moduleConf, arguments);
