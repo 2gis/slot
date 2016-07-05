@@ -204,6 +204,8 @@ ClientApplication.prototype.processEvents = function(moduleId, elementName, on) 
     if (on) {
         descriptor.instance.clientInit();
         descriptor.instance.bind();
+    } else {
+        descriptor.instance.unbind();
     }
 
     // Рекурсивно вызываем функцию для всех дочерних элементов
