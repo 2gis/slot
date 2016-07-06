@@ -127,7 +127,8 @@ AppState.prototype.parse = function(url, callback) {
     var self = this,
         stateConf = this.stateConf,
         patterns = stateConf.patterns,
-        aliases = this.uriAliases;
+        aliases = this.uriAliases,
+        notParsed;
 
     function parse() {
         return parser.parse(patterns, url, aliases, stateConf.get('queryParamName'));
@@ -136,6 +137,9 @@ AppState.prototype.parse = function(url, callback) {
     function parseAndInject() {
         var state = {};
         var slugEntries = parse();
+
+        notParsed = slugEntries.notParsed;
+
         stateConf.invokeInjectors(slugEntries, state);
 
         return state;
@@ -152,20 +156,20 @@ AppState.prototype.parse = function(url, callback) {
 
         stateApi.defaults(state);
 
-        callback.call(self, stateApi.state, stateApi);
+        callback.call(self, stateApi.state, stateApi, notParsed);
     });
 };
 
 AppState.prototype.init = function(url, callback) {
     var self = this;
-    this.parse(url, function(state, stateApi) {
+    this.parse(url, function(state, stateApi, notParsed) {
         this.emitSeries('init', stateApi, function() {
             self.assign(state, true);
 
             self.stateTracker.replace(state, self.getUri());
 
             self.actualState = _.cloneDeep(state);
-            callback.call(self, state);
+            callback.call(self, state, notParsed);
         });
     });
 };
