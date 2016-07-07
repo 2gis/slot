@@ -578,6 +578,7 @@ if (env.isClient) {
     Slot.prototype.addTransition = proxy('addTransition');
     Slot.prototype.onTransitionEnd = proxy('onTransitionEnd');
     Slot.prototype.runInQueue = proxy('runInQueue');
+    Slot.prototype.clearTransitions = proxy('clearTransitions');
 
     /**
      * Метод, возвращающий jQuery-объект с корневым DOM-элементом текущего модуля.
