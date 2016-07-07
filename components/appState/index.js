@@ -125,38 +125,36 @@ AppState.prototype.bind = function(stateTracker) {
 
 AppState.prototype.parse = function(url, callback) {
     var self = this,
+        aliases = this.uriAliases,
         stateConf = this.stateConf,
         patterns = stateConf.patterns,
-        aliases = this.uriAliases,
-        notParsed;
-
-    function parse() {
-        return parser.parse(patterns, url, aliases, stateConf.get('queryParamName'));
-    }
-
-    function parseAndInject() {
-        var state = {};
-        var slugEntries = parse();
-
-        notParsed = slugEntries.notParsed;
-
-        stateConf.invokeInjectors(slugEntries, state);
-
-        return state;
-    }
+        queryParamName = stateConf.get('queryParamName'),
+        isSlugsActual = false;
 
     // создаем временный стэйт для нужд парсера
     var stateApi = new FinalStateApi(this.app);
-    stateApi.parse = parse;
-    stateApi.addUriAlias = _.bind(this.addUriAlias, this);
+
+    stateApi.addUriAlias = function() {
+        isSlugsActual = false;
+        return self.addUriAlias.apply(self, arguments);
+    };
+
+    stateApi.parse = function() {
+        if (!isSlugsActual) {
+            isSlugsActual = true;
+            stateApi.slugEntries = parser.parse(patterns, url, aliases, queryParamName);
+        }
+        return stateApi.slugEntries;
+    };
 
     this.emitSeries('parse', stateApi, function() {
         // когда все добавили алиасы которые хотели финально парсим строку в стэйт
-        var state = parseAndInject();
-
+        var state = {};
+        var slugEntries = stateApi.parse();
+        stateConf.invokeInjectors(slugEntries, state);
         stateApi.defaults(state);
 
-        callback.call(self, stateApi.state, stateApi, notParsed);
+        callback.call(self, stateApi.state, stateApi, slugEntries.notParsed);
     });
 };
 
