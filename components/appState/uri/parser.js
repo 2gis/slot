@@ -1,6 +1,6 @@
 
 var _ = require('lodash');
-var urlParse = require('url-parse');
+var urlParse = require('url').parse;
 var serializer = require('./serializer');
 
 /**
