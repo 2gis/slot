@@ -8,10 +8,9 @@ var serializer = require('./serializer');
  * @param {StateConf} stateConf конфиг урлов приложения
  * @param {object} state состояние приложения в виде JSON
  * @param {string[]} [aliases] алиасы для стейтов
- * @param {boolean} [encode]
  * @returns {string} готовый url
  */
-module.exports = function(stateConf, state, aliases, encode) {
+module.exports = function(stateConf, state, aliases) {
     aliases = aliases || [];
 
     function processState(data, name) {
@@ -21,7 +20,7 @@ module.exports = function(stateConf, state, aliases, encode) {
             return;
         }
 
-        var uri = pattern.inject(data, encode);
+        var uri = pattern.inject(data, true);
         _.some(aliases, function(entry) {
             if (!entry.alias) return;
 
@@ -72,7 +71,7 @@ module.exports = function(stateConf, state, aliases, encode) {
     });
 
     var pathName = processPart(grouppedKeys.main);
-    var queryPart = processPart(grouppedKeys.query);
+    var queryPart = serializer.encodeSlashes(processPart(grouppedKeys.query));
 
     return pathName + (queryPart ? '?' + stateConf.get('queryParamName') + '=' + queryPart : '');
 };
