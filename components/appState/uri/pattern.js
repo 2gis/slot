@@ -1,10 +1,8 @@
 
 var _ = require('lodash');
-var stuff = require('../../../lib/stuff');
 var SlugEntry = require('./slugEntry');
 
-var paramReG = /:(\w+)/g,
-    paramReN = /:(\w+)/;
+var paramReG = /:(\w+)/g;
 
 var serializer = require('./serializer');
 
@@ -14,15 +12,25 @@ var compileCache = {};
  * @returns {RegExp} Регесп для разбора готовой строки, но не паттерна!
  */
 function compile(pattern) {
-    if (!(pattern in compileCache)) {
-        var parts = pattern.split('/'),
-            reStr = stuff.escapeRegExp(parts[0]) + (parts.length > 1 ? '/' : '') + parts.slice(1).join('/');
-        reStr = reStr.replace(paramReG, '([^\/]+)');
-
-        compileCache[pattern] = new RegExp(reStr);
+    var compiledPattern = compileCache[pattern];
+    if (!compiledPattern) {
+        var reStr = _.escapeRegExp(pattern).replace(paramReG, '([^\/]+)');
+        compiledPattern = new RegExp(reStr);
+        compileCache[pattern] = compiledPattern;
     }
+    return compiledPattern;
+}
 
-    return compileCache[pattern];
+/**
+ * @returns {string} Инкодит слеши в queryString'е
+ */
+function encodeQuerySlashes(pattern) {
+    var queryIndex = pattern.indexOf('?');
+    if (queryIndex != -1) {
+        var queryString = pattern.slice(queryIndex);
+        return pattern.slice(0, queryIndex) + serializer.encodeSlashes(queryString);
+    }
+    return pattern;
 }
 
 /**
@@ -32,30 +40,19 @@ function compile(pattern) {
  * @constructor
  */
 function Pattern(pattern, validators) {
+    pattern = encodeQuerySlashes(pattern);
+
     this.pattern = pattern;
+
+    this.slug = pattern.split('/')[0];
+
+    this.validators = validators;
 
     this.patternRe = compile(pattern);
 
-    var parts = pattern.split('/');
-    this.slug = parts[0];
-    this.validators = validators;
-    var params = [];
-
-    for (var i = 1, len = parts.length; i < len; i++) {
-        var paramStr = parts[i];
-        var matchList = paramStr.match(paramReG);
-        if (!matchList) continue; // its just text, skip
-
-        _.each(matchList, function(paramDef) {
-            var match = paramReN.exec(paramDef);
-
-            var name = match[1];
-
-            params.push(name);
-        });
-    }
-
-    this.params = params;
+    this.params = _.map(pattern.match(paramReG), function(param) {
+        return param.slice(1);
+    });
 }
 
 /**
@@ -79,21 +76,21 @@ Pattern.prototype.checkData = function(data) {
     var errorKeys = [];
 
     _.each(this.params, function(name) {
-       if (name in data) {
-           var value = data[name];
+        if (name in data) {
+            var value = data[name];
 
-           var validator = this.validatorFor(name);
+            var validator = this.validatorFor(name);
 
-           if (validator && validator.toUrl) {
-               value = validator.toUrl(value);
-           }
+            if (validator && validator.toUrl) {
+                value = validator.toUrl(value);
+            }
 
-           if (validator && !validator(value)) {
-               errorKeys.push(name);
-           }
-       } else {
-           errorKeys.push(name); // key is missing
-       }
+            if (validator && !validator(value)) {
+                errorKeys.push(name);
+            }
+        } else {
+            errorKeys.push(name); // key is missing
+        }
     }, this);
 
     return errorKeys.length ? errorKeys : null;
@@ -152,7 +149,7 @@ Pattern.prototype.inject = function(data, encode) {
     encode = encode == null ? true : encode;
     var self = this;
 
-    var str = this.pattern.replace(paramReG, function(match, name) {
+    return this.pattern.replace(paramReG, function(match, name) {
         var value = data[name] != null ? data[name] : '';
         var validator = self.validatorFor(name);
 
@@ -161,11 +158,10 @@ Pattern.prototype.inject = function(data, encode) {
         }
 
         if (encode) {
-            value = serializer.encodeSlashes(value);
+            value = serializer.encodeComponent(value);
         }
         return value;
     });
-    return encode ? serializer.encode(str) : str;
 };
 
 module.exports = Pattern;
