@@ -1,6 +1,6 @@
 
 var _ = require('lodash');
-var resolver = require('./../resolver');
+var resolveUrl = require('./../resolver').resolveUrl;
 var helpers = require('./../helpers');
 var StateConf = require('../../stateConf');
 var assert = require('assert');
@@ -42,7 +42,7 @@ describe("UrlResolver", function() {
             }
         };
 
-        assert.equal(decodeURIComponent(resolver(conf, state)), 'search/пиво/inbuild/13');
+        assert.equal(decodeURIComponent(resolveUrl(conf, state)), 'search/пиво/inbuild/13');
     });
 
     it("правильно преобразует стэйт в строку c GET-параметрами", function() {
@@ -68,7 +68,7 @@ describe("UrlResolver", function() {
             }
         };
 
-        assert.equal(decodeURIComponent(resolver(conf, state)), 'inbuild/13?' + queryParamName + '=zoom/15/center/12,10');
+        assert.equal(decodeURIComponent(resolveUrl(conf, state)), 'inbuild/13?' + queryParamName + '=zoom/15/center/12,10');
     });
 
     it("правильно алиасит кириллицу", function() {
@@ -86,7 +86,7 @@ describe("UrlResolver", function() {
             helpers.makeAlias('booklet/:bookletId', {bookletId: 'сбербанк'}, 'сбербанк')
         ];
 
-        assert.equal(decodeURIComponent(resolver(conf, state, aliases)), 'сбербанк');
+        assert.equal(decodeURIComponent(resolveUrl(conf, state, aliases)), 'сбербанк');
 
     });
 });

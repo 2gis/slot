@@ -39,7 +39,7 @@ exports.transform = function(uri, stateConf) {
 
     // Поскольку в notParsed может быть всё, что угодно, то приведем его в порядок
     var cleanNotParsed = _.compact(slugEntries.notParsed.join('/').split('/')).join('/');
-    var newUri = _.compact([cleanNotParsed, resolver(stateConf, state)]).join('/');
+    var newUri = _.compact([cleanNotParsed, resolver.resolveUrl(stateConf, state)]).join('/');
     if (newUri.charAt(0) != '/') {
         return '/' + newUri;
     }
