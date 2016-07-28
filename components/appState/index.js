@@ -174,7 +174,17 @@ AppState.prototype.init = function(url, callback) {
 
 AppState.prototype.getUri = function(state) {
     state = state || this.getShareState();
-    return '/' + resolver(this.stateConf, state, this.uriAliases);
+    return '/' + resolver.resolveUrl(this.stateConf, state, this.uriAliases);
+};
+
+AppState.prototype.getStatePath = function(state) {
+    state = state || this.getShareState();
+    return '/' + resolver.resolvePath(this.stateConf, state, this.uriAliases);
+};
+
+AppState.prototype.getStateQuery = function(state) {
+    state = state || this.getShareState();
+    return resolver.resolveQuery(this.stateConf, state, this.uriAliases);
 };
 
 AppState.prototype.addUriAlias = function(pattern, params, alias) {
