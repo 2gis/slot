@@ -276,7 +276,7 @@ StateConf.prototype.permalink = function(type, params, domain, strict) {
     }
 
     var uri = lastPattern.inject(params);
-    return (domain || '') + helpers.transform(uri, this);
+    return (domain || '') + uri;
 };
 
 module.exports = StateConf;
