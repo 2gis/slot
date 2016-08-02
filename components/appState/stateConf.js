@@ -1,9 +1,10 @@
 
 var _ = require('lodash');
-var Pattern = require('./uri/pattern');
 var stuff = require('../../lib/stuff');
 var expandString = require('../../lib/expandString');
+var Pattern = require('./uri/pattern');
 var helpers = require('./uri/helpers');
+var serializer = require('./uri/serializer');
 
 /**
  * адаптер для конфига, содержит методы которые, оперируя над конфигом, разрешают некоторые потребности стэйта
@@ -275,8 +276,8 @@ StateConf.prototype.permalink = function(type, params, domain, strict) {
         throw new PermalinkNotFound(type, lastCheckData, urlPattern, params);
     }
 
-    var uri = lastPattern.inject(params);
-    return (domain || '') + helpers.transform(uri, this);
+    var uri = lastPattern.inject(params, true);
+    return (domain || '') + serializer.encode(uri);
 };
 
 module.exports = StateConf;

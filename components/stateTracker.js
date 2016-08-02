@@ -29,7 +29,7 @@ StateTracker.prototype.resolveURL = function(url) {
     url = url || document.location.pathname;
 
     if (!history.emulate) { // если у нас не hash url, добавляем query string чтобы не потерялась
-        url = stuff.extendQuery(location.href, url, this.forcedRenewParam);
+        url = stuff.extendQuery(url, location.href, this.forcedRenewParam);
     }
 
     return url;

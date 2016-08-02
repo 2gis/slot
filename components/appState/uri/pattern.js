@@ -1,12 +1,9 @@
 
 var _ = require('lodash');
-var stuff = require('../../../lib/stuff');
 var SlugEntry = require('./slugEntry');
-
-var paramReG = /:(\w+)/g,
-    paramReN = /:(\w+)/;
-
 var serializer = require('./serializer');
+
+var paramReG = /:(\w+)/g;
 
 var compileCache = {};
 
@@ -14,15 +11,24 @@ var compileCache = {};
  * @returns {RegExp} Регесп для разбора готовой строки, но не паттерна!
  */
 function compile(pattern) {
-    if (!(pattern in compileCache)) {
-        var parts = pattern.split('/'),
-            reStr = stuff.escapeRegExp(parts[0]) + (parts.length > 1 ? '/' : '') + parts.slice(1).join('/');
-        reStr = reStr.replace(paramReG, '([^\/]+)');
-
-        compileCache[pattern] = new RegExp(reStr);
+    var compiledPattern = compileCache[pattern];
+    if (!compiledPattern) {
+        var reStr = _.escapeRegExp(pattern).replace(paramReG, '([^\/]+)');
+        compiledPattern = new RegExp(reStr);
+        compileCache[pattern] = compiledPattern;
     }
+    return compiledPattern;
+}
 
-    return compileCache[pattern];
+/**
+ * @returns {string} возвращает слаг
+ */
+function getSlug(pattern) {
+    var slashIndex = pattern.indexOf('/');
+    if (slashIndex != -1) {
+        return pattern.slice(0, slashIndex);
+    }
+    return pattern;
 }
 
 /**
@@ -34,28 +40,15 @@ function compile(pattern) {
 function Pattern(pattern, validators) {
     this.pattern = pattern;
 
+    this.slug = getSlug(pattern);
+
+    this.validators = validators;
+
     this.patternRe = compile(pattern);
 
-    var parts = pattern.split('/');
-    this.slug = parts[0];
-    this.validators = validators;
-    var params = [];
-
-    for (var i = 1, len = parts.length; i < len; i++) {
-        var paramStr = parts[i];
-        var matchList = paramStr.match(paramReG);
-        if (!matchList) continue; // its just text, skip
-
-        _.each(matchList, function(paramDef) {
-            var match = paramReN.exec(paramDef);
-
-            var name = match[1];
-
-            params.push(name);
-        });
-    }
-
-    this.params = params;
+    this.params = _.map(pattern.match(paramReG), function(param) {
+        return param.slice(1);
+    });
 }
 
 /**
@@ -79,21 +72,21 @@ Pattern.prototype.checkData = function(data) {
     var errorKeys = [];
 
     _.each(this.params, function(name) {
-       if (name in data) {
-           var value = data[name];
+        if (name in data) {
+            var value = data[name];
 
-           var validator = this.validatorFor(name);
+            var validator = this.validatorFor(name);
 
-           if (validator && validator.toUrl) {
-               value = validator.toUrl(value);
-           }
+            if (validator && validator.toUrl) {
+                value = validator.toUrl(value);
+            }
 
-           if (validator && !validator(value)) {
-               errorKeys.push(name);
-           }
-       } else {
-           errorKeys.push(name); // key is missing
-       }
+            if (validator && !validator(value)) {
+                errorKeys.push(name);
+            }
+        } else {
+            errorKeys.push(name); // key is missing
+        }
     }, this);
 
     return errorKeys.length ? errorKeys : null;
@@ -116,43 +109,37 @@ Pattern.prototype.dataMatch = function(data) {
  * @returns {SlugEntry?}
  */
 Pattern.prototype.match = function(str) {
-    var pattern = this.pattern;
-
-    var slug = this.slug;
-    var names = pattern.match(paramReG);
-
     var matched = str.match(this.patternRe);
-    if (matched) {
-        var params = {};
+    if (!matched) {
+        return;
+    }
 
-        for (var i = 1, len = matched.length; i < len; i++) {
-            var name = names[i - 1].substr(1);
+    var names = this.params;
+    var params = {};
 
-            var value = serializer.decodeSlashes(matched[i]);
+    for (var i = 1, len = matched.length; i < len; i++) {
+        var name = names[i - 1];
+        var value = serializer.decodeSlashes(matched[i]);
 
-            var validator = this.validatorFor(name);
-            if (validator && !validator(value)) {
-                return;
-            }
-
-            params[name] = value;
+        var validator = this.validatorFor(name);
+        if (validator && !validator(value)) {
+            return;
         }
 
-        return new SlugEntry(slug, params).matchedFrom(matched[0], matched.index);
+        params[name] = value;
     }
+
+    return new SlugEntry(this.slug, params).matchedFrom(matched[0], matched.index);
 };
 
 /**
  * Инжектит данные в паттерн получая в итоге строку
  * @param {object} data данные для вставки
- * @param {boolean} [encode=true]
  * @returns {string}
  */
 Pattern.prototype.inject = function(data, encode) {
-    encode = encode == null ? true : encode;
     var self = this;
-
-    var str = this.pattern.replace(paramReG, function(match, name) {
+    return this.pattern.replace(paramReG, function(match, name) {
         var value = data[name] != null ? data[name] : '';
         var validator = self.validatorFor(name);
 
@@ -160,12 +147,8 @@ Pattern.prototype.inject = function(data, encode) {
             value = validator.toUrl(value);
         }
 
-        if (encode) {
-            value = serializer.encodeSlashes(value);
-        }
-        return value;
+        return encode ? serializer.encodeSlashes(value) : value;
     });
-    return encode ? serializer.encode(str) : str;
 };
 
 module.exports = Pattern;
