@@ -1,6 +1,6 @@
 
 var _ = require('lodash');
-var urlParse = require('url-parse');
+var urlParse = require('url').parse;
 var serializer = require('./serializer');
 
 /**
@@ -88,11 +88,11 @@ function markDirty(parts) {
  *     {Pattern} [pattern] связанный pattern с помощью которого был разобран данный кусок урла
  */
 exports.parse = function(patterns, str, aliases, queryParamName) {
-    str = serializer.decode(str);
-    str = '/' + _.compact(str.split('/')).join('/');
-
     var parsedUrl = urlParse(str, true);
-    str = parsedUrl.pathname;
+
+    str = serializer.decodeParts(parsedUrl.pathname);
+    str = str.replace(/\/╎/g, '╎');
+
     if (queryParamName && parsedUrl.query[queryParamName]) {
         str += '/' + parsedUrl.query[queryParamName];
     }
@@ -100,8 +100,7 @@ exports.parse = function(patterns, str, aliases, queryParamName) {
     var parts = str ? [mkPart(str)] : [];
 
     function doParse() {
-        var someParsed,
-            slashRe = /^\/+$/;
+        var someParsed;
 
         do {
             var cleanParts = getCleanParts(parts);
@@ -109,32 +108,31 @@ exports.parse = function(patterns, str, aliases, queryParamName) {
             someParsed = _.some(patterns, function(pattern) {
                 // а теперь для заданного паттерна проходимся по всему урлу (нераспарсенному)
                 return _.some(cleanParts, function(part) {
-                    var partIndex = _.indexOf(parts, part);
-
                     var matched = pattern.match(part.str);
-                    if (matched) {
-                        matched.pattern = pattern;
-                        finishParse(matched);
-                        matched.injector = pattern.injector;
-
-                        // сплитим parts
-                        var partLeft = part.str.substring(0, matched.index);
-                        var partRight = part.str.substr(matched.index + matched.string.length);
-                        if (slashRe.test(partLeft)) partLeft = '';
-                        if (slashRe.test(partRight)) partRight = '';
-
-                        var spliceArgs = [partIndex, 1];
-                        if (partLeft) {
-                            spliceArgs.push(mkPart(partLeft));
-                        }
-                        spliceArgs.push(mkParsed(matched.string, matched));
-                        if (partRight) {
-                            spliceArgs.push(mkPart(partRight));
-                        }
-                        [].splice.apply(parts, spliceArgs);
-
-                        return true;
+                    if (!matched) {
+                        return;
                     }
+
+                    matched.pattern = pattern;
+                    finishParse(matched);
+                    matched.injector = pattern.injector;
+
+                    // сплитим parts
+                    var partLeft = part.str.slice(0, matched.index);
+                    var partRight = part.str.slice(matched.index + matched.string.length);
+
+                    var partIndex = _.indexOf(parts, part);
+                    var spliceArgs = [partIndex, 1];
+                    if (partLeft) {
+                        spliceArgs.push(mkPart(partLeft));
+                    }
+                    spliceArgs.push(mkParsed(matched.string, matched));
+                    if (partRight) {
+                        spliceArgs.push(mkPart(partRight));
+                    }
+                    [].splice.apply(parts, spliceArgs);
+
+                    return true;
                 });
             });
         } while (someParsed);
@@ -184,7 +182,7 @@ exports.parse = function(patterns, str, aliases, queryParamName) {
                     // кусочек урла должен строго соответствовать алиасу
                     if (partStr == entry.alias) {
                         someProcessed = true;
-                        parts[partIndex] = mkPart(entry.getUri(false));
+                        parts[partIndex] = mkPart(entry.getUri());
                     }
                 });
             });
