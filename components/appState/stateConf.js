@@ -6,6 +6,9 @@ var Pattern = require('./uri/pattern');
 var helpers = require('./uri/helpers');
 var serializer = require('./uri/serializer');
 
+var patternsCache;
+var seoPatternsCache = {};
+
 /**
  * адаптер для конфига, содержит методы которые, оперируя над конфигом, разрешают некоторые потребности стэйта
  * @param conf
@@ -14,7 +17,7 @@ var serializer = require('./uri/serializer');
 function StateConf(conf) {
     this.conf = conf;
     this.patterns = this.compile();
-    this.seoPatternsCache = {};
+    this.seoPatternsCache = this.conf.cachePatterns && seoPatternsCache || {};
 }
 
 /**
@@ -74,7 +77,7 @@ StateConf.prototype.lookupSlug = function(key) {
  * @returns {Pattern[]}
  */
 StateConf.prototype.compile = function() {
-    var list = [],
+    var list = this.conf.cachePatterns && patternsCache || [],
         validatorsMap = this.conf.validatorsMap;
 
     _.each(this.conf.urls, function(injector, urlPattern) {
@@ -84,6 +87,10 @@ StateConf.prototype.compile = function() {
             list.push(pattern);
         });
     });
+
+    if (this.conf.cachePatterns) {
+        patternsCache = list;
+    }
 
     return list;
 };
@@ -201,7 +208,7 @@ StateConf.prototype.invokeInjectors = function(entries, state) {
 };
 
 /**
- * Ищет сруди uri-паттернов тот, который подходит под заданный стэйт-тип и данные
+ * Ищет среди uri-паттернов тот, который подходит под заданный стэйт-тип и данные
  * @param {string} type
  * @param {object} data
  * @returns {Pattern|null}
@@ -214,6 +221,39 @@ StateConf.prototype.resolvePattern = function(type, data) {
     });
 };
 
+
+/**
+ * Получение паттерна для сео-ссылки, в который можно заинжектить параметры и получить готовую сео-ссылку
+ *
+ * @param {string} type тип урла из кофига seoUrls
+ * @param {object} params параметры для формирования урла
+ * @return {string|null} паттерн
+ */
+StateConf.prototype.resolveSeoPattern = function(type, params) {
+    var urlPattern = this.conf.seoUrls && this.conf.seoUrls[type];
+    if (!urlPattern) {
+        return null;
+    }
+
+    var patterns = this.seoPatternsCache[type];
+    if (!patterns) {
+        var validatorsMap = this.conf.validatorsMap;
+        patterns = _.map(expandString(urlPattern), function(finalPattern) {
+            return new Pattern(finalPattern, validatorsMap);
+        });
+        this.seoPatternsCache[type] = patterns;
+    }
+
+    params = _.defaults(params, this.conf.seoDefaults);
+
+    var dataMissmatch;
+    var lastPattern = _.find(patterns, function(pattern) {
+        dataMissmatch = pattern.checkData(params);
+        return !dataMissmatch;
+    });
+
+    return dataMissmatch ? null : lastPattern;
+}
 /**
  * Ошибочка плохих параметров для пермалинка
  * @param {String} entity тип урла, выше есть список типов
@@ -245,38 +285,30 @@ StateConf.PermalinkNotFound = StateConf.prototype.PermalinkNotFound = PermalinkN
  * @param {string} [domain=''] что добавить перед строкой
  * @param {boolean} [strict=false] бросать ли исключение если ссылку не удалось сформировать
  * @throws {StateConf.PermalinkNotFound} бросается если ссылку не удалось сформировать из-за неподходящих параметров
- * @return {string} Вернет null если данного типа нет в конфиге seoUrls
+ * @return {string} Вернет пустую строку если данного типа нет в конфиге seoUrls (или свалится с ошибкой, если strict)
  */
-
 StateConf.prototype.permalink = function(type, params, domain, strict) {
-    var urlPattern = this.conf.seoUrls && this.conf.seoUrls[type];
-    if (!urlPattern) {
-        return null;
+    var pattern;
+    if (this.conf.cachePatterns) {
+        var paramStoreKey = type + '_' + Object.keys(params).filter(function(key) {
+                return params[key] != null;
+            }).join('-');
+
+        pattern = this.seoPatternsCache[paramStoreKey];
+        if (!pattern) {
+            pattern = this.resolveSeoPattern(type, params);
+            this.seoPatternsCache[paramStoreKey] = pattern;
+        }
+    } else {
+        pattern = this.resolveSeoPattern(type, params);
     }
 
-    var patterns = this.seoPatternsCache[type];
-    if (!patterns) {
-        var validatorsMap = this.conf.validatorsMap;
-        patterns = _.map(expandString(urlPattern), function(finalPattern) {
-            return new Pattern(finalPattern, validatorsMap);
-        });
-        this.seoPatternsCache[type] = patterns;
-    }
-
-    params = _.defaults(params, this.conf.seoDefaults);
-
-    var lastCheckData;
-    var lastPattern = _.find(patterns, function(pattern) {
-        lastCheckData = pattern.checkData(params);
-        if (!lastCheckData) return true;
-    });
-
-    if (lastCheckData) {
+    if (!pattern) {
         if (!strict) return '';
-        throw new PermalinkNotFound(type, lastCheckData, urlPattern, params);
+        throw new PermalinkNotFound(type, lastCheckData, params);
     }
 
-    var uri = lastPattern.inject(params, true);
+    var uri = pattern.inject(params, true);
     return (domain || '') + serializer.encode(uri);
 };
 
