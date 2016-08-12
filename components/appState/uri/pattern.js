@@ -32,6 +32,23 @@ function getSlug(pattern) {
 }
 
 /**
+ * Мапит валидаторы для заданного параметра
+ *
+ * @param {object} validators
+ * @param {string} slug
+ * @returns {object}
+ */
+function mapValidators(validators, slug) {
+    if (!slug) {
+        return validators || {};
+    }
+
+    return _.mapValues(validators, function(validator, name) {
+        return validators[slug + '/' + name] || validators[name];
+    });
+}
+
+/**
  * Класс реализует правило сопоставления заданного паттерна со строкой
  * @param {string} pattern паттер вида search/:pivo
  * @param {object} [validators] валидаторы для параметров
@@ -42,7 +59,7 @@ function Pattern(pattern, validators) {
 
     this.slug = getSlug(pattern);
 
-    this.validators = validators;
+    this.validators = mapValidators(validators, this.slug);
 
     this.patternRe = compile(pattern);
 
@@ -52,44 +69,29 @@ function Pattern(pattern, validators) {
 }
 
 /**
- * Возвращает валидатор для заданного параметра
- *
- * @param {string} name
- * @returns {*}
- */
-Pattern.prototype.validatorFor = function(name) {
-    var slugSpecific = this.slug + '/' + name;
-
-    return this.validators && (this.validators[slugSpecific] || this.validators[name]);
-};
-
-/**
  * Проверяем что заданный паттерн соответствует переданным данным
  * @param {object} data
- * @returns {Array|null} null - если все хорошо, иначе имена параметров которые не прошли проверку
+ * @returns {string|null} null - если все хорошо, иначе имена параметров которые не прошли проверку
  */
 Pattern.prototype.checkData = function(data) {
-    var errorKeys = [];
+    var validators = this.validators;
+    return _.find(this.params, function(name) {
+        var value = data[name];
+        if (value === undefined) {
+            return true;
+        }
 
-    _.each(this.params, function(name) {
-        if (name in data) {
-            var value = data[name];
-
-            var validator = this.validatorFor(name);
-
-            if (validator && validator.toUrl) {
+        var validator = validators[name];
+        if (validator) {
+            if (validator.toUrl) {
                 value = validator.toUrl(value);
             }
 
-            if (validator && !validator(value)) {
-                errorKeys.push(name);
+            if (!validator(value)) {
+                return true;
             }
-        } else {
-            errorKeys.push(name); // key is missing
         }
-    }, this);
-
-    return errorKeys.length ? errorKeys : null;
+    });
 };
 
 /**
@@ -99,7 +101,7 @@ Pattern.prototype.checkData = function(data) {
  * @returns {boolean}
  */
 Pattern.prototype.dataMatch = function(data) {
-    return this.checkData(data) == null;
+    return !this.checkData(data);
 };
 
 /**
@@ -121,7 +123,7 @@ Pattern.prototype.match = function(str) {
         var name = names[i - 1];
         var value = serializer.decodeSlashes(matched[i]);
 
-        var validator = this.validatorFor(name);
+        var validator = this.validators[name];
         if (validator && !validator(value)) {
             return;
         }
@@ -138,11 +140,11 @@ Pattern.prototype.match = function(str) {
  * @returns {string}
  */
 Pattern.prototype.inject = function(data, encode) {
-    var self = this;
+    var validators = this.validators;
     return this.pattern.replace(paramReG, function(match, name) {
         var value = data[name] != null ? data[name] : '';
-        var validator = self.validatorFor(name);
 
+        var validator = validators[name];
         if (validator && validator.toUrl) {
             value = validator.toUrl(value);
         }
