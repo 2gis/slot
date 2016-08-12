@@ -9,7 +9,7 @@ var serializer = require('./serializer');
  */
 function finishParse(entry) {
     _.each(entry.params, function(value, name) {
-        var validator = entry.pattern.validatorFor(name);
+        var validator = entry.pattern.validators[name];
         if (validator && validator.fromUrl) {
             entry.params[name] = validator.fromUrl(value);
         }
