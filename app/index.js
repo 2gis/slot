@@ -172,7 +172,9 @@ Application.prototype.init = function(req, callback) {
     });
 
     async.parallel(beforeInitTasks, function(err) {
-        if (err) callback(err);
+        if (err) {
+            return callback(err);
+        }
 
         try {
             if (!mainModuleName) {
