@@ -664,30 +664,40 @@ Application.prototype.raise = function(value) {
  * Подразумевается, что на клиенте есть jQuery.
  */
 Application.prototype.cookie = function(key, value, params) {
-    params = params || {};
+    // Если не задан ключ, но задано значение, то что-то пошло не так
+    if (_.isUndefined(key) && !_.isUndefined(value)) {
+        throw new Error('app.cookie: key is not specified');
+    }
 
+    // Задаем параметры по умолчанию
+    params = params || {};
     _.defaults(params, {
         path: '/',
         expires: 365
     });
 
+    // На клиенте используем jQuery, как уже было написано выше
     if (this.isClient) {
         return $.cookie(key, value, params);
-    } else {
-        if (typeof value != 'undefined') {
-            if (params.expires) {
-                // jquery days to express ms
-                params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000);
-            }
-
-            this.cookies[key] = value;
-            this.emit('cookie', key, value, params);
-        } else {
-            value = this.cookies[key]; // Извлечь значение куки key на сервере из запроса клиента
-        }
-
-        return value;
     }
+
+    // Если передано значение, то значит нужно установить новую куку
+    if (!_.isUndefined(value)) {
+        if (params.expires) {
+            // Переводим дни (распознаваемые jQuery) в мс (распознаваемые Express-ом)
+            params.expires = new Date(Date.now() + params.expires * 24 * 60 * 60 * 1000);
+        }
+        this.cookies[key] = value;
+        this.emit('cookie', key, value, params);
+        return;
+    }
+
+    // Если не передан ключ, то возвращаем все куки, так же, как это делает jQuery
+    if (_.isUndefined(key)) {
+        return _.clone(this.cookies);
+    }
+
+    return this.cookies[key]; // Извлечь значение куки key на сервере из запроса клиента
 };
 
 Application.prototype.removeCookie = function(key, params) {
