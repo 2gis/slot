@@ -267,7 +267,7 @@ AppState.prototype.actualize = function(name) {
         var title = (typeof document != 'undefined' ? document.title : null);
         var url = stuff.extendQuery(
             this.getUri(this.actualState),
-            this.queryString.getAll(),
+            location.search,
             this.stateConf.get('queryParamName')
         );
         history.replaceState(_.cloneDeep(this.actualState), title, url);
