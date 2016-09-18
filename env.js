@@ -209,5 +209,4 @@ exports.isServer = isServer;
  */
 exports.isClient = !isServer;
 
-global.req = exports.require;
 global.requirePrivate = requirePrivate;

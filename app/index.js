@@ -19,7 +19,7 @@ var templateHelpers = require('../lib/templateHelpers');
 var Registry = require('../lib/registry');
 
 module.exports = Application;
-function Application() {
+function Application(Handlebars, __helpers) {
     AsyncEmitter.call(this);
 
     this._moduleDescriptors = {};
@@ -27,6 +27,7 @@ function Application() {
 
     this.modules = {};
     this.components = {};
+    this.__helpers = __helpers;
     /**
      * It's extremely important to realize that each app instance
      * should work with its own set of settings.
@@ -42,10 +43,8 @@ function Application() {
     // setup plugins
     this._setupPlugins(this.config['plugins']);
 
-    var Handlebars = env.get('handlebars');
-
     // Create isolated Handlebars environment
-    this.handlebars = Handlebars.create();
+    this.handlebars = (Handlebars || require('handlebars')).create();
     templateHelpers(this);
 }
 inherits(Application, AsyncEmitter);
@@ -101,32 +100,6 @@ Application.prototype.resolveDevPage = function(url) {
 };
 
 /**
- * Возвращает рутовый модуль.
- * Названеи берется из конфига приложения, ключ 'mainModule' - строка.
- * Если строка начинается с '::', то считаем что это метод app
- *
- * @param req
- * @returns {Object} загруженный модуль
- */
-Application.prototype.resolveEntryPoint = function(req) {
-    req = req || {};
-
-    var name = config.mainModule;
-
-    if (!name) throw new Error("mainModule not configured");
-
-    if (name.startsWith('::')) {
-        name = name.substr(2);
-        if (!this[name]) {
-            throw new Error("App method " + name + " for mainModule not implemented");
-        }
-        name = this[name](req);
-    }
-
-    return name;
-};
-
-/**
  * Инициализация приложения: запись необходимых данных, инициализация модулей.
  *
  * @param {Object} req - параметры запроса
@@ -165,8 +138,6 @@ Application.prototype.init = function(req, callback) {
         }
     }
 
-    var mainModuleName = this.resolveDevPage(this.registry.get('url'));
-
     this.emit('initStart', {
         waitFor: addBeforeInitTask
     });
@@ -177,10 +148,7 @@ Application.prototype.init = function(req, callback) {
         }
 
         try {
-            if (!mainModuleName) {
-                mainModuleName = self.resolveEntryPoint(req);
-            }
-            var mainModule = self.mainModule = self.loadModule({type: mainModuleName});
+            var mainModule = self.mainModule = self.loadModule({type: req.mainModuleName, constructor: req.mainModule});
             mainModule.init(req, function(err) {
                 self.emit('initEnd', mainModule);
                 callback(err, mainModule);
@@ -356,26 +324,20 @@ Application.prototype.notify = function(moduleId, message) {
  * @param  {String} name Component name
  * @return {Object} module.exports of the module
  */
-Application.prototype.loadComponent = _(lookupRequire).partial('components').memoize().value();
+Application.prototype.newComponent = function(name, constructor) {
 
-Application.prototype.newComponent = function(name, extraArgs) {
-    extraArgs = extraArgs || [];
-    var componentConstructor = this.loadComponent(name);
-
-    return this.invoke(componentConstructor, [this].concat(extraArgs));
+    return this.invoke(constructor, [this]);
 };
 
-Application.prototype.requireComponent = function(name, extraArgs) {
-    var componentConstructor = this.loadComponent(name);
+Application.prototype.requireComponent = function(name, constructor) {
+    if (!this.components[name]) {
+        if (!constructor) {
+            throw new Error('There is no constructor for ' + name + ' component');
+        }
 
-    var identityKey = name;
-    if (componentConstructor.identity) {
-        identityKey = componentConstructor.identity.apply(componentConstructor, [name].concat(extraArgs));
+        this.components[name] = this.newComponent(name, constructor);
     }
-    if (!this.components[identityKey]) {
-        this.components[identityKey] = this.newComponent(name, extraArgs);
-    }
-    return this.components[identityKey];
+    return this.components[name];
 };
 
 Application.prototype.processModules = function(moduleId, selector, handler, inclusive) {
@@ -428,14 +390,6 @@ Application.prototype.broadcast = function(moduleId, message) {
     return retValue;
 };
 
-Application.prototype.requireModuleJs = function(moduleName, fileName) {
-    fileName = fileName || moduleName;
-
-    var fn = 'modules/' + moduleName + '/' + fileName;
-
-    return this.require(fn);
-};
-
 Application.prototype.invoke = function(fn, args, provider, self) {
     provider = provider || _.bind(this.requireComponent, this);
     return injector.invoke(fn, args, provider, self);
@@ -455,7 +409,7 @@ Application.prototype.loadModule = function(data) {
         moduleName = data.type;
 
     var Slot = require('../slot'),
-        moduleJs = this.requireModuleJs(moduleName);
+        moduleJs = data.constructor;
 
     var slot = new Slot(app, {
         moduleId: moduleId,
@@ -744,37 +698,27 @@ Application.prototype._nextModuleId = function(parentId) {
  */
 Application.prototype._setupPlugins = function(plugins) {
     _.each(plugins, function(name) {
-        var pluginModule = lookupRequire('plugins', name);
+        var pluginModule = getPlugin(name);
 
-        try {
-            this[name] = pluginModule(this);
-        } catch (e) {
-            throw new Error('Error invoke plugin "' + name + '": ' + e.message);
+        if (pluginModule) {
+            try {
+                this[name] = pluginModule(this);
+            } catch (e) {
+                throw new Error('Error invoke plugin "' + name + '": ' + e.message);
+            }
         }
     }, this);
 };
 
-/**
- * Requires some specific entity by its location and name.
- * Seeks the entity in end-user application then seeks it in the framework.
- *
- * @param {string} location The entity location
- * @param {string} name Module name to load
- * @return {*}
- */
-function lookupRequire(location, name) {
-    var modulePath = location + '/' + name;
-    var res;
-
-    try { // Require from end-user app
-        res = env.require(modulePath + '/' + name);
-    } catch (e) { // Require from framework
-        if (env.isClient) { // Require via browserify in end-user app
-            res = require('slot/' + modulePath);
-        } else {
-            res = require('../' + modulePath);
-        }
+function getPlugin(name) {
+    switch (name) {
+        case 'fpsMeter':
+            return require('../plugins/fpsMeter');
+        case 'ua':
+            return require('../plugins/ua');
+        case 'onNextFrame':
+            return require('../plugins/onNextFrame');
+        default:
+            return null;
     }
-
-    return res;
 }

@@ -3,7 +3,6 @@ var _ = require('lodash');
 var stuff = require('../../lib/stuff');
 var expandString = require('../../lib/expandString');
 var Pattern = require('./uri/pattern');
-var helpers = require('./uri/helpers');
 var serializer = require('./uri/serializer');
 
 var patternsCache;
@@ -236,7 +235,7 @@ StateConf.prototype.resolvePattern = function(type, data) {
 function PermalinkNotFound(entity, params) {
     this.entity = entity;
     this.params = params;
-    this.message = 'seoUrl [' + enity + '] does not match params ' + _.keys(params).join(',');
+    this.message = 'seoUrl [' + entity + '] does not match params ' + _.keys(params).join(',');
 }
 
 StateConf.PermalinkNotFound = StateConf.prototype.PermalinkNotFound = PermalinkNotFound;

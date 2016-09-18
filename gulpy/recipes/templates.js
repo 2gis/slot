@@ -2,6 +2,7 @@
 var _ = require('lodash');
 var es = require('event-stream');
 var templatify = require('../snippets/templatify');
+var concat = require('gulp-concat');
 
 var modulesPaths = ['blocks/**/*.html', 'modules/**/*.html'];
 var modules = {
@@ -28,7 +29,7 @@ exports.compile = function(outputPath) {
     return es.merge(
         modules.compile(null, outputPath),
         helpers.compile(null, outputPath)
-    );
+    ).pipe(concat('templates.js'));
 };
 
 exports.modules = modules;

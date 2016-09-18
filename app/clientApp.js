@@ -14,7 +14,7 @@ require('./jquery.mod');
 
 module.exports = ClientApplication;
 function ClientApplication() {
-    Application.call(this);
+    Application.apply(this, arguments);
 
     this.transitions = [];
     this.transitionsEnded = defer();

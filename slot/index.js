@@ -141,12 +141,13 @@ Slot.prototype.loadModule = function(conf) {
          * });
  *
  * @param {string} name - Тип модуля, например firmCard.
+ * @param {Function} constructor - функция, возвращающая moduleConf модуля
  * @param {object} [data] - Данные для инициализации модуля, которые прилетят в инит модуля первым аргументом.
  * @param {function} [callback] - Колбек, вызываемый инитом модуля асинхронно, или враппером синхронно,
  *                                если модуль синхронный и не имеет колбека в ините.
  * @returns {object|undefined} Инстанс инициализированного (или инициализируемого) модуля
  */
-Slot.prototype.init = function(name, data, callback) {
+Slot.prototype.init = function(name, constructor, data, callback) {
     var slot = this;
 
     // Если слот умер - ничего инитить нет смысла, потому что слот умирает вместе с родительским модулем
@@ -155,19 +156,19 @@ Slot.prototype.init = function(name, data, callback) {
     }
 
     if (_.isObject(name)) { // Обработка расширенного интерфейса метода
-        callback = data;
+        callback = constructor;
 
         var moduleConf = name;
 
         name = moduleConf.type;
         data = moduleConf.data;
+        constructor = moduleConf.constructor;
     } else if (_.isFunction(data)) {
         callback = data;
         data = {};
     }
 
-    var module = slot.loadModule({type: name, data: data});
-
+    var module = slot.loadModule({type: name, data: data, constructor: constructor});
 
     module.init(data, function(err) {
         var moduleName = name;
@@ -255,25 +256,29 @@ Slot.prototype.initModulesSeries = function(modules, callback) {
  * @param {array} [extraArgs] Дополнительные аргументы
  * @returns {object} Возвращает ссылку на компонент componentName.
  */
-Slot.prototype.requireComponent = function(name, extraArgs) {
-    var slot = this,
-        app = slot.app;
+Slot.prototype.requireComponent = function(name, constructor) {
+    return this.app.requireComponent(name, constructor);
 
-    var component,
-        componentMeta = app.loadComponent(name);
+    // @TODO разобраться, как лучше абортить реквесты компонентов.
 
-    if (componentMeta.emitAbortablesBy) {
-        component = app.newComponent(name, extraArgs);
-        component.on(componentMeta.emitAbortablesBy, function(req) {
-            slot.requests.push(req);
-        });
-        component.on('done', function(req) {
-            slot.requests = _.without(slot.requests, req);
-        });
-    } else {
-        component = app.requireComponent(name, extraArgs);
-    }
-    return component;
+    // var slot = this,
+    //     app = slot.app;
+
+    // var component,
+    //     componentMeta = app.loadComponent(name);
+
+    // if (componentMeta.emitAbortablesBy) {
+    //     component = app.newComponent(name, extraArgs);
+    //     component.on(componentMeta.emitAbortablesBy, function(req) {
+    //         slot.requests.push(req);
+    //     });
+    //     component.on('done', function(req) {
+    //         slot.requests = _.without(slot.requests, req);
+    //     });
+    // } else {
+    //     component = app.requireComponent(name, extraArgs);
+    // }
+    // return component;
 };
 
 Slot.prototype.clearRequests = function() {
