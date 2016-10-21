@@ -10,6 +10,10 @@ var isServer = typeof window == 'undefined',
     rootPath = './',
     buildPath;
 
+function interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj.default : obj;
+}
+
 if (!isServer) {
     window.global = window;
 }
@@ -95,7 +99,9 @@ exports.require = function(name) {
     if (!name.endsWith('.js') && !name.endsWith('.json')) {
         name = name + '.js';
     }
-    return require(rootPath + name);
+    return interopRequireDefault(
+        require(rootPath + name)
+    );
 };
 
 /**
