@@ -34,7 +34,7 @@ describe("Горшочек", function() {
                 blackListModules: ['firm', 'firmCard']
             };
 
-            var forBuild = pot.modulesFilter('firmCard/firmCard.js');
+            var forBuild = pot.modulesFilter('modules/firmCard/firmCard.js');
 
             assert(!forBuild, 'Если модуль в blackList, он не должен попадать в сборку ни при каких обстоятельствах');
         });
@@ -45,7 +45,7 @@ describe("Горшочек", function() {
                 blackListModules: ['firmCard', 'geoCard']
             };
 
-            var forBuild = pot.modulesFilter('firmCard/firmCard.js');
+            var forBuild = pot.modulesFilter('modules/firmCard/firmCard.js');
 
             assert(!forBuild, 'Если модуль в blackList, он не должен попадать в сборку ни при каких обстоятельствах');
         });
@@ -55,7 +55,7 @@ describe("Горшочек", function() {
                 whiteListModules: ['geoCard']
             };
 
-            var forBuild = pot.modulesFilter('firmCard/firmCard.js');
+            var forBuild = pot.modulesFilter('modules/firmCard/firmCard.js');
 
             assert(!forBuild, 'Если есть whiteList, но модуль не в нём, он не должен попадать в сборку');
         });
